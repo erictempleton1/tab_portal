@@ -21,4 +21,4 @@ modules.exports = function(passport) {
     // set up Passport Strategies for Login and Signup
     login(passport);
     signup(passport);
-}
+};
