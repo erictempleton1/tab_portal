@@ -6,12 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
-var expressSession = require('express-session');
-
-var dbConfig = require('./db.js');
-
-// mongodb connection
-mongoose.connect(dbConfig.url);
+var LocalStrategy = require('passport-local').Strategy;
 
 
 var routes = require('./routes/index');
@@ -19,15 +14,6 @@ var users = require('./routes/users');
 var login = require('./routes/login');
 
 var app = express();
-
-// passport init
-app.use(expressSession({
-  secret: 'thisisasupersecret',
-  resave: true,
-  saveUninitialized: true
-}));
-app.use(passport.initialize());
-app.use(passport.session());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -39,11 +25,25 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(require('express-session') ({
+  secret: 'supersecretkey',
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// passport config
+var Account = require('./models/account');
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
 
 app.use('/', routes);
 app.use('/users', users);
 app.use('/login', login);
+
+// mongodb connection
+mongoose.connect('mongodb://localhost/passport_local_mongoose_express4');
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
