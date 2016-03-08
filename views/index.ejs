@@ -4,8 +4,12 @@
     <title>Title</title>
   </head>
   <body>
-    <%= user %>
-    <p><a href="/login">Log In</a></p>
-    <p><a href="/register">Register</a></p>
+    <% if (user) { %>
+        <p> <%= user.username %> </p>
+        <p><a href="/logout">Logout</a></p>
+    <% } else { %>
+        <p><a href="/login">Log In</a></p>
+        <p><a href="/register">Register</a></p>
+    <% } %>
   </body>
 </html>
