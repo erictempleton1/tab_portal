@@ -24,8 +24,8 @@ router.get('/', function(req, res) {
 router.get('/sites/:username', function(req, res) {
   Account.findOne({'username': req.params.username}, function(error, user) {
     if (!error) {
-      if (user) {
-        res.render('user_page', {user: user});
+      if (user && req.user) {
+        res.render('user_page', {user: user.username});
       } else {
         // todo - better error msg needed here
         res.render('user_page', {user: 'user not found'});
