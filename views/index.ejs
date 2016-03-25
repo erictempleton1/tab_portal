@@ -2,14 +2,23 @@
 <html>
   <head>
     <title>Title</title>
+    <script src="https://public.tableau.com/javascripts/api/tableau-2.js"></script>
+    <script src="/javascripts/tab.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
   </head>
   <body>
     <% if (user) { %>
         <p> <%= user.username %> </p>
+        <div id="vizContainer"></div>
         <p><a href="/logout">Logout</a></p>
     <% } else { %>
         <p><a href="/login">Log In</a></p>
         <p><a href="/register">Register</a></p>
     <% } %>
   </body>
+  <script>
+  $(document).ready(function() {
+      $(initViz);
+  });
+  </script>
 </html>
