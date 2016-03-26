@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var session = require('express-session');
+var flash = require('connect-flash');
 var LocalStrategy = require('passport-local').Strategy;
 
 
@@ -32,6 +33,11 @@ app.use(session ({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);

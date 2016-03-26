@@ -4,6 +4,7 @@
     <title>Title</title>
   </head>
   <body>
+  <%- messages() %>
     <% if (user) { %>
         <p> <%= user.username %> </p>
         <p><a href="/logout">Logout</a></p>

@@ -8,9 +8,12 @@ var Account = require('../models/account');
 router.get('/:username', function(req, res) {
   Account.findOne({'username': req.params.username}, function(error, user) {
     if (!error) {
-      if (user && req.user) {
+      // make sure the user is authorized for this page
+      // maybe add a private flag in the db?  
+      if (req.params.username == req.user.username) {
         res.render('user_page', {user: user.username});
       } else {
+        req.flash("info", "Unauthorized");
         res.redirect('/');
       }
     } else {

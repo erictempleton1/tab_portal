@@ -28,6 +28,7 @@ router.get('/login', function(req, res) {
 });
 
 router.post('/login', passport.authenticate('local'), function(req, res) {
+  req.flash("info", "Logged In!");
   res.redirect('/sites/' + req.user.username);
 });
 
