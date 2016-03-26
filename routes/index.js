@@ -8,22 +8,6 @@ router.get('/', function(req, res) {
   res.render('index', {user: req.user});
 });
 
-// todo - only auth'd users matching username should be able to access here
-router.get('/sites/:username', function(req, res) {
-  Account.findOne({'username': req.params.username}, function(error, user) {
-    if (!error) {
-      if (user && req.user) {
-        res.render('user_page', {user: user.username});
-      } else {
-        // todo - better error msg needed here
-        res.render('user_page', {user: 'user not found'});
-      }
-    } else {
-      res.render('user_page', {user: 'error'});
-    }
-  });
-});
-
 router.get('/register', function(req, res) {
   res.render('register', {title: 'Register'});
 });
