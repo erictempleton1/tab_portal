@@ -11,8 +11,7 @@ router.get('/:username', function(req, res) {
       if (user && req.user) {
         res.render('user_page', {user: user.username});
       } else {
-        // todo - better error msg needed here
-        res.render('user_page', {user: 'user not found'});
+        res.redirect('/');
       }
     } else {
       res.render('user_page', {user: 'error'});
