@@ -7,8 +7,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
   </head>
   <body>
-    <%- messages() %>
-    <%= (user) %>
+    <p><%- messages() %></p>
+    <p><a href="/sites/<%= user %>"<p><%= (user) %></p></a>
+    <p><a href="/logout">Logout</a></p>
     <div id="vizContainer"></div>
   </body>
     <script>

@@ -6,7 +6,7 @@
   <body>
   <%- messages() %>
     <% if (user) { %>
-        <p> <%= user.username %> </p>
+        <a href="/sites/<%= user.username %>"<p> <%= user.username %> </p></a>
         <p><a href="/logout">Logout</a></p>
     <% } else { %>
         <p><a href="/login">Log In</a></p>
