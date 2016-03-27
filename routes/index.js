@@ -13,9 +13,13 @@ router.get('/login', function(req, res) {
 });
 
 // todo - handle invalid user/pw with message
-router.post('/login', passport.authenticate('local'), function(req, res) {
-  req.flash("info", "Logged In!");
-  res.redirect('/sites/' + req.user.username);
+router.post('/login', passport.authenticate("local", {
+        failureRedirect: "/login",
+        failureFlash: "Invalid username or password"
+      }),
+      function(req, res) {
+        req.flash("info", "Logged In!");
+        res.redirect('/sites/' + req.user.username);
 });
 
 router.get('/logout', function(req, res) {
