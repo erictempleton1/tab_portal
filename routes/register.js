@@ -5,7 +5,7 @@ var Account = require('../models/account');
 
 
 router.get('/', function(req, res) {
-  res.render('register', {title: 'Register'});
+  res.render('register');
 });
 
 // todo - need to fix error message and handling here
@@ -13,7 +13,8 @@ router.get('/', function(req, res) {
 router.post('/', function(req, res) {
   Account.register(new Account({username: req.body.username}), req.body.password, function (err, account) {
     if (err) {
-      return res.render('register', {account: account});
+      req.flash("info", "Sorry, this account already exists");  
+      return res.render('register')
     }
     passport.authenticate('local')(req, res, function () {
       res.redirect('/');

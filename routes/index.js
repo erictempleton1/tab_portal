@@ -12,7 +12,6 @@ router.get('/login', function(req, res) {
   res.render('login', {user: req.user});
 });
 
-// todo - handle invalid user/pw with message
 router.post('/login', passport.authenticate("local", {
         failureRedirect: "/login",
         failureFlash: "Invalid username or password"
