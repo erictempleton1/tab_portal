@@ -10,7 +10,7 @@ var getTabServerToken = function() {
     console.log(formData);
     console.log(tabReqUrl);
 
-    request.get(tabReqUrl, {form: {key: formData}}, function(err, resp, body) {
+    request.post(tabReqUrl, {form: {key: formData}}, function(err, resp, body) {
         if (err) {
             console.log(err)
         } else {

@@ -4,7 +4,20 @@
     <title>Title</title>
   </head>
   <body>
-    <p>Admin</p>
+    <h3>Admin</h3>
+    <h4>All Users</h4>
+    <ul>
+    <% for(var i = 0; i < userAccts.length; i++) { %>
+        <li>
+            <a href="/sites/<%= userAccts[i].username %>"><%= userAccts[i].username %></a>
+            <%= "|| admin: " + userAccts[i].isAdmin %>
+            <%= "|| registered: " + userAccts[i].regDate %>
+            <%= "|| user _id: " + userAccts[i]._id + " || " %>
+            <a href="/admin/user/<%= userAccts[i]._id %>">edit user</a>
+        </li>
+    <% } %>
+    </ul>
+
     <form method="POST" action="/admin">
         <input type="submit" value="Get Auth">
     </form>
