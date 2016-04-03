@@ -9,7 +9,12 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  Account.register(new Account({username: req.body.username}), req.body.password, function (err, account) {
+  var regInfo = {
+    username: req.body.username,
+    isAdmin: false,
+    regDate: Date.now()
+  }
+  Account.register(new Account(regInfo), req.body.password, function (err, account) {
     if (err) {
       req.flash("info", "Sorry, this account already exists");  
       return res.render('register')
