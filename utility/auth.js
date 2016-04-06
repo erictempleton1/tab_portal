@@ -24,7 +24,7 @@ var getTabServerToken = function() {
         } else {
             parseString(body, function(err, result) {
                 var parsedResp = result;
-                console.log(parsedResp);
+                console.log(parsedResp['tsResponse']['credentials'][0]['$']['token']);
             });
         }
     });
