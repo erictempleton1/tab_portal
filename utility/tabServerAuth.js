@@ -3,7 +3,7 @@ var config = require('../config');
 var parseString = require('xml2js').parseString;
 
 
-var getTabServerToken = function() {
+exports.getTabServerToken = function() {
     var tabReqUrl = config.tabServer.baseUrl + 'api/2.0/auth/signin';
     var formData = '<tsRequest><credentials name=' + '"' + config.tabServer.username + '" ' +
                     'password=' + '"' + config.tabServer.password + '"' +
@@ -30,4 +30,4 @@ var getTabServerToken = function() {
     });
 }
 
-module.exports = getTabServerToken;
+//module.exports = getTabServerToken;

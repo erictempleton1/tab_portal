@@ -4,7 +4,7 @@ var passport = require('passport');
 var Account = require('../models/account');
 var request = require('request');
 var config = require('../config');
-var authUtil = require('../utility/auth');
+var authUtil = require('../utility/tabServerAuth');
 
 
 router.get('/', function(req, res) {
@@ -28,10 +28,9 @@ router.get('/user/:id', function(req, res) {
     });
 });
 
-
 router.post('/', function(req, res) {
-    var testReq = new authUtil();
-    console.log(testReq);
+    // todo - add more code here. render or send ect...
+    authUtil.getTabServerToken();
 });
 
 module.exports = router;

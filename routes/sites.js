@@ -9,7 +9,8 @@ router.get('/:username', function(req, res) {
   Account.findOne({'username': req.params.username}, function(error, user) {
     if (!error) {
       // make sure the user is authorized for this page
-      // maybe add a private flag in the db?  
+      // maybe add a private flag in the db?
+      // todo - redirect unauthorized users if private
       if (req.params.username == req.user.username) {
         res.render('user_page', {user: user.username});
       } else {
