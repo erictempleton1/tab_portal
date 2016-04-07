@@ -7,13 +7,24 @@ var config = require('../config');
 var authUtil = require('../utility/tabServerAuth');
 
 
+// todo - this is untested
 router.get('/', function(req, res) {
-    Account.find({}, function(err, users) {
+    Account.findOne({'username': req.user.username}, function(err, user) {
         if (err) {
-            req.flash("info", "There was an error >> " + err);
-            res.render('admin');
+            req.flash('info': 'Unable to find user');
+            res.render('index');
+        } else if (user.isAdmin) {
+            Account.find({}, function(err, users) {
+                if (err) {
+                    req.flash("info", "There was an error loading users >> " + err);
+                    res.render('admin');
+                } else {
+                    res.render('admin', {userAccts: users});
+                }
+            });
         } else {
-            res.render('admin', {userAccts: users});
+            req.flash('info': 'Unauthorized');
+            res.render('index');
         }
     });
 });
