@@ -12,7 +12,8 @@ router.post('/', function(req, res) {
   var regInfo = {
     username: req.body.username,
     isAdmin: false,
-    regDate: Date.now()
+    regDate: Date.now(),
+    lastLogin: Date.now()
   }
   Account.register(new Account(regInfo), req.body.password, function (err, account) {
     if (err) {

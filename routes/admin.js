@@ -8,45 +8,44 @@ var authUtil = require('../utility/tabServerAuth');
 
 
 router.get('/', function(req, res) {
-    // only logged in users can attempt admin access
-    if (req.user) {
-        // check to see if the user is an admin
-        Account.findOne({'username': req.user.username}, function(err, user) {
+    // main admin page
+    if (req.user && req.user.isAdmin) {
+        // query all users and send to template
+        Account.find({}, function(err, users) {
             if (err) {
-                req.flash('info', 'Unable to find user >> ' + err);
-                res.render('index');
-            } else if (user.isAdmin) {
-                // query all users for admin page
-                Account.find({}, function(err, users) {
-                    if (err) {
-                        req.flash('info', 'There was an error loading users >> ' + err);
-                        res.render('admin');
-                    } else {
-                        res.render('admin', {userAccts: users});
-                    }
-                });
+                req.flash('info', 'There was an error loading users >> ' + err);
+                res.render('admin');
             } else {
-                req.flash('info', 'Unauthorized');
-                res.render('index', {user: user});
+                res.render('admin', {userAccts: users});
             }
         });
     } else {
-        res.redirect('login');
+        req.flash('info', 'Unauthorized');
+        res.redirect(302, '/');
     }
 });
 
 router.get('/user/:id', function(req, res) {
-    Account.findOne({'_id': req.params.id}, function(err, user) {
-        if (err) {
-            req.flash("info", "User not found");
-        } else {
-            res.render('user_edit', {user: user});
-        }
-    });
+    // admin can view/edit a single user
+    if (req.user && req.user.isAdmin) {
+        // query the single user using the _id param
+        Account.findOne({'_id': req.params.id}, function(err, user) {
+            if (err) {
+                req.flash("info", "User not found");
+                res.redirect(301, '/admin');
+            } else {
+                res.render('user_edit', {user: user});
+            }
+        });
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect(302, '/')
+    }
 });
 
 router.post('/', function(req, res) {
     // todo - add more code here. render or send ect...
+    // todo - add admin only check similar to above
     authUtil.getTabServerToken();
 });
 

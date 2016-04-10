@@ -29,5 +29,3 @@ exports.getTabServerToken = function() {
         }
     });
 }
-
-//module.exports = getTabServerToken;
