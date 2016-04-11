@@ -5,7 +5,11 @@ var Account = require('../models/account');
 
 
 router.get('/', function(req, res) {
-  res.render('register');
+  if (!req.user) {
+    res.render('register');
+  } else {
+    req.flash('info', 'Please logout before creating a new account');
+    res.redirect(301, '/');
 });
 
 router.post('/', function(req, res) {
@@ -13,7 +17,7 @@ router.post('/', function(req, res) {
     username: req.body.username,
     isAdmin: false,
     regDate: Date.now(),
-    lastLogin: Date.now()
+    lastLogin: Date.now(),
   }
   Account.register(new Account(regInfo), req.body.password, function (err, account) {
     if (err) {

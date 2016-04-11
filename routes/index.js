@@ -3,15 +3,18 @@ var router = express.Router();
 var passport = require('passport');
 var Account = require('../models/account');
 
-// Sat Apr 09 2016 15:58:18 GMT-0400 (EDT)
-// Sat Apr 09 2016 15:59:56 GMT-0400 (EDT)
  
 router.get('/', function(req, res) {
   res.render('index', {user: req.user});
 });
 
 router.get('/login', function(req, res) {
-  res.render('login', {user: req.user});
+  if (!req.user) {
+    res.render('login', {user: req.user});
+  } else {
+    req.flash('info', 'Already logged in');
+    res.redirect(301, '/');
+  }
 });
 
 router.post('/login', passport.authenticate("local", {
