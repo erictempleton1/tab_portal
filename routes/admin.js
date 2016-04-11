@@ -39,14 +39,17 @@ router.get('/user/:id', function(req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect(302, '/')
+        res.redirect(302, '/');
     }
 });
 
 router.post('/', function(req, res) {
-    // todo - add more code here. render or send ect...
-    // todo - add admin only check similar to above
-    authUtil.getTabServerToken();
+    if (req.user && req.user.isAdmin) {
+        authUtil.getTabServerToken();
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect(302, '/');
+    }
 });
 
 module.exports = router;
