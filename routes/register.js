@@ -10,6 +10,7 @@ router.get('/', function(req, res) {
   } else {
     req.flash('info', 'Please logout before creating a new account');
     res.redirect(301, '/');
+  }
 });
 
 router.post('/', function(req, res) {
