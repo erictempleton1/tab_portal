@@ -19,8 +19,12 @@ exports.getTabServerToken = function(callback) {
             console.log(err)
         } else {
             parseString(body, function(err, result) {
-                var parsedToken = result['tsResponse']['credentials'][0]['$']['token'];
-                callback(null, parsedToken);
+                if (resp.statusCode == 200) {
+                    var parsedResp = result['tsResponse']['credentials'][0]['$']['token'];
+                } else {
+                    var parsedResp = result;
+                }
+                callback(null, parsedResp);
             });
         }
     });

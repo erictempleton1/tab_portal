@@ -46,9 +46,13 @@ router.get('/user/:id', function(req, res) {
 router.post('/', function(req, res) {
     if (req.user && req.user.isAdmin) {
         var parsedToken = authUtil.getTabServerToken(function(err, token) {
-           token
+            if (err) {
+                console.log(err);
+            } else {
+                // todo - do something with the token
+                console.log(token);
+            }
         });
-        // todo - this is untested
         res.redirect('admin');
     } else {
         req.flash('info', 'Unauthorized');
