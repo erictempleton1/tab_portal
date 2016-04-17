@@ -5,6 +5,7 @@ var Account = require('../models/account');
 var request = require('request');
 var config = require('../config');
 var authUtil = require('../utility/tabServerAuth');
+var ServerToken = require('../models/serverToken');
 
 
 router.get('/', function(req, res) {
@@ -44,11 +45,17 @@ router.get('/user/:id', function(req, res) {
 });
 
 router.post('/', function(req, res) {
+    // request an access token from tab server
     if (req.user && req.user.isAdmin) {
         var parsedToken = authUtil.getTabServerToken(function(err, token) {
             if (err) {
                 console.log(err);
             } else {
+                // todo - save the new object
+                var tokenInfo = {
+                    refreshDate: Date.now(),
+                    tabServerToken: token
+                };
                 // todo - do something with the token
                 console.log(token);
             }
