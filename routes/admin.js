@@ -17,7 +17,17 @@ router.get('/', function(req, res) {
                 req.flash('info', 'There was an error loading users >> ' + err);
                 res.render('admin');
             } else {
-                res.render('admin', {userAccts: users});
+                // query the server token to show in the UI
+                ServerToken.findOne({}, function(err, token) {
+                    if (err) {
+                        req.flash('info', 'There was an error querying the token');
+                    } else {
+                        res.render('admin', {
+                            userAccts: users,
+                            serverToken: token
+                        });
+                    }
+                });
             }
         });
     } else {
@@ -52,12 +62,18 @@ router.post('/', function(req, res) {
                 console.log(err);
             } else {
                 // todo - save the new object
-                var tokenInfo = {
+                var tokenInfo = new ServerToken({
                     refreshDate: Date.now(),
                     tabServerToken: token
-                };
-                // todo - do something with the token
-                console.log(token);
+                });
+                tokenInfo.save(function(err) {
+                    if (err) {
+                        req.flash('info', 'An error occurred');
+                    } else {
+                        req.flash('info', 'Server token refreshed!');
+                        console.log(token);
+                    }
+                });
             }
         });
         res.redirect('admin');

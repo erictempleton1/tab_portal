@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var ServerToken = new Schema({
     refreshDate: Date,
-    token: String
+    tabServerToken: String
 });
 
-module.exports = mongoos.model('ServerToken', ServerToken);
+module.exports = mongoose.model('ServerToken', ServerToken);

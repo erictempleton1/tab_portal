@@ -17,6 +17,7 @@
         </li>
     <% } %>
     </ul>
+    <p>Server token: <%= (serverToken.tabServerToken) %> (Refreshed: <%= (serverToken.refreshDate) %></p>
 
     <form method="POST" action="/admin">
         <input type="submit" value="Get Auth">
