@@ -9,6 +9,9 @@
   <body>
     <p><%- messages() %></p>
     <p><a href="/sites/<%= user %>"<p><%= (user) %></p></a>
+    <% if (user) { %>
+      <p><a href="/admin">Admin (todo fix this)</a></p>
+    <% } %>
     <p><a href="/logout">Logout</a></p>
     <div id="vizContainer"></div>
   </body>
