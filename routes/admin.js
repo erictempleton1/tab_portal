@@ -36,6 +36,16 @@ router.get('/', function(req, res) {
     }
 });
 
+router.get('/users', function(req, res) {
+    if (req.user && req.user.isAdmin) {
+        // todo - build users listing page and move it off main admin page
+        res.send('Future users page! Todo - build ejs template and users query');
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect('/');
+    }
+});
+
 router.get('/user/:id', function(req, res) {
     // admin can view/edit a single user
     if (req.user && req.user.isAdmin) {
