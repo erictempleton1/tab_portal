@@ -38,7 +38,11 @@ router.get('/', function(req, res) {
 
 router.get('/users', function(req, res) {
     if (req.user && req.user.isAdmin) {
-        // todo - build users listing page and move it off main admin page
+        Account.find({}, function(err, users) {
+            if (err) {
+                req.flash('info', 'There was an error loading users >> ' + err);
+                res.redirect('admin');
+                // todo - finish else statement here
         res.send('Future users page! Todo - build ejs template and users query');
     } else {
         req.flash('info', 'Unauthorized');
