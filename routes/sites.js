@@ -4,21 +4,24 @@ var passport = require('passport');
 var Account = require('../models/account');
 
 
-// todo - only auth'd users matching username should be able to access here
 router.get('/:username', function(req, res) {
   Account.findOne({'username': req.params.username}, function(err, user) {
     if (!err) {
-      // make sure the user is authorized for this page
-      // maybe add a private flag in the db?
-      // todo - redirect unauthorized users if private
-      if (req.params.username == req.user.username && req.user) {
-        res.render('user_page', {user: user.username});
+      if (req.user) {
+        // admins and site owner can access the site
+        // maybe change to isprivate flag?
+        if (req.params.username == req.user.username || req.user.isAdmin) {
+          res.render('user_page', {user: user});
+        } else {
+          req.flash("info", "Unauthorized");
+          res.redirect('/');
+        }
       } else {
-        req.flash("info", "Unauthorized");
-        res.redirect('/');
+        req.flash('info', 'Unauthorized');
       }
     } else {
-      res.render('user_page', {user: 'error'});
+      req.flash('info', 'Error');
+      res.redirect('/');
     }
   });
 });
