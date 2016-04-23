@@ -11,22 +11,13 @@ var ServerToken = require('../models/serverToken');
 router.get('/', function(req, res) {
     // main admin page
     if (req.user && req.user.isAdmin) {
-        // query all users and send to template
-        Account.find({}, function(err, users) {
+        // query the server token to show in the UI
+        ServerToken.findOne({}, function(err, token) {
             if (err) {
-                req.flash('info', 'There was an error loading users >> ' + err);
-                res.render('admin');
+                req.flash('info', 'There was an error querying the token');
             } else {
-                // query the server token to show in the UI
-                ServerToken.findOne({}, function(err, token) {
-                    if (err) {
-                        req.flash('info', 'There was an error querying the token');
-                    } else {
-                        res.render('admin', {
-                            userAccts: users,
-                            serverToken: token
-                        });
-                    }
+                res.render('admin', {
+                    serverToken: token
                 });
             }
         });
@@ -42,8 +33,10 @@ router.get('/users', function(req, res) {
             if (err) {
                 req.flash('info', 'There was an error loading users >> ' + err);
                 res.redirect('admin');
-                // todo - finish else statement here
-        res.send('Future users page! Todo - build ejs template and users query');
+            } else {
+                res.render('users_list', {users: users});
+            }
+        });
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect('/');

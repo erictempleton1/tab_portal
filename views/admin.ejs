@@ -4,21 +4,10 @@
     <title>Title</title>
   </head>
   <body>
-    <h3>Admin</h3>
+    <h3><a href="/admin">Admin</a></h3>
     <h4><a href="/admin/users">All Users</a></h4>
-    <ul>
-    <% for(var i = 0; i < userAccts.length; i++) { %>
-        <li>
-            <a href="/sites/<%= userAccts[i].username %>"><%= userAccts[i].username %></a>
-            <%= "|| admin: " + userAccts[i].isAdmin %>
-            <%= "|| registered: " + userAccts[i].regDate %>
-            <%= "|| user _id: " + userAccts[i]._id + " || " %>
-            <a href="/admin/user/<%= userAccts[i]._id %>">edit user</a>
-        </li>
-    <% } %>
-    </ul>
-    <p>Server token: <%= (serverToken.tabServerToken) %> (Refreshed: <%= (serverToken.refreshDate) %></p>
-
+    <p>
+    Server token: <%= (serverToken.tabServerToken) %> (Refreshed: <%= (serverToken.refreshDate) %></p>
     <form method="POST" action="/admin">
         <input type="submit" value="Get Auth">
     </form>

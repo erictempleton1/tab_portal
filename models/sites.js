@@ -6,6 +6,7 @@ var Sites = new Scehma({
     editedDate: Date,
     allowedUsers: Array,
     siteUrl: String,
+    siteName: String,
     isPrivate: Boolean
 });
 
