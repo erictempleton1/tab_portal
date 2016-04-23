@@ -28,6 +28,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/users', function(req, res) {
+    // page for listing all users
     if (req.user && req.user.isAdmin) {
         Account.find({}, function(err, users) {
             if (err) {
@@ -58,6 +59,17 @@ router.get('/user/:id', function(req, res) {
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(302, '/');
+    }
+});
+
+// todo - add query
+router.get('/sites', function(req, res) {
+    // page for listing all sites
+    if (req.user && req.user.isAdmin) {
+        res.send('Placeholder for listing all sites! Todo - build ejs and query');
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect('/');
     }
 });
 
