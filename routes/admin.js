@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var Account = require('../models/account');
+var Sites = require('../models/sites');
 var request = require('request');
 var config = require('../config');
 var authUtil = require('../utility/tabServerAuth');
@@ -66,7 +67,14 @@ router.get('/user/:id', function(req, res) {
 router.get('/sites', function(req, res) {
     // page for listing all sites
     if (req.user && req.user.isAdmin) {
-        res.send('Placeholder for listing all sites! Todo - build ejs and query');
+        Sites.find({}, function(err, sites) {
+            if (err) {
+                req.flash('info', 'There was an error loading sites >> ' + err);
+                res.redirect('admin');
+            } else {
+                res.render('sites_list');
+            }
+        });
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect('/');

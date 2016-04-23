@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var Sites = new Scehma({
+var Sites = new Schema({
     createdDate: Date,
     editedDate: Date,
     allowedUsers: Array,
