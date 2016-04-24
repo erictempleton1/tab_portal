@@ -6,5 +6,16 @@
   <body>
     <h3><a href="/admin">Admin</a></h3>
     <h4>All Sites</h4>
+    <ul>
+    <% if (sites.length > 0) { %>
+        <% for(var i = 0; i < sites.length; i++) { %>
+            <li>
+                <%= sites[i] %>
+            </li>
+        <% } %>
+    <% } else { %>
+        <p>No sites found</p>
+    <% } %>
+    </ul>
     </body>
 </html>

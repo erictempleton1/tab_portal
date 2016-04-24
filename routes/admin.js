@@ -72,7 +72,7 @@ router.get('/sites', function(req, res) {
                 req.flash('info', 'There was an error loading sites >> ' + err);
                 res.redirect('admin');
             } else {
-                res.render('sites_list');
+                res.render('sites_list', {sites: sites});
             }
         });
     } else {
