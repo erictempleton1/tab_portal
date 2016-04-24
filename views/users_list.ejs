@@ -7,14 +7,18 @@
     <h3><a href="/admin">Admin</a></h3>
     <h4>All Users</h4>
     <ul>
-    <% for(var i = 0; i < users.length; i++) { %>
-        <li>
-            <a href="/sites/<%= users[i].username %>"><%= users[i].username %></a>
-            <%= "|| admin: " + users[i].isAdmin %>
-            <%= "|| registered: " + users[i].regDate %>
-            <%= "|| user _id: " + users[i]._id + " || " %>
-            <a href="/admin/user/<%= users[i]._id %>">edit user</a>
-        </li>
+    <% if (users.length > 0) { %>
+        <% for(var i = 0; i < users.length; i++) { %>
+            <li>
+                <a href="/sites/<%= users[i].username %>"><%= users[i].username %></a>
+                <%= "|| admin: " + users[i].isAdmin %>
+                <%= "|| registered: " + users[i].regDate %>
+                <%= "|| user _id: " + users[i]._id + " || " %>
+                <a href="/admin/user/<%= users[i]._id %>">edit user</a>
+            </li>
+        <% } %>
+    <% } else { %>
+        <p>No users found</p>
     <% } %>
     </ul>
     </body>
