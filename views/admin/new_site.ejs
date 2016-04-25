@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>New Site</title>
+  </head>
+  <body>
+    <p>Add New Site</p>
+    <form method="POST" action="/admin/sites/new">
+        <p>
+            <label>Site Url:</label>
+            <input type="text" name="siteUrl">
+        </p>
+        <p>
+            <label>Site Name:</label>
+            <input type="text" name="siteName">
+        </p>
+        <p>
+            <label>Private Site:</label>
+            <select name="isPrivate">
+                <option value="True">True</option>
+                <option value="False">False</option>
+            </select>
+        </p>
+        <p>
+            <label>Add Users:</label>
+            <select name="allowedUsers" multiple>
+            <% for (var i = 0; i < users.length; i++) { %>
+                <option value="<%= users[i].username %>"><%= users[i].username %></option>
+            <% } %>
+            </select>
+        <p>
+            <input type="submit" value="Add Site">
+        </p>
+    </form>
+  </body>
+</html>

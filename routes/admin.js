@@ -84,7 +84,15 @@ router.get('/sites', function(req, res) {
 router.get('/sites/new', function(req, res) {
     // add a new site
     if (req.user && req.user.isAdmin) {
-        res.render('admin/new_site');
+        // todo - query users to populate add users form
+        Account.find({}, function(err, users) {
+            if (err) {
+                req.flash('info', 'Error getting users');
+                res.redirect(301, '/admin');
+            } else {
+                res.render('admin/new_site', {users: users});
+            }
+        });
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect('/');
