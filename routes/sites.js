@@ -11,7 +11,7 @@ router.get('/:username', function(req, res) {
         // admins and site owner can access the site
         // maybe change to isprivate flag?
         if (req.params.username == req.user.username || req.user.isAdmin) {
-          res.render('user_page', {user: user});
+          res.render('admin/user_page', {user: user});
         } else {
           req.flash("info", "Unauthorized");
           res.redirect('/');

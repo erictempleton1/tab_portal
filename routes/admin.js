@@ -17,7 +17,7 @@ router.get('/', function(req, res) {
             if (err) {
                 req.flash('info', 'There was an error querying the token');
             } else {
-                res.render('admin', {
+                res.render('admin/admin', {
                     serverToken: token
                 });
             }
@@ -36,7 +36,7 @@ router.get('/users', function(req, res) {
                 req.flash('info', 'There was an error loading users >> ' + err);
                 res.redirect('admin');
             } else {
-                res.render('users_list', {users: users});
+                res.render('admin/users_list', {users: users});
             }
         });
     } else {
@@ -54,7 +54,7 @@ router.get('/user/:id', function(req, res) {
                 req.flash("info", "User not found");
                 res.redirect(301, '/admin');
             } else {
-                res.render('user_edit', {user: user});
+                res.render('admin/user_edit', {user: user});
             }
         });
     } else {
@@ -72,9 +72,19 @@ router.get('/sites', function(req, res) {
                 req.flash('info', 'There was an error loading sites >> ' + err);
                 res.redirect('admin');
             } else {
-                res.render('sites_list', {sites: sites});
+                res.render('admin/sites_list', {sites: sites});
             }
         });
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect('/');
+    }
+});
+
+router.get('/sites/new', function(req, res) {
+    // add a new site
+    if (req.user && req.user.isAdmin) {
+        res.render('admin/new_site');
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect('/');
@@ -103,7 +113,7 @@ router.post('/', function(req, res) {
                 });
             }
         });
-        res.redirect('admin');
+        res.redirect('admin/admin');
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(302, '/');
