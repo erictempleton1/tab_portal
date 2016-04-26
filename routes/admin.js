@@ -7,6 +7,7 @@ var request = require('request');
 var config = require('../config');
 var authUtil = require('../utility/tabServerAuth');
 var ServerToken = require('../models/serverToken');
+var Sites = require('../models/sites');
 
 
 router.get('/', function(req, res) {
@@ -99,6 +100,31 @@ router.get('/sites/new', function(req, res) {
     }
 });
 
+router.post('/sites/new', function(req, res) {
+    if (req.user && req.user.isAdmin) {
+        var newSite = new Sites({
+            createdDate: Date.now(),
+            editedDate: Date.now(),
+            allowedUsers: req.body.allowedUsers,
+            siteUrl: req.body.siteUrl,
+            siteName: req.body.siteName,
+            isPrivate: req.body.isPrivate
+        });
+        newSite.save(function(err) {
+            if (err) {
+                req.flash('info', 'An error occurred');
+                res.redirect('/admin');
+            } else {
+                req.flash('info', 'New site added');
+                res.redirect('/admin/sites');
+            }
+        });
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect('/');
+    }
+});
+
 router.post('/', function(req, res) {
     // request an access token from tab server
     if (req.user && req.user.isAdmin) {
@@ -121,7 +147,7 @@ router.post('/', function(req, res) {
                 });
             }
         });
-        res.redirect('admin/admin');
+        res.redirect('/admin');
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(302, '/');
