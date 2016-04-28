@@ -6,6 +6,7 @@ var Sites = require('../models/sites');
 var request = require('request');
 var config = require('../config');
 var authUtil = require('../utility/tabServerAuth');
+var util = require('../utility/utility');
 var ServerToken = require('../models/serverToken');
 var Sites = require('../models/sites');
 
@@ -64,7 +65,6 @@ router.get('/user/:id', function(req, res) {
     }
 });
 
-// todo - add query
 router.get('/sites', function(req, res) {
     // page for listing all sites
     if (req.user && req.user.isAdmin) {
@@ -83,9 +83,9 @@ router.get('/sites', function(req, res) {
 });
 
 router.get('/sites/new', function(req, res) {
-    // add a new site
+    // form page for adding a new site
     if (req.user && req.user.isAdmin) {
-        // todo - query users to populate add users form
+        // query all users to populate allowed users form
         Account.find({}, function(err, users) {
             if (err) {
                 req.flash('info', 'Error getting users');
@@ -101,13 +101,14 @@ router.get('/sites/new', function(req, res) {
 });
 
 router.post('/sites/new', function(req, res) {
+    // add a new site
     if (req.user && req.user.isAdmin) {
         var newSite = new Sites({
             createdDate: Date.now(),
             editedDate: Date.now(),
             allowedUsers: req.body.allowedUsers,
             siteUrl: req.body.siteUrl,
-            siteName: req.body.siteName,
+            siteName: util.removeWhitespace(req.body.siteName),
             isPrivate: req.body.isPrivate
         });
         newSite.save(function(err) {
@@ -126,13 +127,12 @@ router.post('/sites/new', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-    // request an access token from tab server
+    // request an access token from tab server and save
     if (req.user && req.user.isAdmin) {
         var parsedToken = authUtil.getTabServerToken(function(err, token) {
             if (err) {
                 console.log(err);
             } else {
-                // todo - save the new object
                 var tokenInfo = new ServerToken({
                     refreshDate: Date.now(),
                     tabServerToken: token
