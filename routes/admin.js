@@ -111,15 +111,20 @@ router.post('/sites/new', function(req, res) {
             siteName: util.removeWhitespace(req.body.siteName),
             isPrivate: req.body.isPrivate
         });
-        newSite.save(function(err) {
-            if (err) {
-                req.flash('info', 'An error occurred');
-                res.redirect('/admin');
-            } else {
-                req.flash('info', 'New site added');
-                res.redirect('/admin/sites');
-            }
-        });
+        if (req.body.allowedUsers === undefined) {
+            req.flash('info', 'Please select users');
+            res.redirect('/admin/sites/new');
+        } else {
+            newSite.save(function(err) {
+                if (err) {
+                    req.flash('info', 'An error occurred');
+                    res.redirect('/admin');
+                } else {
+                    req.flash('info', 'New site added');
+                    res.redirect('/admin/sites');
+                }
+            });
+        }
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect('/');
