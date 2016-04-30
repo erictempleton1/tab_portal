@@ -111,6 +111,7 @@ router.post('/sites/new', function(req, res) {
             siteName: util.removeWhitespace(req.body.siteName),
             isPrivate: req.body.isPrivate
         });
+        // todo - add more form validation
         if (req.body.allowedUsers === undefined) {
             req.flash('info', 'Please select users');
             res.redirect('/admin/sites/new');
