@@ -20,21 +20,26 @@ router.get('/login', function(req, res) {
 router.post('/login', passport.authenticate("local", {
         failureRedirect: "/login",
         failureFlash: "Invalid username or password"
-      }),
-      function(req, res) {
-        // update the last login date
-        var conditions = {'username': req.user.username};
-        var update = {'lastLogin': Date.now()};
-        var options = {'upsert': false};
-        Account.update(conditions, update, options, function(err, doc) {
-          if (err) {
-            req.flash('info', 'There was an error!')
-            res.redirect('login')
-          } else {
-            req.flash("info", "Logged In!");
-            res.redirect('/sites/' + req.user.username);
-          }
-        });
+  }),
+  function(req, res) {
+    // update the last login date
+    var conditions = {'username': req.user.username};
+    var update = {'lastLogin': Date.now()};
+    var options = {'upsert': false};
+    Account.update(conditions, update, options, function(err, doc) {
+      if (err) {
+        req.flash('info', 'There was an error!')
+        res.redirect('login')
+      } else {
+        req.flash("info", "Logged In!");
+        if (req.user.isAdmin) {
+          // admins should go to the admin site first
+          res.redirect('/admin');
+        } else {
+          res.redirect('/sites/' + req.user.username);
+        }
+      }
+    });
 });
 
 router.get('/logout', function(req, res) {
