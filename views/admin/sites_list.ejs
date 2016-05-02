@@ -12,6 +12,10 @@
         <% for(var i = 0; i < sites.length; i++) { %>
             <li>
                 <%= "site name: " + sites[i].siteName %>
+                <%= "created: " + sites[i].createdDate %>
+                <%= "allowed users: " + sites[i].allowedUsers %>
+                <%= "site Url: " + sites[i].siteUrl %>
+                <%= "private: " + sites[i].isPrivate %>
             </li>
         <% } %>
     <% } else { %>
