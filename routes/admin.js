@@ -65,6 +65,22 @@ router.get('/user/:id', function(req, res) {
     }
 });
 
+router.get('/site/:id', function(req, res) {
+    if (req.user && req.user.isAdmin) {
+        Sites.findOne({'_id': req.params.id}, function(err, site) {
+            if (err) {
+                req.flash('info', 'There was an error');
+                res.redirect('/admin');
+            } else {
+                res.render('admin/site_edit', {site: site});
+            }
+        });
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect(302, '/');
+    }
+});
+
 router.get('/sites', function(req, res) {
     // page for listing all sites
     if (req.user && req.user.isAdmin) {
