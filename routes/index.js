@@ -31,7 +31,6 @@ router.post('/login', passport.authenticate("local", {
         req.flash('info', 'There was an error!')
         res.redirect('login')
       } else {
-        req.flash("info", "Logged In!");
         if (req.user.isAdmin) {
           // admins should go to the admin site first
           res.redirect('/admin');

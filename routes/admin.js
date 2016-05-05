@@ -65,7 +65,37 @@ router.get('/user/:id', function(req, res) {
     }
 });
 
+router.get('/users/new', function(req, res) {
+    // form for adding a new user
+    if (req.user && req.user.isAdmin) {
+        res.render('add_users');
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect(302, '/');
+    }
+});
+
+router.post('/users/new', function(req, res) {
+    // post request for adding a new user
+    var regInfo = {
+        username: req.body.username,
+        isAdmin: false,
+        regDate: Date.now(),
+        lastLogin: Date.now(),
+    };
+    Account.register(new Account(regInfo), req.body.password, function (err, account) {
+    if (err) {
+      req.flash("info", "Sorry, this account already exists");  
+      return res.render('add_users')
+    }
+    passport.authenticate('local')(req, res, function() {
+      res.redirect('/admin/users');
+    });
+  });
+});
+
 router.get('/site/:id', function(req, res) {
+    // get a single site
     if (req.user && req.user.isAdmin) {
         Sites.findOne({'_id': req.params.id}, function(err, site) {
             if (err) {
