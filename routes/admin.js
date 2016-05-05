@@ -68,7 +68,7 @@ router.get('/user/:id', function(req, res) {
 router.get('/users/new', function(req, res) {
     // form for adding a new user
     if (req.user && req.user.isAdmin) {
-        res.render('add_users');
+        res.render('admin/add_user');
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(302, '/');
@@ -86,7 +86,7 @@ router.post('/users/new', function(req, res) {
     Account.register(new Account(regInfo), req.body.password, function (err, account) {
     if (err) {
       req.flash("info", "Sorry, this account already exists");  
-      return res.render('add_users')
+      return res.render('admin/add_user')
     }
     passport.authenticate('local')(req, res, function() {
       res.redirect('/admin/users');
