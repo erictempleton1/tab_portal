@@ -65,6 +65,28 @@ router.get('/user/:id', function(req, res) {
     }
 });
 
+// todo - add POST request
+router.post('/user/:id', function(req, res) {
+    // post request to edit a single user
+    if (req.user && req.user.isAdmin) {
+        Account.findOne({'_id': req.params.id}, function(err, user) {
+            if (err) {
+                req.flash('info', 'An error occurred');
+                res.redirect('/admin/users');
+            } else {
+                // todo - stop users from picking usernames already in use!
+                user.username = req.body.username;
+                user.isAdmin = req.body.isAdmin;
+                user.save();
+                req.flash('info', 'User updated!');
+                res.redirect('/admin/users');
+            }
+        });
+    } else {
+        res.render(302, '/');
+    }
+});
+
 router.get('/users/new', function(req, res) {
     // form for adding a new user
     if (req.user && req.user.isAdmin) {

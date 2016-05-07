@@ -10,5 +10,28 @@
     <p>Admin: <%= (user.isAdmin) %></p>
     <p>Reg Date: <%= (user.regDate) %></p>
     <p>Last Login: <%= user.lastLogin %></p>
+
+    <form method="POST" action="/admin/user/<%= (user._id) %>">
+      <p>
+        <label>Username:</lable>
+        <input type="text" name="username" value="<%= (user.username) %>">
+      </p>
+      <p>
+        <label>Is Admin:</lable>
+        <select name="isAdmin">
+          <% if (user.isAdmin) { %>
+            <option value=true>True</option>
+            <option value=false>False</option>
+          <% } else { %>
+            <option value=false>False</option>
+            <option value=true>True</option>
+          <% } %>
+        </select>
+      </p>
+      <p>
+        <input type="submit" value="Save">
+      </p>
+    </form>
+
   </body>
 </html>
