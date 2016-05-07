@@ -4,11 +4,11 @@ var passport = require('passport');
 var Account = require('../models/account');
 
 
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
   res.render('index', {user: req.user});
 });
 
-router.get('/login', function(req, res) {
+router.get('/login', function (req, res) {
   if (!req.user) {
     res.render('login', {user: req.user});
   } else {
@@ -21,15 +21,15 @@ router.post('/login', passport.authenticate("local", {
         failureRedirect: "/login",
         failureFlash: "Invalid username or password"
   }),
-  function(req, res) {
+  function (req, res) {
     // update the last login date
-    var conditions = {'username': req.user.username};
-    var update = {'lastLogin': Date.now()};
-    var options = {'upsert': false};
-    Account.update(conditions, update, options, function(err, doc) {
+    var conditions = {'username': req.user.username},
+        update = {'lastLogin': Date.now()},
+        options = {'upsert': false};
+    Account.update(conditions, update, options, function (err, doc) {
       if (err) {
-        req.flash('info', 'There was an error!')
-        res.redirect('login')
+        req.flash('info', 'There was an error!');
+        res.redirect('login');
       } else {
         if (req.user.isAdmin) {
           // admins should go to the admin site first
@@ -41,12 +41,12 @@ router.post('/login', passport.authenticate("local", {
     });
 });
 
-router.get('/logout', function(req, res) {
+router.get('/logout', function (req, res) {
   req.logout();
   res.redirect('/');
 });
 
-router.get('/ping', function(req, res) {
+router.get('/ping', function (req, res) {
   res.status(200).send('pong!');
 });
 

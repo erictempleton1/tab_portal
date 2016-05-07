@@ -1,21 +1,21 @@
-var express = require('express');
-var router = express.Router();
-var passport = require('passport');
-var Account = require('../models/account');
-var Sites = require('../models/sites');
-var request = require('request');
-var config = require('../config');
-var authUtil = require('../utility/tabServerAuth');
-var util = require('../utility/utility');
-var ServerToken = require('../models/serverToken');
-var Sites = require('../models/sites');
+var express = require('express'),
+    router = express.Router(),
+    passport = require('passport'),
+    Account = require('../models/account'),
+    Sites = require('../models/sites'),
+    request = require('request'),
+    config = require('../config'),
+    authUtil = require('../utility/tabServerAuth'),
+    util = require('../utility/utility'),
+    ServerToken = require('../models/serverToken'),
+    Sites = require('../models/sites');
 
 
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
     // main admin page
     if (req.user && req.user.isAdmin) {
         // query the server token to show in the UI
-        ServerToken.findOne({}, function(err, token) {
+        ServerToken.findOne({}, function (err, token) {
             if (err) {
                 req.flash('info', 'There was an error querying the token');
             } else {
@@ -30,10 +30,10 @@ router.get('/', function(req, res) {
     }
 });
 
-router.get('/users', function(req, res) {
+router.get('/users', function (req, res) {
     // page for listing all users
     if (req.user && req.user.isAdmin) {
-        Account.find({}, function(err, users) {
+        Account.find({}, function (err, users) {
             if (err) {
                 req.flash('info', 'There was an error loading users >> ' + err);
                 res.redirect('admin');
@@ -47,11 +47,11 @@ router.get('/users', function(req, res) {
     }
 });
 
-router.get('/user/:id', function(req, res) {
+router.get('/user/:id', function (req, res) {
     // admin can view/edit a single user
     if (req.user && req.user.isAdmin) {
         // query the single user using the _id param
-        Account.findOne({'_id': req.params.id}, function(err, user) {
+        Account.findOne({'_id': req.params.id}, function (err, user) {
             if (err) {
                 req.flash("info", "User not found");
                 res.redirect(301, '/admin');
@@ -65,11 +65,10 @@ router.get('/user/:id', function(req, res) {
     }
 });
 
-// todo - add POST request
 router.post('/user/:id', function(req, res) {
     // post request to edit a single user
     if (req.user && req.user.isAdmin) {
-        Account.findOne({'_id': req.params.id}, function(err, user) {
+        Account.findOne({'_id': req.params.id}, function (err, user) {
             if (err) {
                 req.flash('info', 'An error occurred');
                 res.redirect('/admin/users');
@@ -83,11 +82,12 @@ router.post('/user/:id', function(req, res) {
             }
         });
     } else {
+        req.flash('info', 'Unauthorized');
         res.render(302, '/');
     }
 });
 
-router.get('/users/new', function(req, res) {
+router.get('/users/new', function (req, res) {
     // form for adding a new user
     if (req.user && req.user.isAdmin) {
         res.render('admin/add_user');
@@ -97,7 +97,7 @@ router.get('/users/new', function(req, res) {
     }
 });
 
-router.post('/users/new', function(req, res) {
+router.post('/users/new', function (req, res) {
     // post request for adding a new user
     var regInfo = {
         username: req.body.username,
@@ -116,10 +116,10 @@ router.post('/users/new', function(req, res) {
   });
 });
 
-router.get('/site/:id', function(req, res) {
+router.get('/site/:id', function (req, res) {
     // get a single site
     if (req.user && req.user.isAdmin) {
-        Sites.findOne({'_id': req.params.id}, function(err, site) {
+        Sites.findOne({'_id': req.params.id}, function (err, site) {
             if (err) {
                 req.flash('info', 'There was an error');
                 res.redirect('/admin');
@@ -133,10 +133,10 @@ router.get('/site/:id', function(req, res) {
     }
 });
 
-router.get('/sites', function(req, res) {
+router.get('/sites', function (req, res) {
     // page for listing all sites
     if (req.user && req.user.isAdmin) {
-        Sites.find({}, function(err, sites) {
+        Sites.find({}, function (err, sites) {
             if (err) {
                 req.flash('info', 'There was an error loading sites >> ' + err);
                 res.redirect('admin');
@@ -150,11 +150,11 @@ router.get('/sites', function(req, res) {
     }
 });
 
-router.get('/sites/new', function(req, res) {
+router.get('/sites/new', function (req, res) {
     // form page for adding a new site
     if (req.user && req.user.isAdmin) {
         // query all users to populate allowed users form
-        Account.find({}, function(err, users) {
+        Account.find({}, function (err, users) {
             if (err) {
                 req.flash('info', 'Error getting users');
                 res.redirect(301, '/admin');
@@ -168,7 +168,7 @@ router.get('/sites/new', function(req, res) {
     }
 });
 
-router.post('/sites/new', function(req, res) {
+router.post('/sites/new', function (req, res) {
     // add a new site
     if (req.user && req.user.isAdmin) {
         var newSite = new Sites({
@@ -184,7 +184,7 @@ router.post('/sites/new', function(req, res) {
             req.flash('info', 'Please select users');
             res.redirect('/admin/sites/new');
         } else {
-            newSite.save(function(err) {
+            newSite.save(function (err) {
                 if (err) {
                     req.flash('info', 'An error occurred');
                     res.redirect('/admin');
@@ -200,10 +200,10 @@ router.post('/sites/new', function(req, res) {
     }
 });
 
-router.post('/', function(req, res) {
+router.post('/', function (req, res) {
     // request an access token from tab server and save
     if (req.user && req.user.isAdmin) {
-        var parsedToken = authUtil.getTabServerToken(function(err, token) {
+        var parsedToken = authUtil.getTabServerToken(function (err, token) {
             if (err) {
                 console.log(err);
             } else {
@@ -211,7 +211,7 @@ router.post('/', function(req, res) {
                     refreshDate: Date.now(),
                     tabServerToken: token
                 });
-                tokenInfo.save(function(err) {
+                tokenInfo.save(function (err) {
                     if (err) {
                         req.flash('info', 'An error occurred');
                     } else {

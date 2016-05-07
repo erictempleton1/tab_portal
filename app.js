@@ -1,19 +1,19 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var passport = require('passport');
-var session = require('express-session');
-var flash = require('connect-flash');
-var LocalStrategy = require('passport-local').Strategy;
+var express = require('express'),
+    path = require('path'),
+    favicon = require('serve-favicon'),
+    logger = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    mongoose = require('mongoose'),
+    passport = require('passport'),
+    session = require('express-session'),
+    flash = require('connect-flash'),
+    LocalStrategy = require('passport-local').Strategy;
 
-
-var routes = require('./routes/index');
-var sites = require('./routes/sites');
-var admin = require('./routes/admin');
+// route files
+var routes = require('./routes/index'),
+    sites = require('./routes/sites'),
+    admin = require('./routes/admin');
 
 var app = express();
 

@@ -1,16 +1,15 @@
-var express = require('express');
-var router = express.Router();
-var passport = require('passport');
-var Account = require('../models/account');
+var express = require('express'),
+    router = express.Router(),
+    passport = require('passport'),
+    Account = require('../models/account');
 
 
-router.get('/:username', function(req, res) {
-  Account.findOne({'username': req.params.username}, function(err, user) {
+router.get('/:username', function (req, res) {
+  Account.findOne({'username': req.params.username}, function (err, user) {
     if (!err) {
       if (req.user) {
         // admins and site owner can access the site
-        // maybe change to isprivate flag?
-        if (req.params.username == req.user.username || req.user.isAdmin) {
+        if (req.params.username === req.user.username || req.user.isAdmin) {
           res.render('admin/user_page', {user: user});
         } else {
           req.flash("info", "Unauthorized");
