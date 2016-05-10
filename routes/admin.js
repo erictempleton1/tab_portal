@@ -73,12 +73,23 @@ router.post('/user/:id', function(req, res) {
                 req.flash('info', 'An error occurred');
                 res.redirect('/admin/users');
             } else {
-                // todo - stop users from picking usernames already in use!
-                user.username = req.body.username;
-                user.isAdmin = req.body.isAdmin;
-                user.save();
-                req.flash('info', 'User updated!');
-                res.redirect('/admin/users');
+                // check for existing username
+                Account.findOne({'username': req.body.username}, function (existingErr, existingUser) {
+                    if (existingErr) {
+                        req.flash('info', 'Existing user query error');
+                        res.redirect('/admin/users');
+                    } else if (!existingUser || existingUser.username === user.username) {
+                        // users can keep the same username or change to one not in use
+                        user.username = req.body.username;
+                        user.isAdmin = req.body.isAdmin;
+                        user.save();
+                        req.flash('info', 'User updated!');
+                        res.redirect('/admin/users');
+                    } else {
+                        req.flash('info', 'Username already in use');
+                        res.redirect('/admin/users');
+                    }
+                });
             }
         });
     } else {
