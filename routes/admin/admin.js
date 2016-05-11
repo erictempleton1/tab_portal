@@ -1,14 +1,14 @@
 var express = require('express'),
     router = express.Router(),
     passport = require('passport'),
-    Account = require('../models/account'),
-    Sites = require('../models/sites'),
+    Account = require('../../models/account'),
+    Sites = require('../../models/sites'),
     request = require('request'),
-    config = require('../config'),
-    authUtil = require('../utility/tabServerAuth'),
-    util = require('../utility/utility'),
-    ServerToken = require('../models/serverToken'),
-    Sites = require('../models/sites');
+    config = require('../../config'),
+    authUtil = require('../../utility/tabServerAuth'),
+    util = require('../../utility/utility'),
+    ServerToken = require('../../models/serverToken'),
+    Sites = require('../../models/sites');
 
 
 router.get('/', function (req, res) {

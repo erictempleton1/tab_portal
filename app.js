@@ -13,7 +13,7 @@ var express = require('express'),
 // route files
 var routes = require('./routes/index'),
     sites = require('./routes/sites'),
-    admin = require('./routes/admin');
+    admin = require('./routes/admin/admin');
 
 var app = express();
 
