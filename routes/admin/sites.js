@@ -11,8 +11,6 @@ var express = require('express'),
     Sites = require('../../models/sites');
 
 
-// todo - these routes are untested!
-
 router.get('/', function (req, res) {
     // page for listing all sites
     if (req.user && req.user.isAdmin) {
@@ -47,7 +45,7 @@ router.get('/edit/:id', function (req, res) {
     }
 });
 
-router.get('/sites/new', function (req, res) {
+router.get('/new', function (req, res) {
     // form page for adding a new site
     if (req.user && req.user.isAdmin) {
         // query all users to populate allowed users form
