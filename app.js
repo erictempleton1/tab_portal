@@ -13,7 +13,8 @@ var express = require('express'),
 // route files
 var routes = require('./routes/index'),
     sites = require('./routes/sites'),
-    admin = require('./routes/admin/admin');
+    admin = require('./routes/admin/admin'),
+    users = require('./routes/admin/users');
 
 var app = express();
 
@@ -44,6 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/sites/', sites);
 app.use('/admin', admin);
+app.use('/admin/users/', users);
 
 // passport config
 var Account = require('./models/account');

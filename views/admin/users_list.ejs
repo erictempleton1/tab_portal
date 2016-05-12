@@ -16,7 +16,7 @@
                 <%= "|| admin: " + users[i].isAdmin %>
                 <%= "|| registered: " + users[i].regDate %>
                 <%= "|| user _id: " + users[i]._id + " || " %>
-                <a href="/admin/user/<%= users[i]._id %>">edit user</a>
+                <a href="/admin/users/edit/<%= users[i]._id %>">edit user</a>
             </li>
         <% } %>
     <% } else { %>
