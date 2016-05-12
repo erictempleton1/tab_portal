@@ -11,45 +11,9 @@ var express = require('express'),
     Sites = require('../../models/sites');
 
 
+// todo - these routes are untested!
+
 router.get('/', function (req, res) {
-    // main admin page
-    if (req.user && req.user.isAdmin) {
-        // query the server token to show in the UI
-        ServerToken.findOne({}, function (err, token) {
-            if (err) {
-                req.flash('info', 'There was an error querying the token');
-            } else {
-                res.render('admin/admin', {
-                    serverToken: token
-                });
-            }
-        });
-    } else {
-        req.flash('info', 'Unauthorized');
-        res.redirect(302, '/');
-    }
-});
-
-/*
-router.get('/site/:id', function (req, res) {
-    // get a single site
-    if (req.user && req.user.isAdmin) {
-        Sites.findOne({'_id': req.params.id}, function (err, site) {
-            if (err) {
-                req.flash('info', 'There was an error');
-                res.redirect('/admin');
-            } else {
-                res.render('admin/site_edit', {site: site});
-            }
-        });
-    } else {
-        req.flash('info', 'Unauthorized');
-        res.redirect(302, '/');
-    }
-});
-
-
-router.get('/sites', function (req, res) {
     // page for listing all sites
     if (req.user && req.user.isAdmin) {
         Sites.find({}, function (err, sites) {
@@ -63,6 +27,23 @@ router.get('/sites', function (req, res) {
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect('/');
+    }
+});
+
+router.get('/edit/:id', function (req, res) {
+    // get a single site
+    if (req.user && req.user.isAdmin) {
+        Sites.findOne({'_id': req.params.id}, function (err, site) {
+            if (err) {
+                req.flash('info', 'There was an error');
+                res.redirect('/admin');
+            } else {
+                res.render('admin/site_edit', {site: site});
+            }
+        });
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect(302, '/');
     }
 });
 
@@ -84,7 +65,7 @@ router.get('/sites/new', function (req, res) {
     }
 });
 
-router.post('/sites/new', function (req, res) {
+router.post('/new', function (req, res) {
     // add a new site
     if (req.user && req.user.isAdmin) {
         var newSite = new Sites({
@@ -113,35 +94,6 @@ router.post('/sites/new', function (req, res) {
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect('/');
-    }
-});
-*/
-
-router.post('/', function (req, res) {
-    // request an access token from tab server and save
-    if (req.user && req.user.isAdmin) {
-        var parsedToken = authUtil.getTabServerToken(function (err, token) {
-            if (err) {
-                console.log(err);
-            } else {
-                var tokenInfo = new ServerToken({
-                    refreshDate: Date.now(),
-                    tabServerToken: token
-                });
-                tokenInfo.save(function (err) {
-                    if (err) {
-                        req.flash('info', 'An error occurred');
-                    } else {
-                        req.flash('info', 'Server token refreshed!');
-                        console.log(token);
-                    }
-                });
-            }
-        });
-        res.redirect('/admin');
-    } else {
-        req.flash('info', 'Unauthorized');
-        res.redirect(302, '/');
     }
 });
 
