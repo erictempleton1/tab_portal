@@ -1,7 +1,8 @@
 // helper functions
 
 
-exports.removeWhitespace = function(string) {
+exports.cleanSiteName = function(siteName) {
     // strip all whitespace from a string
-    return string.replace(/ /g, '');
+    var cleanedSiteName = siteName.replace(/ /g, '');
+    return cleanedSiteName.toLowerCase();
 }

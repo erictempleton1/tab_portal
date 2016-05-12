@@ -71,7 +71,7 @@ router.post('/new', function (req, res) {
             editedDate: Date.now(),
             allowedUsers: req.body.allowedUsers,
             siteUrl: req.body.siteUrl,
-            siteName: util.removeWhitespace(req.body.siteName),
+            siteName: util.cleanSiteName(req.body.siteName),
             isPrivate: req.body.isPrivate
         });
         // todo - add more form validation
