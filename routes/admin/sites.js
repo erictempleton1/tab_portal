@@ -66,7 +66,7 @@ router.get('/new', function (req, res) {
 router.post('/new', function (req, res) {
     // add a new site
     if (req.user && req.user.isAdmin) {
-        var newSite = new Sites({
+        var newSite =  new Sites({
             createdDate: Date.now(),
             editedDate: Date.now(),
             allowedUsers: req.body.allowedUsers,
@@ -79,13 +79,24 @@ router.post('/new', function (req, res) {
             req.flash('info', 'Please select users');
             res.redirect('/admin/sites/new');
         } else {
-            newSite.save(function (err) {
+            // check to see if the site name is in use already before saving
+            Sites.findOne({'siteName': util.cleanSiteName(req.body.siteName)}, function (err, site) {
                 if (err) {
-                    req.flash('info', 'An error occurred');
-                    res.redirect('/admin');
+                    req.flash('info', 'Error checking site');
+                    res.redirect('/admin/sites/new');
+                } else if (!site) {
+                    newSite.save(function (err) {
+                        if (err) {
+                            req.flash('info', 'Error saving site');
+                            res.redirect('/admin/sites/new');
+                        } else {
+                            req.flash('info', 'New site created!');
+                            res.redirect('/admin/sites');
+                        }
+                    });
                 } else {
-                    req.flash('info', 'New site added');
-                    res.redirect('/admin/sites');
+                    req.flash('info', 'Site name already in use');
+                    res.redirect('/admin/sites/new');
                 }
             });
         }
