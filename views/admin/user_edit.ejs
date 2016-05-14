@@ -11,7 +11,7 @@
     <p>Admin: <%= (user.isAdmin) %></p>
     <p>Reg Date: <%= (user.regDate) %></p>
     <p>Last Login: <%= user.lastLogin %></p>
-    <form method="POST" action="/admin/user/<%= (user._id) %>">
+    <form method="POST" action="/admin/users/edit/<%= (user._id) %>">
       <p>
         <label>Username:</lable>
         <input type="text" name="username" value="<%= (user.username) %>">

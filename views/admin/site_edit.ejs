@@ -6,10 +6,40 @@
   <body>
   <h3><a href="/admin">Admin</a></h3>
   <h4>Edit Site</h4>
-        <p><%= "site name: " + site.siteName %></p>
-        <p><%= "created: " + site.createdDate %></p>
-        <p><%= "allowed users: " + site.allowedUsers %></p>
-        <p><%= "site Url: " + site.siteUrl %></p>
-        <p><%= "private: " + site.isPrivate %></p>
+  <p><%= "site name: " + site.siteName %></p>
+  <p><%= "created: " + site.createdDate %></p>
+  <p><%= "allowed users: " + site.allowedUsers %></p>
+  <p><%= "site Url: " + site.siteUrl %></p>
+  <p><%= "private: " + site.isPrivate %></p>
+  <form method="POST" action="/admin/sites/edit/<%= site._id %>">
+    <p>
+      <label>Site Name:</label>
+      <input type="text" name="siteName" value="<%= site.siteName %>">
+    </p>
+    <p>
+      <label>Site Url:</label>
+      <input type="text" name="siteUrl" value="<%= site.siteUrl %>">
+    </p>
+    <p>
+      <label>Private Site:</label>
+      <select name="isPrivate">
+        <% if (site.isPrivate) { %>
+          <option value=true>True</option>
+          <option value=false>False</option>
+        <% } else { %>
+          <option value=false>False</option>
+          <option value=true>True</option>
+        <% } %>
+      </select>
+      <P>
+        <label>Allowed Users:</label>
+        <select name="allowedUsers" multiple>
+          <option value="placeholder">Placeholder</option>
+        </select>
+      </p>
+      <p>
+        <input type="submit" value="Update Site">
+      </p>
+    </form>
   </body>
 </html>

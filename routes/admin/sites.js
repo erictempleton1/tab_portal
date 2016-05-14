@@ -28,6 +28,8 @@ router.get('/', function (req, res) {
     }
 });
 
+// todo - create post request below for editing a site!
+// todo - how do we fill in the users form? re-query all users?
 router.get('/edit/:id', function (req, res) {
     // get a single site
     if (req.user && req.user.isAdmin) {
