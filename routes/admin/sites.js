@@ -28,8 +28,6 @@ router.get('/', function (req, res) {
     }
 });
 
-// todo - create post request below for editing a site!
-// todo - how do we fill in the users form? re-query all users?
 router.get('/edit/:id', function (req, res) {
     // get a single site
     if (req.user && req.user.isAdmin) {
@@ -38,7 +36,17 @@ router.get('/edit/:id', function (req, res) {
                 req.flash('info', 'There was an error');
                 res.redirect('/admin');
             } else {
-                res.render('admin/site_edit', {site: site});
+                // get all users to populate the site users select form
+                Account.find({}, function (err, users) {
+                    if (err) {
+                        req.flash('info', 'Unable to load users');
+                        res.redirect('admin/new_site');
+                    } else {
+                        // todo - set existing selected users as selected in ejs,
+                        // list others below them
+                        res.render('admin/site_edit', {site: site, users: users});
+                    }
+                });
             }
         });
     } else {
