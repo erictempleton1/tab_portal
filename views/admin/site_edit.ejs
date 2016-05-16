@@ -34,7 +34,13 @@
       <P>
         <label>Allowed Users:</label>
         <select name="allowedUsers" multiple>
-          <option value="placeholder">Placeholder</option>
+        <% for (var i = 0; i < users.length; i++) { %>
+            <% if (site.allowedUsers.indexOf(users[i].username) > -1) { %>
+                <option selected value="<%= users[i].username %>"><%= users[i].username %></option>
+            <% } else { %>
+                <option value="<%= users[i].username %>"><%= users[i].username %></option>
+            <% } %>
+        <% } %>
         </select>
       </p>
       <p>

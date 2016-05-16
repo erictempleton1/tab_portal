@@ -42,8 +42,6 @@ router.get('/edit/:id', function (req, res) {
                         req.flash('info', 'Unable to load users');
                         res.redirect('admin/new_site');
                     } else {
-                        // todo - set existing selected users as selected in ejs,
-                        // list others below them
                         res.render('admin/site_edit', {site: site, users: users});
                     }
                 });
