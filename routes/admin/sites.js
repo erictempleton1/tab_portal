@@ -1,15 +1,8 @@
 var express = require('express'),
     router = express.Router(),
-    passport = require('passport'),
     Account = require('../../models/account'),
     Sites = require('../../models/sites'),
-    request = require('request'),
-    config = require('../../config'),
-    authUtil = require('../../utility/tabServerAuth'),
-    util = require('../../utility/utility'),
-    ServerToken = require('../../models/serverToken'),
-    Sites = require('../../models/sites');
-
+    util = require('../../utility/utility');
 
 router.get('/', function (req, res) {
     // page for listing all sites
@@ -31,7 +24,7 @@ router.get('/', function (req, res) {
 router.get('/edit/:id', function (req, res) {
     // get a single site
     if (req.user && req.user.isAdmin) {
-        Sites.findOne({'_id': req.params.id}, function (err, site) {
+        Sites.findOne({_id: req.params.id}, function (err, site) {
             if (err) {
                 req.flash('info', 'There was an error');
                 res.redirect('/admin');
@@ -50,6 +43,38 @@ router.get('/edit/:id', function (req, res) {
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(302, '/');
+    }
+});
+
+router.post('/edit/:id', function (req, res) {
+    if (req.user && req.user.isAdmin) {
+        Sites.findOne({_id: req.params.id}, function (err, site) {
+            if (err) {
+                req.flash('info', 'An error occurred finding site');
+                res.redirect('/admin/sites');
+            } else {
+                Sites.findOne({siteName: util.cleanSiteName(req.body.siteName)}, function (existingErr, existingSite) {
+                    if (existingErr) {
+                        req.flash('info', 'Existing site query error');
+                        res.redirect('/admin/sites');
+                    } else if (!existingSite || existingSite.siteName === site.siteName) {
+                        site.siteName = req.body.siteName;
+                        site.siteUrl = req.body.siteUrl;
+                        site.isPrivate = req.body.isPrivate;
+                        site.allowedUsers = req.body.allowedUsers;
+                        site.save();
+                        req.flash('info', 'Site updated!');
+                        res.redirect('/admin/users');
+                    } else {
+                        req.flash('info', 'Site name already in use');
+                        res.redirect('/admin/users');
+                    }
+                });
+            }
+        });
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect('/');
     }
 });
 
@@ -74,7 +99,7 @@ router.get('/new', function (req, res) {
 router.post('/new', function (req, res) {
     // add a new site
     if (req.user && req.user.isAdmin) {
-        var newSite =  new Sites({
+        var newSite = new Sites({
             createdDate: Date.now(),
             editedDate: Date.now(),
             allowedUsers: req.body.allowedUsers,
@@ -88,7 +113,7 @@ router.post('/new', function (req, res) {
             res.redirect('/admin/sites/new');
         } else {
             // check to see if the site name is in use already before saving
-            Sites.findOne({'siteName': util.cleanSiteName(req.body.siteName)}, function (err, site) {
+            Sites.findOne({siteName: util.cleanSiteName(req.body.siteName)}, function (err, site) {
                 if (err) {
                     req.flash('info', 'Error checking site');
                     res.redirect('/admin/sites/new');

@@ -3,13 +3,7 @@ var express = require('express'),
     passport = require('passport'),
     Account = require('../../models/account'),
     Sites = require('../../models/sites'),
-    request = require('request'),
-    config = require('../../config'),
-    authUtil = require('../../utility/tabServerAuth'),
-    util = require('../../utility/utility'),
-    ServerToken = require('../../models/serverToken'),
-    Sites = require('../../models/sites');
-
+    util = require('../../utility/utility');
 
 router.get('/', function (req, res) {
     // page for listing all users
@@ -32,7 +26,7 @@ router.get('/edit/:id', function (req, res) {
     // admin can view/edit a single user
     if (req.user && req.user.isAdmin) {
         // query the single user using the _id param
-        Account.findOne({'_id': req.params.id}, function (err, user) {
+        Account.findOne({_id: req.params.id}, function (err, user) {
             if (err) {
                 req.flash("info", "User not found");
                 res.redirect(301, '/admin');
@@ -49,13 +43,13 @@ router.get('/edit/:id', function (req, res) {
 router.post('/edit/:id', function(req, res) {
     // post request to edit a single user
     if (req.user && req.user.isAdmin) {
-        Account.findOne({'_id': req.params.id}, function (err, user) {
+        Account.findOne({_id: req.params.id}, function (err, user) {
             if (err) {
                 req.flash('info', 'An error occurred');
                 res.redirect('/admin/users');
             } else {
                 // check for existing username
-                Account.findOne({'username': req.body.username}, function (existingErr, existingUser) {
+                Account.findOne({username: req.body.username}, function (existingErr, existingUser) {
                     if (existingErr) {
                         req.flash('info', 'Existing user query error');
                         res.redirect('/admin/users');
@@ -75,7 +69,7 @@ router.post('/edit/:id', function(req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.render(302, '/');
+        res.redirect(302, '/');
     }
 });
 
@@ -100,7 +94,7 @@ router.post('/new', function (req, res) {
         };
         Account.register(new Account(regInfo), req.body.password, function (err, account) {
         if (err) {
-          req.flash("info", "Sorry, this account already exists");  
+          req.flash("info", "Sorry, this account already exists");
           return res.render('admin/add_user')
         }
         passport.authenticate('local')(req, res, function() {
