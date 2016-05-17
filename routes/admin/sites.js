@@ -67,7 +67,7 @@ router.post('/edit/:id', function (req, res) {
                         res.redirect('/admin/users');
                     } else {
                         req.flash('info', 'Site name already in use');
-                        res.redirect('/admin/users');
+                        res.redirect('/admin/sites');
                     }
                 });
             }
