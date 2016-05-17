@@ -78,6 +78,20 @@ router.post('/edit/:id', function (req, res) {
     }
 });
 
+router.get('/remove/:id', function (req, res) {
+    // page for confirming site deletion
+    if (req.user && req.user.isAdmin) {
+        Sites.findOne({_id: req.params.id}, function (err, site) {
+            if (err) {
+                req.flash('info', 'An error occurred finding site');
+                res.redirect('/admin/sites');
+            } else {
+                res.render('admin/remove_site', {site: site});
+            }
+        });
+    }
+})
+
 router.get('/new', function (req, res) {
     // form page for adding a new site
     if (req.user && req.user.isAdmin) {
