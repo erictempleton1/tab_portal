@@ -89,8 +89,29 @@ router.get('/remove/:id', function (req, res) {
                 res.render('admin/remove_site', {site: site});
             }
         });
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect('/');
     }
-})
+});
+
+router.post('/remove/:id', function (req, res) {
+    // post request to delete a site
+    if (req.user && req.user.isAdmin) {
+        Sites.remove({_id: req.params.id}, function (err, site) {
+            if (err) {
+                req.flash('info', 'An error occurred deleting site');
+                res.redirect('/admin/sites');
+            } else {
+                req.flash('info', 'Site removed!');
+                res.redirect('/admin/sites');
+            }
+        });
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect('/');
+    }
+});
 
 router.get('/new', function (req, res) {
     // form page for adding a new site

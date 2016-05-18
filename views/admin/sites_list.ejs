@@ -7,6 +7,7 @@
     <h3><a href="/admin">Admin</a></h3>
     <h4><a href="/admin/sites/new">Add New Site</a></h4>
     <h4>All Sites</h4>
+    <p><%- messages() %></p>
     <ul>
     <% if (sites.length > 0) { %>
         <% for(var i = 0; i < sites.length; i++) { %>
@@ -17,6 +18,7 @@
                 <%= "site Url: " + sites[i].siteUrl %>
                 <%= "private: " + sites[i].isPrivate %>
                 <a href="/admin/sites/edit/<%= sites[i]._id %>">edit</a>
+                <a href="/admin/sites/remove/<%= sites[i]._id %>">remove</a>
             </li>
         <% } %>
     <% } else { %>

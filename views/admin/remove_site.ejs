@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+  </head>
+  <body>
+    <h3><a href="/admin">Admin</a></h3>
+    <h4>Remove Site</h4>
+    <p><%= "site name: " + site.siteName %></p>
+    <p><%= "created: " + site.createdDate %></p>
+    <p><%= "allowed users: " + site.allowedUsers %></p>
+    <p><%= "site Url: " + site.siteUrl %></p>
+    <p><%= "private: " + site.isPrivate %></p>
+    <form method="POST" action="/admin/sites/remove/<%= site._id %>">
+        <input type="submit" value="Remove Site">
+    </form>
+    </body>
+</html>
