@@ -17,6 +17,7 @@
                 <%= "|| registered: " + users[i].regDate %>
                 <%= "|| user _id: " + users[i]._id + " || " %>
                 <a href="/admin/users/edit/<%= users[i]._id %>">edit user</a>
+                <a href="/admin/users/remove/<%= users[i]._id %>">remove user</a>
             </li>
         <% } %>
     <% } else { %>

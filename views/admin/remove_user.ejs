@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+  </head>
+  <body>
+    <h3><a href="/admin">Admin</a></h3>
+    <p><%- messages() %></p>
+    <p>Username: <%= (user.username) %></p>
+    <p>Admin: <%= (user.isAdmin) %></p>
+    <p>Reg Date: <%= (user.regDate) %></p>
+    <p>Last Login: <%= user.lastLogin %></p>
+    <form method="POST" action="/admin/users/remove/<%= user._id %>">
+        <input type="submit" value="Remove User">
+    </form>
+    </body>
+</html>

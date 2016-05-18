@@ -76,7 +76,7 @@ router.post('/edit/:id', function(req, res) {
 router.get('/remove/:id', function (req, res) {
     // page for confirming user deletion
     if (req.user && req.user.isAdmin) {
-        Account.findOne({_id: req.body.id}, function (err, user) {
+        Account.findOne({_id: req.params.id}, function (err, user) {
             if (err) {
                 req.flash('info', 'An error occurred finding user');
                 res.redirect('/admin/users');
@@ -90,7 +90,6 @@ router.get('/remove/:id', function (req, res) {
     }
 });
 
-// todo - build ejs template
 router.post('/remove/:id', function (req, res) {
     // post request to delete a user
     if (req.user && req.user.isAdmin) {
