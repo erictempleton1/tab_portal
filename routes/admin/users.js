@@ -73,6 +73,42 @@ router.post('/edit/:id', function(req, res) {
     }
 });
 
+router.get('/remove/:id', function (req, res) {
+    // page for confirming user deletion
+    if (req.user && req.user.isAdmin) {
+        Account.findOne({_id: req.body.id}, function (err, user) {
+            if (err) {
+                req.flash('info', 'An error occurred finding user');
+                res.redirect('/admin/users');
+            } else {
+                res.render('admin/remove_user', {user: user});
+            }
+        });
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect('/');
+    }
+});
+
+// todo - build ejs template
+router.post('/remove/:id', function (req, res) {
+    // post request to delete a user
+    if (req.user && req.user.isAdmin) {
+        Account.remove({_id: req.params.id}, function (err, user) {
+            if (err) {
+                req.flash('info', 'An error occurred deleting user');
+                res.redirec('/admin/users');
+            } else {
+                req.flash('info', 'User removed!');
+                res.redirect('/admin/users');
+            }
+        });
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect('/');
+    }
+});
+
 router.get('/new', function (req, res) {
     // form for adding a new user
     if (req.user && req.user.isAdmin) {
