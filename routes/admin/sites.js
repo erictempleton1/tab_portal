@@ -53,7 +53,7 @@ router.post('/edit/:id', function (req, res) {
                 req.flash('info', 'An error occurred finding site');
                 res.redirect('/admin/sites');
             } else {
-                Sites.findOne({siteName: util.cleanSiteName(req.body.siteName)}, function (existingErr, existingSite) {
+                Sites.findOne({siteName: util.cleanString(req.body.siteName)}, function (existingErr, existingSite) {
                     if (existingErr) {
                         req.flash('info', 'Existing site query error');
                         res.redirect('/admin/sites');

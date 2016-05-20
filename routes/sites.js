@@ -15,6 +15,8 @@ var express = require('express'),
 
 // site pages and user pages should be seperate entities. 
 
+// user names should be lowercase and whitespace removed
+
 router.get('/:username', function (req, res) {
   Account.findOne({'username': req.params.username}, function (err, user) {
     if (!err) {
