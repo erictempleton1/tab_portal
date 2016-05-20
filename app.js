@@ -14,8 +14,9 @@ var express = require('express'),
 var routes = require('./routes/index'),
     sites = require('./routes/sites'),
     admin = require('./routes/admin/admin'),
-    adminUsers = require('./routes/admin/users');
-    adminSites = require('./routes/admin/sites');
+    adminUsers = require('./routes/admin/users'),
+    adminSites = require('./routes/admin/sites'),
+    user = require('./routes/user/user');
 
 
 var app = express();
@@ -49,6 +50,7 @@ app.use('/sites/', sites);
 app.use('/admin', admin);
 app.use('/admin/users/', adminUsers);
 app.use('/admin/sites/', adminSites);
+app.use('/user/', user);
 
 // passport config
 var Account = require('./models/account');
