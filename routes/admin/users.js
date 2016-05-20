@@ -122,7 +122,7 @@ router.post('/new', function (req, res) {
     // post request for adding a new user
     if (req.user && req.user.isAdmin) {
         var regInfo = {
-            username: req.body.username,
+            username: util.cleanString(req.body.username),
             isAdmin: false,
             regDate: Date.now(),
             lastLogin: Date.now(),

@@ -2,7 +2,7 @@
 
 
 exports.cleanString = function(stringToClean) {
-    // strip all whitespace from a string
+    // strip all whitespace and lowercase a string
     var cleanedString = stringToClean.replace(/ /g, '');
     return cleanedString.toLowerCase();
 }
