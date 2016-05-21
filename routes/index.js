@@ -27,18 +27,17 @@ router.post('/login', passport.authenticate("local", {
     var conditions = {'username': req.user.username},
         update = {'lastLogin': Date.now()},
         options = {'upsert': false};
-    Account.update(conditions, update, options, function (err, doc) {
-      if (err) {
-        req.flash('info', 'There was an error!');
-        res.redirect('login');
+    var updateAccount = Account.update(conditions, update, options).exec();
+    updateAccount.then(function (user) {
+      // send admin users to the admin site
+      if (req.user.isAdmin) {
+        res.redirect('/admin');
       } else {
-        if (req.user.isAdmin) {
-          // admins should go to the admin site first
-          res.redirect('/admin');
-        } else {
-          res.redirect('/sites/' + req.user.username);
-        }
+        res.redirect('/sites/' + req.user.username);
       }
+    }).catch(function (err) {
+      req.flash('info', 'There was an error!');
+      res.redirect('login');
     });
 });
 
