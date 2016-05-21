@@ -17,8 +17,8 @@
                 <%= "allowed users: " + sites[i].allowedUsers %>
                 <%= "site Url: " + sites[i].siteUrl %>
                 <%= "private: " + sites[i].isPrivate %>
-                <a href="/admin/sites/edit/<%= sites[i]._id %>">edit</a>
-                <a href="/admin/sites/remove/<%= sites[i]._id %>">remove</a>
+                <a href="/admin/sites/edit/<%= sites[i].siteName %>">edit</a>
+                <a href="/admin/sites/remove/<%= sites[i].siteName %>">remove</a>
             </li>
         <% } %>
     <% } else { %>

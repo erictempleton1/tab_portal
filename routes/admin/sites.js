@@ -19,23 +19,28 @@ router.get('/', function (req, res) {
     }
 });
 
-router.get('/edit/:id', function (req, res) {
+// todo - work on this route!
+router.get('/edit/:sitename', function (req, res) {
     // get a single site
     if (req.user && req.user.isAdmin) {
         // execute the queries in paralell since they don't depend on each other.
         var findSitesAccounts = [
-            Sites.findOne({_id: req.params.id}).exec(),
+            Sites.findOne({siteName: req.params.sitename}).exec(),
             Account.find({}).exec()
         ]
         Promise.all(findSitesAccounts).then(function (result) {
             // access the result of the execs, and send to template
             var site = result[0],
                 users = result[1];
-            console.log(result);  
-            res.render('admin/site_edit', {site: site, users: users});
+            if (site) {
+                res.render('admin/site_edit', {site: site, users: users});
+            } else {
+                req.flash('info', 'Site not found');
+                res.redirect('/admin/sites');
+            }
         }).catch(function (err) {
             req.flash('info', 'There was an error loading site');
-            res.redirect('admin/sites');
+            res.redirect('/admin/sites');
         });
     } else {
         req.flash('info', 'Unauthorized');
@@ -43,30 +48,21 @@ router.get('/edit/:id', function (req, res) {
     }
 });
 
-router.post('/edit/:id', function (req, res) {
+router.post('/edit/:sitename', function (req, res) {
     if (req.user && req.user.isAdmin) {
-        Sites.findOne({_id: req.params.id}, function (err, site) {
-            if (err) {
-                req.flash('info', 'An error occurred finding site');
-                res.redirect('/admin/sites');
-            } else {
-                Sites.findOne({siteName: util.cleanString(req.body.siteName)}, function (existingErr, existingSite) {
-                    if (existingErr) {
-                        req.flash('info', 'Existing site query error');
-                        res.redirect('/admin/sites');
-                    } else if (!existingSite || existingSite.siteName === site.siteName) {
-                        site.siteName = req.body.siteName;
+        Sites.findOne({sitename: req.params.sitename}).exec()
+        .then(function (site) {
+            if (!site || existing.siteName === site.siteName) {
+                    site.siteName = req.body.siteName;
                         site.siteUrl = req.body.siteUrl;
                         site.isPrivate = req.body.isPrivate;
                         site.allowedUsers = req.body.allowedUsers;
                         site.save();
                         req.flash('info', 'Site updated!');
-                        res.redirect('/admin/users');
-                    } else {
-                        req.flash('info', 'Site name already in use');
                         res.redirect('/admin/sites');
-                    }
-                });
+            } else {
+                req.flash('info', 'Site name already in use');
+                res.redirect('/admin/sites');
             }
         });
     } else {
@@ -98,7 +94,7 @@ router.post('/remove/:id', function (req, res) {
         Sites.remove({_id: req.params.id}, function (err, site) {
             if (err) {
                 req.flash('info', 'An error occurred deleting site');
-                res.redirect('/admin/sites');
+                res.redirect('/sites');
             } else {
                 req.flash('info', 'Site removed!');
                 res.redirect('/admin/sites');
