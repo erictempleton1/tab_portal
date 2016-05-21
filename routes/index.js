@@ -1,7 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var passport = require('passport');
-var Account = require('../models/account');
+var express = require('express'),
+    router = express.Router(),
+    passport = require('passport'),
+    Account = require('../models/account'),
+    Promise = require('bluebird');
 
 
 router.get('/', function (req, res) {
