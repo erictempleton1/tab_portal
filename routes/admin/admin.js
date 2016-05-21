@@ -8,6 +8,7 @@ var express = require('express'),
     authUtil = require('../../utility/tabServerAuth'),
     util = require('../../utility/utility'),
     ServerToken = require('../../models/serverToken'),
+    Promise = require('bluebird'),
     Sites = require('../../models/sites');
 
 
@@ -15,14 +16,11 @@ router.get('/', function (req, res) {
     // main admin page
     if (req.user && req.user.isAdmin) {
         // query the server token to show in the UI
-        ServerToken.findOne({}, function (err, token) {
-            if (err) {
-                req.flash('info', 'There was an error querying the token');
-            } else {
-                res.render('admin/admin', {
-                    serverToken: token
-                });
-            }
+        var serverToken = ServerToken.findOne({}).exec();
+        serverToken.then(function (token) {
+            res.render('admin/admin', {serverToken: token});
+        }).catch(function (err) {
+            req.flash('info', 'There was an error querying the token');
         });
     } else {
         req.flash('info', 'Unauthorized');
@@ -30,6 +28,8 @@ router.get('/', function (req, res) {
     }
 });
 
+
+// todo - conver this over to promises
 router.post('/', function (req, res) {
     // request an access token from tab server and save
     if (req.user && req.user.isAdmin) {
