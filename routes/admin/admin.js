@@ -29,7 +29,7 @@ router.get('/', function (req, res) {
 });
 
 
-// todo - conver this over to promises
+// todo - convert this over to promises or just remove it all together for now
 router.post('/', function (req, res) {
     // request an access token from tab server and save
     if (req.user && req.user.isAdmin) {

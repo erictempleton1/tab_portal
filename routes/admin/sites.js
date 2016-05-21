@@ -7,13 +7,11 @@ var express = require('express'),
 router.get('/', function (req, res) {
     // page for listing all sites
     if (req.user && req.user.isAdmin) {
-        Sites.find({}, function (err, sites) {
-            if (err) {
-                req.flash('info', 'There was an error loading sites >> ' + err);
-                res.redirect('admin');
-            } else {
-                res.render('admin/sites_list', {sites: sites});
-            }
+        var findSites = Sites.find({}).exec();
+        findSites.then(function (sites) {
+            res.render('admin/sites_list', {sites: sites});
+        }).catch(function (err) {
+            req.flash('info', 'There was an error loading sites >> ' + err);
         });
     } else {
         req.flash('info', 'Unauthorized');
@@ -24,21 +22,20 @@ router.get('/', function (req, res) {
 router.get('/edit/:id', function (req, res) {
     // get a single site
     if (req.user && req.user.isAdmin) {
-        Sites.findOne({_id: req.params.id}, function (err, site) {
-            if (err) {
-                req.flash('info', 'There was an error');
-                res.redirect('/admin');
-            } else {
-                // get all users to populate the site users select form
-                Account.find({}, function (err, users) {
-                    if (err) {
-                        req.flash('info', 'Unable to load users');
-                        res.redirect('admin/new_site');
-                    } else {
-                        res.render('admin/site_edit', {site: site, users: users});
-                    }
-                });
-            }
+        // execute the queries in paralell since they don't depend on each other.
+        var findSitesAccounts = [
+            Sites.findOne({_id: req.params.id}).exec(),
+            Account.find({}).exec()
+        ]
+        Promise.all(findSitesAccounts).then(function (result) {
+            // access the result of the execs, and send to template
+            var site = result[0],
+                users = result[1];
+            console.log(result);  
+            res.render('admin/site_edit', {site: site, users: users});
+        }).catch(function (err) {
+            req.flash('info', 'There was an error loading site');
+            res.redirect('admin/sites');
         });
     } else {
         req.flash('info', 'Unauthorized');
