@@ -47,7 +47,6 @@ router.get('/edit/:sitename', function (req, res) {
     }
 });
 
-// todo - make sure this is working!
 router.post('/edit/:sitename', function (req, res) {
     if (req.user && req.user.isAdmin) {
         // todo - need some form validation here!
@@ -55,25 +54,16 @@ router.post('/edit/:sitename', function (req, res) {
             Sites.findOne({siteName: req.params.sitename}).exec(),
             Sites.findOne({siteName: req.body.siteName}).exec()
         ];
-        
-        // todo - add some code here and remove the code below!
-        
-        Sites.findOne({siteName: req.params.sitename}).exec()
-        .then(function (site) {
-            // first make sure that the site post'd exists
-            if (site) {
-                return Sites.findOne({siteName: req.body.siteName}).exec();
-            } else {
+        // run the two queries in parallel
+        Promise.all(checkSitesQueries).then(function (siteResults) {
+            var site = siteResults[0],
+                existingSite = siteResults[1];
+            // check to be sure the site actually exists before going any futher    
+            if (!site) {
                 req.flash('info', 'Site not found');
                 res.redirect('/admin/sites');
-            }
-        })
-        .bind(site)
-        .then(function (existingSite) {
-            console.log(!existingSite);
-            console.log(site);
-            if (!existingSite || existingSite.siteName === site.siteName) {
-                console.log('ok');
+            // save if the site name is unchanged, or isn't already in use
+            } else if (!existingSite || existingSite.siteName === site.siteName) {
                 site.siteName = req.body.siteName;
                 site.siteUrl = req.body.siteUrl;
                 site.isPrivate = req.body.isPrivate;
@@ -85,6 +75,9 @@ router.post('/edit/:sitename', function (req, res) {
                 req.flash('info', 'Site name already in use');
                 res.redirect('/admin/sites');
             }
+        }).catch(function (err) {
+            req.flash('info', 'There was an error loading the site');
+            res.redirect('/admin/sites');
         });
     } else {
         req.flash('info', 'Unauthorized');
