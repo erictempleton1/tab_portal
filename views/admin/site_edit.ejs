@@ -11,7 +11,7 @@
   <p><%= "allowed users: " + site.allowedUsers %></p>
   <p><%= "site Url: " + site.siteUrl %></p>
   <p><%= "private: " + site.isPrivate %></p>
-  <form method="POST" action="/admin/sites/edit/<%= site._id %>">
+  <form method="POST" action="/admin/sites/edit/<%= site.siteName %>">
     <p>
       <label>Site Name:</label>
       <input type="text" name="siteName" value="<%= site.siteName %>">

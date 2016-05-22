@@ -19,7 +19,6 @@ router.get('/', function (req, res) {
     }
 });
 
-// todo - work on this route!
 router.get('/edit/:sitename', function (req, res) {
     // get a single site
     if (req.user && req.user.isAdmin) {
@@ -27,7 +26,7 @@ router.get('/edit/:sitename', function (req, res) {
         var findSitesAccounts = [
             Sites.findOne({siteName: req.params.sitename}).exec(),
             Account.find({}).exec()
-        ]
+        ];
         Promise.all(findSitesAccounts).then(function (result) {
             // access the result of the execs, and send to template
             var site = result[0],
@@ -48,18 +47,40 @@ router.get('/edit/:sitename', function (req, res) {
     }
 });
 
+// todo - make sure this is working!
 router.post('/edit/:sitename', function (req, res) {
     if (req.user && req.user.isAdmin) {
-        Sites.findOne({sitename: req.params.sitename}).exec()
+        // todo - need some form validation here!
+        var checkSitesQueries = [
+            Sites.findOne({siteName: req.params.sitename}).exec(),
+            Sites.findOne({siteName: req.body.siteName}).exec()
+        ];
+        
+        // todo - add some code here and remove the code below!
+        
+        Sites.findOne({siteName: req.params.sitename}).exec()
         .then(function (site) {
-            if (!site || existing.siteName === site.siteName) {
-                    site.siteName = req.body.siteName;
-                        site.siteUrl = req.body.siteUrl;
-                        site.isPrivate = req.body.isPrivate;
-                        site.allowedUsers = req.body.allowedUsers;
-                        site.save();
-                        req.flash('info', 'Site updated!');
-                        res.redirect('/admin/sites');
+            // first make sure that the site post'd exists
+            if (site) {
+                return Sites.findOne({siteName: req.body.siteName}).exec();
+            } else {
+                req.flash('info', 'Site not found');
+                res.redirect('/admin/sites');
+            }
+        })
+        .bind(site)
+        .then(function (existingSite) {
+            console.log(!existingSite);
+            console.log(site);
+            if (!existingSite || existingSite.siteName === site.siteName) {
+                console.log('ok');
+                site.siteName = req.body.siteName;
+                site.siteUrl = req.body.siteUrl;
+                site.isPrivate = req.body.isPrivate;
+                site.allowedUsers = req.body.allowedUsers;
+                site.save();
+                req.flash('info', 'Site updated!');
+                res.redirect('/admin/sites');
             } else {
                 req.flash('info', 'Site name already in use');
                 res.redirect('/admin/sites');
