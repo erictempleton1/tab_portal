@@ -7,8 +7,8 @@ var express = require('express'),
 router.get('/', function (req, res) {
     // page for listing all sites
     if (req.user && req.user.isAdmin) {
-        var findSites = Sites.find({}).exec();
-        findSites.then(function (sites) {
+        Sites.find({}).exec()
+        .then(function (sites) {
             res.render('admin/sites_list', {sites: sites});
         }).catch(function (err) {
             req.flash('info', 'There was an error loading sites >> ' + err);
@@ -85,16 +85,15 @@ router.post('/edit/:sitename', function (req, res) {
     }
 });
 
-router.get('/remove/:id', function (req, res) {
+router.get('/remove/:sitename', function (req, res) {
     // page for confirming site deletion
     if (req.user && req.user.isAdmin) {
-        Sites.findOne({_id: req.params.id}, function (err, site) {
-            if (err) {
-                req.flash('info', 'An error occurred finding site');
-                res.redirect('/admin/sites');
-            } else {
-                res.render('admin/remove_site', {site: site});
-            }
+        Sites.findOne({siteName: req.params.sitename}).exec()
+        .then(function (site) {
+            res.render('admin/remove_site', {site: site});
+        }).catch(function (err) {
+            req.flash('info', 'There was an error loading site >> ' + err);
+            res.redirect('/admin/sites');
         });
     } else {
         req.flash('info', 'Unauthorized');
@@ -102,17 +101,16 @@ router.get('/remove/:id', function (req, res) {
     }
 });
 
-router.post('/remove/:id', function (req, res) {
+router.post('/remove/:sitename', function (req, res) {
     // post request to delete a site
     if (req.user && req.user.isAdmin) {
-        Sites.remove({_id: req.params.id}, function (err, site) {
-            if (err) {
-                req.flash('info', 'An error occurred deleting site');
-                res.redirect('/sites');
-            } else {
-                req.flash('info', 'Site removed!');
-                res.redirect('/admin/sites');
-            }
+        Sites.remove({siteName: req.params.sitename}).exec()
+        .then(function (site) {
+            req.flash('info', 'Site removed!');
+            res.redirect('/admin/sites');
+        }).catch(function (err) {
+            req.flash('info', 'An error occurred while deleting site');
+            res.redirect('/admin/sites');
         });
     } else {
         req.flash('info', 'Unauthorized');

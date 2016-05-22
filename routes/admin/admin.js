@@ -16,8 +16,8 @@ router.get('/', function (req, res) {
     // main admin page
     if (req.user && req.user.isAdmin) {
         // query the server token to show in the UI
-        var serverToken = ServerToken.findOne({}).exec();
-        serverToken.then(function (token) {
+        ServerToken.findOne({}).exec()
+        .then(function (token) {
             res.render('admin/admin', {serverToken: token});
         }).catch(function (err) {
             req.flash('info', 'There was an error querying the token');
