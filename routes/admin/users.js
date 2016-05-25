@@ -13,7 +13,7 @@ router.get('/', function (req, res) {
             res.render('admin/users_list', {users: users});
         }).catch(function (err) {
             req.flash('info', 'Error getting users >> ' + err);
-            res.redirect('/admin/sites');
+            res.redirect('/admin');
         });
     } else {
         req.flash('info', 'Unauthorized');
@@ -25,13 +25,13 @@ router.get('/edit/:id', function (req, res) {
     // admin can view/edit a single user
     if (req.user && req.user.isAdmin) {
         // query the single user using the _id param
-        Account.findOne({_id: req.params.id}, function (err, user) {
-            if (err) {
-                req.flash("info", "User not found");
-                res.redirect(301, '/admin');
-            } else {
-                res.render('admin/user_edit', {user: user});
-            }
+        // todo - might need to change this to username instead!
+        Account.findOne({_id: req.params.id}).exec()
+        .then(function (user) {
+            res.render('admin/user_edit', {user: user});
+        }).catch(function (err) {
+            req.flash('info', 'Error querying user >> ' + err);
+            res.redirect('/admin/users');
         });
     } else {
         req.flash('info', 'Unauthorized');
@@ -39,6 +39,7 @@ router.get('/edit/:id', function (req, res) {
     }
 });
 
+// todo - similar to sites, work some paralell query magic here!
 router.post('/edit/:id', function(req, res) {
     // post request to edit a single user
     if (req.user && req.user.isAdmin) {
