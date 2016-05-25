@@ -8,13 +8,12 @@ var express = require('express'),
 router.get('/', function (req, res) {
     // page for listing all users
     if (req.user && req.user.isAdmin) {
-        Account.find({}, function (err, users) {
-            if (err) {
-                req.flash('info', 'There was an error loading users >> ' + err);
-                res.redirect('admin');
-            } else {
-                res.render('admin/users_list', {users: users});
-            }
+        Account.find({}).exec()
+        .then(function (users) {
+            res.render('admin/users_list', {users: users});
+        }).catch(function (err) {
+            req.flash('info', 'Error getting users >> ' + err);
+            res.redirect('/admin/sites');
         });
     } else {
         req.flash('info', 'Unauthorized');
