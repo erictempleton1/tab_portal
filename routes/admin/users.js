@@ -21,7 +21,7 @@ router.get('/', function (req, res) {
     }
 });
 
-router.get('/edit/:id', function (req, res) {
+router.get('/edit/:username', function (req, res) {
     // admin can view/edit a single user
     if (req.user && req.user.isAdmin) {
         // query the single user using the _id param
@@ -39,32 +39,30 @@ router.get('/edit/:id', function (req, res) {
     }
 });
 
-// todo - similar to sites, work some paralell query magic here!
-router.post('/edit/:id', function(req, res) {
+// todo - switch out ejs to use username instead of _id
+router.post('/edit/:username', function(req, res) {
     // post request to edit a single user
     if (req.user && req.user.isAdmin) {
-        Account.findOne({_id: req.params.id}, function (err, user) {
-            if (err) {
-                req.flash('info', 'An error occurred');
+        var checkAccountQueries = [
+            Account.findOne({username: req.params.username}).exec(),
+            Account.findOne({username: req.body.username}).exec()
+        ];
+        // run the two queries in paralell
+        Promise.all(checkAccountQueries).then(function (userResults) {
+            var user = userResults[0],
+                existingUser = userResults[1];
+            if (!user) {
+                req.flash('info', 'User not found');
+                res.redirect('/admin/sites');
+            } else if (!existingUser || existingUser.username === user.username) {
+                user.username = req.body.username;
+                user.isAdmin = req.body.isAdmin;
+                user.save();
+                req.flash('info', 'User updated!');
                 res.redirect('/admin/users');
             } else {
-                // check for existing username
-                Account.findOne({username: req.body.username}, function (existingErr, existingUser) {
-                    if (existingErr) {
-                        req.flash('info', 'Existing user query error');
-                        res.redirect('/admin/users');
-                    } else if (!existingUser || existingUser.username === user.username) {
-                        // users can keep the same username or change to one not in use
-                        user.username = req.body.username;
-                        user.isAdmin = req.body.isAdmin;
-                        user.save();
-                        req.flash('info', 'User updated!');
-                        res.redirect('/admin/users');
-                    } else {
-                        req.flash('info', 'Username already in use');
-                        res.redirect('/admin/users');
-                    }
-                });
+                req.flash('info', 'Username already in use');
+                res.redirect('/admin/users');
             }
         });
     } else {
