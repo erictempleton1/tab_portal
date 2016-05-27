@@ -71,16 +71,15 @@ router.post('/edit/:username', function(req, res) {
     }
 });
 
-router.get('/remove/:id', function (req, res) {
+router.get('/remove/:username', function (req, res) {
     // page for confirming user deletion
     if (req.user && req.user.isAdmin) {
-        Account.findOne({_id: req.params.id}, function (err, user) {
-            if (err) {
-                req.flash('info', 'An error occurred finding user');
-                res.redirect('/admin/users');
-            } else {
-                res.render('admin/remove_user', {user: user});
-            }
+        Account.findOne({username: req.params.username}).exec()
+        .then(function (user) {
+            res.render('admin/remove_user', {user: user});
+        }).catch(function (err) {
+            req.flash('info', 'There was an error loading user >> ' + err);
+            res.redirect('/admin/users');
         });
     } else {
         req.flash('info', 'Unauthorized');
@@ -88,17 +87,16 @@ router.get('/remove/:id', function (req, res) {
     }
 });
 
-router.post('/remove/:id', function (req, res) {
+router.post('/remove/:username', function (req, res) {
     // post request to delete a user
     if (req.user && req.user.isAdmin) {
-        Account.remove({_id: req.params.id}, function (err, user) {
-            if (err) {
-                req.flash('info', 'An error occurred deleting user');
-                res.redirec('/admin/users');
-            } else {
-                req.flash('info', 'User removed!');
-                res.redirect('/admin/users');
-            }
+        Account.remove({username: req.params.username}).exec()
+        .then(function (user) {
+            req.flash('info', 'User removed');
+            res.redirect('/admin/users');
+        }).catch(function (err) {
+            req.flash('info', 'An error occurred deleting user');
+            res.redirect('/admin/users');
         });
     } else {
         req.flash('info', 'Unauthorized');
