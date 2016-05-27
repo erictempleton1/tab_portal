@@ -26,7 +26,7 @@ router.get('/edit/:username', function (req, res) {
     if (req.user && req.user.isAdmin) {
         // query the single user using the _id param
         // todo - might need to change this to username instead!
-        Account.findOne({_id: req.params.id}).exec()
+        Account.findOne({username: req.params.username}).exec()
         .then(function (user) {
             res.render('admin/user_edit', {user: user});
         }).catch(function (err) {
