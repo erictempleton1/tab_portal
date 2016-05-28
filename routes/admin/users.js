@@ -114,7 +114,6 @@ router.get('/new', function (req, res) {
     }
 });
 
-// todo - figure out why this isn't rendering
 router.post('/new', function (req, res) {
     // post request for adding a new user
     if (req.user && req.user.isAdmin) {
@@ -124,15 +123,15 @@ router.post('/new', function (req, res) {
             regDate: Date.now(),
             lastLogin: Date.now(),
         };
-        Account.register(new Account(regInfo), req.body.password).exec()
-        .then(function (account) {
-            passport.authenticate('local')(req, res, function() {
-                res.redirect('/admin/users');
-            });
-        }).catch(function (err) {
-            req.flash('info', 'Please try a different username');
-            res.render('admin/add_user');
+        Account.register(new Account(regInfo), req.body.password, function (err, account) {
+        if (err) {
+          req.flash("info", "Sorry, this account already exists");
+          return res.render('admin/add_user')
+        }
+        passport.authenticate('local')(req, res, function() {
+          res.redirect('/admin/users');
         });
+      });
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(302, '/');

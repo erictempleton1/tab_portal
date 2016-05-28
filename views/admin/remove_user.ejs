@@ -10,7 +10,7 @@
     <p>Admin: <%= (user.isAdmin) %></p>
     <p>Reg Date: <%= (user.regDate) %></p>
     <p>Last Login: <%= user.lastLogin %></p>
-    <form method="POST" action="/admin/users/remove/<%= user._id %>">
+    <form method="POST" action="/admin/users/remove/<%= user.username %>">
         <input type="submit" value="Remove User">
     </form>
     </body>
