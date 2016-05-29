@@ -125,12 +125,12 @@ router.post('/new', function (req, res) {
         };
         Account.register(new Account(regInfo), req.body.password, function (err, account) {
         if (err) {
-          req.flash("info", "Sorry, this account already exists");
-          return res.render('admin/add_user')
+            req.flash("info", "Sorry, this account already exists");
+            res.render('admin/add_user');
+        } else {
+            req.flash('info', 'User created');
+            res.redirect('/admin/users');
         }
-        passport.authenticate('local')(req, res, function() {
-          res.redirect('/admin/users');
-        });
       });
     } else {
         req.flash('info', 'Unauthorized');
