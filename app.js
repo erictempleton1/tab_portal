@@ -12,7 +12,7 @@ var express = require('express'),
 
 // route files
 var routes = require('./routes/index'),
-    sites = require('./routes/sites'),
+    site = require('./routes/site/site'),
     admin = require('./routes/admin/admin'),
     adminUsers = require('./routes/admin/users'),
     adminSites = require('./routes/admin/sites'),
@@ -46,10 +46,10 @@ app.use(function (req, res, next) {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/sites/', sites);
 app.use('/admin', admin);
 app.use('/admin/users/', adminUsers);
 app.use('/admin/sites/', adminSites);
+app.use('/site/', site);
 app.use('/user/', user);
 
 // passport config
