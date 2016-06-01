@@ -4,10 +4,12 @@ var express = require('express'),
     Sites = require('../../models/sites');
     
 router.get('/:sitename', function (req, res) {
+    // render the site page that displays the given workbook
     if (req.user) {
         Sites.findOne({siteName: req.params.sitename}).exec()
         .then(function (site) {
             if (site) {
+                // make sure that the user is allowed to view the site or an admin
                 if (site.allowedUsers.indexOf(req.user.username) >= 0 || req.user.isAdmin) {
                     res.render('site/site_page', {site: site});
                 } else {
