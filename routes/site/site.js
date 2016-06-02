@@ -11,7 +11,7 @@ router.get('/:sitename', function (req, res) {
             if (site) {
                 // make sure that the user is allowed to view the site or an admin
                 if (site.allowedUsers.indexOf(req.user.username) >= 0 || req.user.isAdmin) {
-                    res.render('site/site_page', {site: site});
+                    res.render('site/site_page', {site: site, user: req.user});
                 } else {
                     req.flash('info', 'User is not authorized to view this site');
                     res.redirect('/');
