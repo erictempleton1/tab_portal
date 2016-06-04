@@ -1,6 +1,6 @@
-var request = require('request');
-var config = require('../config');
-var parseString = require('xml2js').parseString;
+var request = require('request'),
+    config = require('../config'),
+    parseString = require('xml2js').parseString;
 
 
 exports.getTabServerToken = function(callback) {

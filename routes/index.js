@@ -18,6 +18,7 @@ router.get('/login', function (req, res) {
   }
 });
 
+// todo - add tab server trusted ticket request here?
 router.post('/login', passport.authenticate("local", {
         failureRedirect: "/login",
         failureFlash: "Invalid username or password"
