@@ -38,7 +38,7 @@ router.post('/:sitename', function(req, res) {
         .then(function (site) {
             if (site) {
                 if (site.allowedUsers.indexOf(req.user.username) >= 0 || req.user.isAdmin) {
-                    // todo - post request logic here!
+                    // todo - get trusted ticket post request
                 } else {
                     req.flash('info', 'User is not authorized to view this site');
                     res.redirect('/');

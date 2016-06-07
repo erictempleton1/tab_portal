@@ -1,6 +1,7 @@
 var request = require('request'),
     config = require('../config'),
-    parseString = require('xml2js').parseString;
+    parseString = require('xml2js').parseString,
+    Promise = require('bluebird');
 
 
 exports.getTabServerToken = function(callback) {
@@ -27,5 +28,29 @@ exports.getTabServerToken = function(callback) {
                 callback(null, parsedResp);
             });
         }
+    });
+}
+
+exports.getTrustedTicket = function(username, siteName, clientIp) {
+    var ticketReqUrl = config.tabServer.baseUrl + 'trusted',
+        formData = {username: username, target_site: siteName},
+        options = {
+            url: ticketReqUrl,
+            body: formData,
+        };
+    // check for optional clientIp and add to form data 
+    if (clientIp) {
+        formData.client_ip = clientIp;
+    };
+    return new Promise(function (resolve, reject) {
+        request.post(options, function (err, resp, body) {
+            if (err) {
+                return reject(err);
+            } else if (res.statusCode !== 200) {
+                err = new Error('Unexpected status code >> ' + res.statusCode);
+                return reject(err);
+            }
+            return resolve(body);
+        });
     });
 }
