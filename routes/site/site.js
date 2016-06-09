@@ -1,5 +1,7 @@
 var express = require('express'),
     router = express.Router(),
+    util = require('../../utility/utility'),
+    tabServerUtil = require('../../utility/tabServerAuth'),
     Account = require('../../models/account'),
     Sites = require('../../models/sites');
     
@@ -38,7 +40,11 @@ router.post('/:sitename', function(req, res) {
         .then(function (site) {
             if (site) {
                 if (site.allowedUsers.indexOf(req.user.username) >= 0 || req.user.isAdmin) {
-                    // todo - get trusted ticket post request
+                    tabServerUtil.getTrustedTicket(req.user.username, req.params.sitename)
+                    .then(function (ticket) {
+                        console.log(ticket);
+                    });
+                    res.redirect('/site/' + req.params.sitename);
                 } else {
                     req.flash('info', 'User is not authorized to view this site');
                     res.redirect('/');

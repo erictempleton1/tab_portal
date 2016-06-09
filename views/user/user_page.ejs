@@ -17,6 +17,9 @@
                 <%= "allowed users: " + sites[i].allowedUsers %>
                 <%= "site Url: " + sites[i].siteUrl %>
                 <%= "private: " + sites[i].isPrivate %>
+                <form method="POST" action="/site/<%= sites[i].siteName %>">
+                <input type="submit" value="View Site">
+                </form>
             </li>
         <% } %>
     <% } else { %>
