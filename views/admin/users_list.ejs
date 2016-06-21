@@ -12,7 +12,7 @@
     <% if (users.length > 0) { %>
         <% for(var i = 0; i < users.length; i++) { %>
             <li>
-                <a href="/sites/<%= users[i].username %>"><%= users[i].username %></a>
+                <%= users[i].username %>
                 <a href="/user/<%= users[i].username %>">user site</a>
                 <%= "|| admin: " + users[i].isAdmin %>
                 <%= "|| registered: " + users[i].regDate %>

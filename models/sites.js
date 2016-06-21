@@ -7,7 +7,8 @@ var Sites = new Schema({
     allowedUsers: Array,
     siteUrl: String,
     siteName: String,
-    isPrivate: Boolean
+    isPrivate: Boolean,
+    requestTrustedTicket: Boolean
 });
 
 module.exports = mongoose.model('Sites', Sites);

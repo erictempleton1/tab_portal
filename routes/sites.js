@@ -5,17 +5,9 @@ var express = require('express'),
 
 // todos -
 
-// need to re-think this route. the portal should be site first centric, so need to change
-// this route to use the site name instead.
-
 // keep the findone query, but search for the site name instead, then check if the site is private,
 // and if so, can the given user access it. redirect to homepage otherwise.
 
-// create a basic home page for each user that lists their site membership?
-
-// site pages and user pages should be seperate entities. 
-
-// switch to promises!
 
 router.get('/:username', function (req, res) {
   Account.findOne({'username': req.params.username}, function (err, user) {

@@ -7,7 +7,8 @@ var Account = new Schema({
     password: String,
     isAdmin: Boolean,
     regDate: Date,
-    lastLogin: Date
+    lastLogin: Date,
+    trustedTicket: String
 });
 
 Account.plugin(passportLocalMongoose);

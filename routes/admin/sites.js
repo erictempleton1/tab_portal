@@ -68,6 +68,7 @@ router.post('/edit/:sitename', function (req, res) {
                 site.siteUrl = req.body.siteUrl;
                 site.isPrivate = req.body.isPrivate;
                 site.allowedUsers = req.body.allowedUsers;
+                site.requestTrustedTicket = req.body.requestTrustedTicket;
                 site.save();
                 req.flash('info', 'Site updated!');
                 res.redirect('/admin/sites');

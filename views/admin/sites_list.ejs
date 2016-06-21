@@ -13,6 +13,7 @@
         <% for(var i = 0; i < sites.length; i++) { %>
             <li>
                 <a href="/site/<%= sites[i].siteName %>"><%= sites[i].siteName %></a>
+                <%= "request ticket: " + sites[i].requestTrustedTicket %>
                 <%= "site name: " + sites[i].siteName %>
                 <%= "created: " + sites[i].createdDate %>
                 <%= "allowed users: " + sites[i].allowedUsers %>
