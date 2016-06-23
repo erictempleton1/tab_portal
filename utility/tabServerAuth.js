@@ -31,23 +31,19 @@ exports.getTabServerToken = function(callback) {
     });
 }
 
-exports.getTrustedTicket = function(username, siteName, clientIp) {
+exports.getTrustedTicket = function(username, siteName) {
     var ticketReqUrl = config.tabServer.baseUrl + 'trusted',
         formData = {username: username, target_site: siteName},
         options = {
-            url: ticketReqUrl,
+            uri: ticketReqUrl,
             body: formData,
         };
-    // check for optional clientIp and add to form data 
-    if (clientIp) {
-        formData.client_ip = clientIp;
-    };
     return new Promise(function (resolve, reject) {
         request.post(options, function (err, resp, body) {
             if (err) {
                 return reject(err);
             } else if (res.statusCode !== 200) {
-                err = new Error('Unexpected status code >> ' + res.statusCode);
+                err = new Error('Unexpected status code');
                 return reject(err);
             }
             return resolve(body);
