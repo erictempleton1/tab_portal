@@ -39,13 +39,14 @@ exports.getTrustedTicket = function(username, siteName) {
             body: formData,
         };
     return new Promise(function (resolve, reject) {
-        request.post(options, function (err, resp, body) {
+        request.post(options.uri, {form: formData}, function (err, res, body) {
             if (err) {
                 return reject(err);
-            } else if (res.statusCode !== 200) {
-                err = new Error('Unexpected status code');
+            } else if (res.statusCode === 500) {
+                err = new Error('Unexpected status code ' + res.statusCode);
                 return reject(err);
             }
+            console.log(body);
             return resolve(body);
         });
     });
