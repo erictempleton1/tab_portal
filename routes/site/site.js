@@ -44,7 +44,7 @@ router.post('/:sitename', function(req, res) {
                     .then(function (ticket) {
                         console.log(ticket);
                     });
-                    res.redirect('/site/' + req.params.sitename);
+                    res.render('site/site_page', {site: site, user: req.user});
                 } else {
                     req.flash('info', 'User is not authorized to view this site');
                     res.redirect('/');
