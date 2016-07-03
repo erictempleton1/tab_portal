@@ -46,7 +46,6 @@ exports.getTrustedTicket = function(username, siteName) {
                 err = new Error('Unexpected status code ' + res.statusCode);
                 return reject(err);
             }
-            console.log(body);
             return resolve(body);
         });
     });
