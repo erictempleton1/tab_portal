@@ -5,7 +5,7 @@ var request = require('request'),
 
 
 exports.getTabServerToken = function(callback) {
-    var tabReqUrl = config.tabServer.baseUrl + 'api/2.0/auth/signin';
+    var tabReqUrl = config.tabServer.baseUrl + 'api/2.2/auth/signin';
     var formData = '<tsRequest><credentials name=' + '"' + config.tabServer.username + '" ' +
                     'password=' + '"' + config.tabServer.password + '"' +
                      '><site contentUrl="" /></credentials></tsRequest>'
