@@ -17,12 +17,10 @@
   </body>
     <script>
     function initViz() {
-      // http://tabserver/trusted/<ticket>/t/Sales/views/<workbook>/<view> 
-      var trustedUrl = "http://<site-url>/trusted/<trusted ticket>/t/<site-name>/views/<workbook name>/<view>",
-          containerDiv = document.getElementById("vizContainer"),
-          url = "<%= (site.siteUrl) %>",
+      var containerDiv = document.getElementById("vizContainer"),
+          url = "<%= (renderUrl) %>",
           options = {hideToolbar: true},
-          viz = new tableau.Viz(containerDiv, trustedUrl, options);
+          viz = new tableau.Viz(containerDiv, url, options);
     }
     $(document).ready(function() {
         $(initViz);
