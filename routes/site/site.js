@@ -25,24 +25,35 @@ router.get('/:sitename', function (req, res) {
             if (site) {
                 // make sure that the user is allowed to view the site or an admin
                 if (site.allowedUsers.indexOf(req.user.username) >= 0 || req.user.isAdmin) {
-                    tabServerUtil.getTrustedTicket(req.user.username, req.params.sitename).
-                    then(function (ticket) {
-                        // build the url and pass to template
-                        var renderUrl = ticketUrl(site.siteUrl, ticket);
-                        if (renderUrl) {
-                            res.render('site/site_page', {
-                                site: site,
-                                user: req.user,
-                                renderUrl: renderUrl
-                            });
-                        } else {
-                            req.flash('info', 'Error building render url');
+                    var renderUrl;
+                    if (site.isTabServerViz) {
+                        tabServerUtil.getTrustedTicket(req.user.username, req.params.sitename).
+                        then(function (ticket) {
+                            // try to build the url and pass to template
+                            renderUrl = ticketUrl(site.siteUrl, ticket);
+                            if (renderUrl) {
+                                res.render('site/site_page', {
+                                    site: site,
+                                    user: req.user,
+                                    renderUrl: renderUrl
+                                });
+                            } else {
+                                req.flash('info', 'Error building render url');
+                                res.redirect('/');
+                            }
+                        }).catch(function (err) {
+                            req.flash('info', 'Error loading site');
                             res.redirect('/');
-                        }
-                    }).catch(function (err) {
-                        req.flash('info', 'Error loading site');
-                        res.redirect('/');
-                    });
+                        });
+                    } else {
+                        // set non-tab server url
+                        renderUrl = site.siteUrl;
+                        res.render('site/site_page', {
+                            site: site,
+                            user: req.user,
+                            renderUrl: site.siteUrl
+                        });
+                    }
                 } else {
                     req.flash('info', 'User is not authorized to view this site');
                     res.redirect('/');
