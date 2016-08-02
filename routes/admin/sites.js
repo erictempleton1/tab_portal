@@ -68,7 +68,7 @@ router.post('/edit/:sitename', function (req, res) {
                 site.siteUrl = req.body.siteUrl;
                 site.isPrivate = req.body.isPrivate;
                 site.allowedUsers = req.body.allowedUsers;
-                site.requestTrustedTicket = req.body.requestTrustedTicket;
+                site.isTabServerViz = req.body.isTabServerViz;
                 site.save();
                 req.flash('info', 'Site updated!');
                 res.redirect('/admin/sites');
@@ -155,7 +155,8 @@ router.post('/new', function (req, res) {
                         allowedUsers: req.body.allowedUsers,
                         siteUrl: req.body.siteUrl,
                         siteName: util.cleanString(req.body.siteName),
-                        isPrivate: req.body.isPrivate
+                        isPrivate: req.body.isPrivate,
+                        isTabServerViz: req.body.isTabServerViz
                     });
                     newSite.save();
                     req.flash('info', 'New site created');

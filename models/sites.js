@@ -8,7 +8,7 @@ var Sites = new Schema({
     siteUrl: String,
     siteName: String,
     isPrivate: Boolean,
-    requestTrustedTicket: Boolean
+    isTabServerViz: Boolean
 });
 
 module.exports = mongoose.model('Sites', Sites);

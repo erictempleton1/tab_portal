@@ -31,11 +31,11 @@
           <option value=true>True</option>
         <% } %>
       </select>
-    </p>
-    <p>
-      <label>Request Trusted Ticket:</label>
-      <select name="requestTrustedTicket">
-          <% if (site.requestTrustedTicket) { %>
+      </p>
+      <p>
+        <label>Is Tableau Server Viz:</label>
+        <select name="isTabServerViz">
+          <% if (site.isTabServerViz) { %>
             <option value=true>True</option>
             <option value=false>False</option>
           <% } else { %>
@@ -43,6 +43,7 @@
             <option value=true>True</option>
           <% } %>
         </select>
+      </p>
       <P>
         <label>Allowed Users:</label>
         <select name="allowedUsers" multiple>
