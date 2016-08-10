@@ -18,7 +18,7 @@ router.get('/', function (req, res) {
         // query the server token to show in the UI
         ServerToken.findOne({}).exec()
         .then(function (token) {
-            res.render('admin/admin', {serverToken: token});
+            res.render('admin/admin', {serverToken: token, user: req.user});
         }).catch(function (err) {
             req.flash('info', 'There was an error querying the token');
         });

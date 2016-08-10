@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Title</title>
-  </head>
+  <% include ../includes/index_header %>
   <body>
-    <h3><a href="/admin">Admin</a></h3>
-    <h4><a href="/admin/users">All Users</a></h4>
-    <h4><a href="/admin/sites">All Sites</a></h4>
-    <p>
-    Server token: <%= (serverToken.tabServerToken) %> (Refreshed: <%= (serverToken.refreshDate) %></p>
-    <form method="POST" action="/admin">
-        <input type="submit" value="Get Auth">
-    </form>
+    <% include ../includes/index_navbar %>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-2">
+          <h4><a href="/admin/users">All Users</a></h4>
+          <h4><a href="/admin/sites">All Sites</a></h4>
+          <p>
+          Server token: <%= (serverToken.tabServerToken) %> (Refreshed: <%= (serverToken.refreshDate) %></p>
+          <form method="POST" action="/admin">
+              <input type="submit" value="Get Auth">
+          </form>
+        </div>
+      </div>
+    </div>
+    <% include ../includes/index_footer %>
   </body>
 </html>
