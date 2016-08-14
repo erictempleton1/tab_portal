@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Login</title>
-  </head>
+  <% include includes/index_header %>
   <body>
-    <p>Login</p>
-    <%- messages() %>
-    <form method="POST" action="/login">
-        <p>
-            <label>Username:</label>
-            <input type="text" name="username">
-        </p>
-        <p>
-            <label>Password:</label>
-            <input type="password" name="password">
-        </p>
-        <p>
-            <input type="submit" value="Log In">
-        </p>
-    </form>
+    <% include includes/index_navbar %>
+    <div class="container">
+        <p>Login</p>
+        <%- messages() %>
+        <form id="loginForm" method="POST" action="/login">
+            <p>
+                <label>Username:</label>
+                <input type="text" name="username">
+            </p>
+            <p>
+                <label>Password:</label>
+                <input type="password" name="password">
+            </p>
+            <p>
+                <input type="submit" value="Log In">
+            </p>
+        </form>
+    </div>
+    <% include includes/index_footer %>
+    <script src="/javascripts/parsley.min.js"></script>
 </body>
+<script type="text/javascript">
+  $('#loginForm').parsley();
+</script>
 </html>
