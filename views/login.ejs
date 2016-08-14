@@ -9,11 +9,11 @@
         <form id="loginForm" method="POST" action="/login">
             <p>
                 <label>Username:</label>
-                <input type="text" name="username">
+                <input type="text" name="username" required="" data-parsley-error-message="Please Enter Username">
             </p>
             <p>
                 <label>Password:</label>
-                <input type="password" name="password">
+                <input type="password" name="password" required="" data-parsley-error-message="Please Enter Password">
             </p>
             <p>
                 <input type="submit" value="Log In">
