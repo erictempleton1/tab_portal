@@ -4,21 +4,29 @@
   <body>
     <% include includes/index_navbar %>
     <div class="container">
-        <p>Login</p>
-        <%- messages() %>
-        <form id="loginForm" method="POST" action="/login">
-            <p>
-                <label>Username:</label>
-                <input type="text" name="username" required="" data-parsley-error-message="Please Enter Username">
-            </p>
-            <p>
-                <label>Password:</label>
-                <input type="password" name="password" required="" data-parsley-error-message="Please Enter Password">
-            </p>
-            <p>
-                <input type="submit" value="Log In">
-            </p>
-        </form>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="lead center-index">
+                    Login
+                </div>
+                    <%- messages() %>
+                <form id="loginForm" method="POST" action="/login">
+                    <p>
+                        <label>Username:</label>
+                        <input type="text" class="form-control" name="username" required="" data-parsley-error-message="Please Enter Username">
+                    </p>
+                    <p>
+                        <label>Password:</label>
+                        <input type="password" class="form-control" name="password" required="" data-parsley-error-message="Please Enter Password">
+                    </p>
+                    <p>
+                        <input class="btn btn-default" type="submit" value="Log In">
+                    </p>
+                </form>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
     </div>
     <% include includes/index_footer %>
     <script src="/javascripts/parsley.min.js"></script>
