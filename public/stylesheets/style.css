@@ -4,7 +4,7 @@ body {
 }
 
 .center-index {
-  padding: 30px 5px;
+  padding: 25px 5px;
   text-align: center;
 }
 
@@ -13,12 +13,13 @@ body {
     border-color: #E7E7E7;
 }
 
+
 /* parsley css */
 input.parsley-success,
 select.parsley-success,
 textarea.parsley-success {
-  color: #468847;
-  background-color: #DFF0D8;
+  color: #777777;
+  background-color: #FFFFFF;
   border: 1px solid #D6E9C6;
 }
 
