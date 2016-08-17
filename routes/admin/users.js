@@ -10,7 +10,7 @@ router.get('/', function (req, res) {
     if (req.user && req.user.isAdmin) {
         Account.find({}).exec()
         .then(function (users) {
-            res.render('admin/users_list', {users: users});
+            res.render('admin/users_list', {users: users, user: req.user});
         }).catch(function (err) {
             req.flash('info', 'Error getting users >> ' + err);
             res.redirect('/admin');
