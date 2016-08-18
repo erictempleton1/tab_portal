@@ -3,9 +3,10 @@
   <% include ../includes/index_header %>
   <body>
     <% include ../includes/index_navbar %>
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
-                <h4><a href="/admin/users/new">Add User</a></h4>
+                <% include ../includes/admin/admin_navbar_left %>
+                <div class="col-md-8">
                 <h4>All Users</h4>
                 <p><%- messages() %></p>
                 <% if (users.length > 0) { %>
@@ -35,6 +36,8 @@
                 <% } else { %>
                     <p>No users found</p>
                 <% } %>
+                </div>
+                </div>
             </div>
         </div>
     </body>
