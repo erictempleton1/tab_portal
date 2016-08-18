@@ -5,27 +5,36 @@
     <% include ../includes/index_navbar %>
         <div class="container">
             <div class="row">
-                <h3><a href="/admin">Admin</a></h3>
                 <h4><a href="/admin/users/new">Add User</a></h4>
                 <h4>All Users</h4>
                 <p><%- messages() %></p>
-                <ul>
                 <% if (users.length > 0) { %>
-                    <% for(var i = 0; i < users.length; i++) { %>
-                        <li>
-                            <%= users[i].username %>
-                            <a href="/user/<%= users[i].username %>">user site</a>
-                            <%= "|| admin: " + users[i].isAdmin %>
-                            <%= "|| registered: " + users[i].regDate %>
-                            <%= "|| user _id: " + users[i]._id + " || " %>
-                            <a href="/admin/users/edit/<%= users[i].username %>">edit user</a>
-                            <a href="/admin/users/remove/<%= users[i].username %>">remove user</a>
-                        </li>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Is Admin</th>
+                                <th>Created</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+                    <tbody>
+                    <% for (var i = 0; i < users.length; i++) { %>
+                        <tr>
+                            <td><a href="/user/<%= users[i].username %>"><%= users[i].username %></a></td>
+                            <td><%= users[i].isAdmin %></td>
+                            <td><%= users[i].regDate %></td>
+                            <td>
+                            <a href="/admin/users/edit/<%= users[i].username %>">Edit</a> | 
+                            <a href="/admin/users/remove/<%= users[i].username %>">Remove</a>
+                            </td>
+                        </tr>
                     <% } %>
+                    </tbody>
+                </table>
                 <% } else { %>
                     <p>No users found</p>
                 <% } %>
-                </ul>
             </div>
         </div>
     </body>
