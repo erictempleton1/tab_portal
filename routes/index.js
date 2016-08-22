@@ -6,7 +6,21 @@ var express = require('express'),
 
 
 router.get('/', function (req, res) {
-  res.render('index', {user: req.user});
+  Account.find({}).exec()
+  .then(function (users) {
+    if (users.length > 0) {
+      res.render('index', {user: req.user});
+    } else {
+      // todo - create create_admin view
+      res.render('create_admin', {user: req.user});
+    }
+  }).catch(function (findOneErr) {
+      console.log(findOneErr);
+  });
+});
+
+router.post('/', function (req, res) {
+  // todo - check for users again and create admin user
 });
 
 router.get('/login', function (req, res) {
