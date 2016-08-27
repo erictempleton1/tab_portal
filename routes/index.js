@@ -35,6 +35,7 @@ router.post('/', function (req, res) {
       };
       // todo - this might need to be a callback instead. strange error thrown
       // [TypeError: Cannot read property 'exec' of undefined]
+      // TypeError: cb is not a function
       Account.register(new Account(regInfo), req.body.password).exec()
       .then(function (account) {
         req.flash('info', 'Admin user created');
