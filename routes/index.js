@@ -2,6 +2,7 @@ var express = require('express'),
     router = express.Router(),
     passport = require('passport'),
     Account = require('../models/account'),
+    util = require('../utility/utility'),
     Promise = require('bluebird');
 
 
@@ -11,7 +12,7 @@ router.get('/', function (req, res) {
     if (users.length > 0) {
       res.render('index', {user: req.user});
     } else {
-      // todo - create create_admin view
+      // no users have been found so prompt user to create an admin
       res.render('create_admin', {user: req.user});
     }
   }).catch(function (findOneErr) {
@@ -20,7 +21,31 @@ router.get('/', function (req, res) {
 });
 
 router.post('/', function (req, res) {
-  // todo - check for users again and create admin user
+  Account.find({}).exec()
+  .then(function (users) {
+    if (users.length > 0) {
+      req.flash('info', 'Invalid request');
+      res.redirect(301, '/');
+    } else {
+      var regInfo = {
+        username: util.cleanString(req.body.username),
+        isAdmin: true,
+        regDate: Date.now(),
+        lastLogin: Date.now()
+      };
+      // todo - this might need to be a callback instead. strange error thrown
+      // [TypeError: Cannot read property 'exec' of undefined]
+      Account.register(new Account(regInfo), req.body.password).exec()
+      .then(function (account) {
+        req.flash('info', 'Admin user created');
+        res.redirect('/');
+      }).catch(function (regError) {
+        console.log(regError);
+      });
+    }
+  }).catch(function (findError) {
+    console.log(findError);
+  });
 });
 
 router.get('/login', function (req, res) {

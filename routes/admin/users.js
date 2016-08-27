@@ -121,7 +121,7 @@ router.post('/new', function (req, res) {
             username: util.cleanString(req.body.username),
             isAdmin: false,
             regDate: Date.now(),
-            lastLogin: Date.now(),
+            lastLogin: Date.now()
         };
         Account.register(new Account(regInfo), req.body.password, function (err, account) {
         if (err) {
