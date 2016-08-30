@@ -25,7 +25,6 @@ router.get('/edit/:username', function (req, res) {
     // admin can view/edit a single user
     if (req.user && req.user.isAdmin) {
         // query the single user using the _id param
-        // todo - might need to change this to username instead!
         Account.findOne({username: req.params.username}).exec()
         .then(function (user) {
             res.render('admin/user_edit', {user: user});
@@ -39,7 +38,6 @@ router.get('/edit/:username', function (req, res) {
     }
 });
 
-// todo - switch out ejs to use username instead of _id
 router.post('/edit/:username', function(req, res) {
     // post request to edit a single user
     if (req.user && req.user.isAdmin) {

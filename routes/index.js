@@ -21,8 +21,10 @@ router.get('/', function (req, res) {
 });
 
 router.post('/', function (req, res) {
+  // post request for first startup when there is no admin user
   Account.find({}).exec()
   .then(function (users) {
+    // only allow this method when there are no other users
     if (users.length > 0) {
       req.flash('info', 'Invalid request');
       res.redirect(301, '/');
@@ -33,19 +35,16 @@ router.post('/', function (req, res) {
         regDate: Date.now(),
         lastLogin: Date.now()
       };
-      // todo - this might need to be a callback instead. strange error thrown
-      // [TypeError: Cannot read property 'exec' of undefined]
-      // TypeError: cb is not a function
-      Account.register(new Account(regInfo), req.body.password).exec()
-      .then(function (account) {
-        req.flash('info', 'Admin user created');
-        res.redirect('/');
-      }).catch(function (regError) {
-        console.log(regError);
+      Account.register(new Account(regInfo), req.body.password, function (regErr, account) {
+        if (regErr) {
+          req.flash('info', 'Error creating account: ' + regErr);
+          res.redirect('/');
+        } else {
+          req.flash('info', 'Admin user created');
+          res.redirect('/');
+        }
       });
     }
-  }).catch(function (findError) {
-    console.log(findError);
   });
 });
 
@@ -58,7 +57,6 @@ router.get('/login', function (req, res) {
   }
 });
 
-// todo - add tab server trusted ticket request here?
 router.post('/login', passport.authenticate("local", {
         failureRedirect: "/login",
         failureFlash: "Invalid username or password"
