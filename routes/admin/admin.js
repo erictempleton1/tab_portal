@@ -1,27 +1,29 @@
 var express = require('express'),
     router = express.Router(),
-    passport = require('passport'),
-    Account = require('../../models/account'),
-    Sites = require('../../models/sites'),
-    request = require('request'),
-    config = require('../../config'),
     authUtil = require('../../utility/tabServerAuth'),
-    util = require('../../utility/utility'),
     ServerToken = require('../../models/serverToken'),
-    Promise = require('bluebird'),
-    Sites = require('../../models/sites');
+    TabServerConfig = require('../../models/tabServerConfig');
 
 
 router.get('/', function (req, res) {
     // main admin page
     if (req.user && req.user.isAdmin) {
-        res.render('admin/admin', {user: req.user});
+        TabServerConfig.find({}).exec()
+        .then(function (config) {
+            if (config.length > 0) {
+                res.render('admin/admin', {user: req.user});
+            } else {
+                res.render('admin/create_config', {user: req.user});
+            }
+        }).catch(function (err) {
+            req.flash('info', 'An error occurred: ' + err);
+            res.redirect('/admin');
+        });
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(302, '/');
     }
 });
-
 
 // todo - convert this over to promises or just remove it all together for now
 router.post('/', function (req, res) {
