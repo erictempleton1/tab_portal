@@ -15,13 +15,7 @@ var express = require('express'),
 router.get('/', function (req, res) {
     // main admin page
     if (req.user && req.user.isAdmin) {
-        // query the server token to show in the UI
-        ServerToken.findOne({}).exec()
-        .then(function (token) {
-            res.render('admin/admin', {serverToken: token, user: req.user});
-        }).catch(function (err) {
-            req.flash('info', 'There was an error querying the token');
-        });
+        res.render('admin/admin', {user: req.user});
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(302, '/');
