@@ -5,15 +5,18 @@ var express = require('express'),
     util = require('../utility/utility'),
     Promise = require('bluebird');
 
+// todo - add check for config collection
+// allow user to create or skip. modify later in admin.
+
 
 router.get('/', function (req, res) {
   Account.find({}).exec()
   .then(function (users) {
     if (users.length > 0) {
       res.render('index', {user: req.user});
-    } else {
-      // no users have been found so prompt user to create an admin
-      res.render('create_admin', {user: req.user});
+    } else if (users.length == 0) {
+        // no users have been found so prompt user to create an admin
+        res.render('create_admin', {user: req.user});
     }
   }).catch(function (findOneErr) {
       console.log(findOneErr);
@@ -40,8 +43,8 @@ router.post('/', function (req, res) {
           req.flash('info', 'Error creating account: ' + regErr);
           res.redirect('/');
         } else {
-          req.flash('info', 'Admin user created');
-          res.redirect('/');
+          req.flash('info', 'Admin user created. Please log in.');
+          res.redirect('/login');
         }
       });
     }
