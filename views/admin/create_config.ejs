@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <% include ../includes/index_header %>
+  <body>
+    <% include ../includes/index_navbar %>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="lead center-index">
+                    Add Config
+                </div>
+                    <%- messages() %>
+                <form id="loginForm" method="POST" action="/admin">
+                    <p>
+                        <label>Tableau Server Username:</label>
+                        <input type="text" class="form-control" name="tabServerUsername" required="" data-parsley-error-message="Please Enter Username">
+                    </p>
+                    <p>
+                        <label>Tableau Server Password:</label>
+                        <input type="password" class="form-control" name="tabServerPassword" required="" data-parsley-error-message="Please Enter Password">
+                    </p>
+                    <p>
+                        <label>Tableau Server Url:</label>
+                        <input type="text" class="form-control" name="tabServerUrl" required="" data-parsley-error-message="Please Enter Url">
+                    </p>
+                    <p>
+                        <input class="btn btn-default" name="submit" type="submit" value="Add Config">
+                        <input class="btn btn-default" name="submit" type="submit" value="Skip For Now">
+                    </p>
+                </form>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+    </div>
+    <% include ../includes/index_footer %>
+    <script src="/javascripts/parsley.min.js"></script>
+</body>
+<script type="text/javascript">
+  $('#loginForm').parsley();
+</script>
+</html>

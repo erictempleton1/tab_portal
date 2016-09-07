@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
 var TabServerConfig = new Schema({
     tabServerUsername: String,
     tabServerPassword: String,
+    tabServerUrl: String,
     addedDate: Date,
     updatedDate: Date
 });
