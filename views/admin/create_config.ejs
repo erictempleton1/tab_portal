@@ -11,21 +11,21 @@
                     Add Config
                 </div>
                     <%- messages() %>
-                <form id="loginForm" method="POST" action="/admin">
+                <form id="configForm" method="POST" action="/admin">
                     <p>
                         <label>Tableau Server Username:</label>
-                        <input type="text" class="form-control" name="tabServerUsername" required="" data-parsley-error-message="Please Enter Username">
+                        <input id="tabServerUsername" type="text" class="form-control" name="tabServerUsername" data-parsley-error-message="Please Enter Username">
                     </p>
                     <p>
                         <label>Tableau Server Password:</label>
-                        <input type="password" class="form-control" name="tabServerPassword" required="" data-parsley-error-message="Please Enter Password">
+                        <input id="tabServerPassword" type="password" class="form-control" name="tabServerPassword" data-parsley-error-message="Please Enter Password">
                     </p>
                     <p>
                         <label>Tableau Server Url:</label>
-                        <input type="text" class="form-control" name="tabServerUrl" required="" data-parsley-error-message="Please Enter Url">
+                        <input id="tabServerUrl" type="text" class="form-control" name="tabServerUrl" data-parsley-error-message="Please Enter Url">
                     </p>
                     <p>
-                        <input class="btn btn-default" name="submit" type="submit" value="Add Config">
+                        <input id="submit" class="btn btn-default" name="submit" type="submit" value="Add Config">
                         <input class="btn btn-default" name="submit" type="submit" value="Skip For Now">
                     </p>
                 </form>
@@ -37,6 +37,14 @@
     <script src="/javascripts/parsley.min.js"></script>
 </body>
 <script type="text/javascript">
-  $('#loginForm').parsley();
+$(document).on("click", "#submit", function(e) {
+    // add required field attr if user clicks "Add Config" form validation
+    $("#tabServerUsername").attr("required", '""');
+    $("#tabServerPassword").attr("required", '""');
+    $("#tabServerUrl").attr("required", "''");
+
+    // init form validation for "Add Config" click
+    $("#configForm").parsley();
+});
 </script>
 </html>
