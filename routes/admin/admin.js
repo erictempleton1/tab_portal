@@ -10,9 +10,11 @@ router.get('/', function (req, res) {
     if (req.user && req.user.isAdmin) {
         TabServerConfig.find({}).exec()
         .then(function (config) {
+            // check if config file exists
             if (config.length > 0) {
                 res.render('admin/admin', {user: req.user});
             } else {
+                // ask user if they want to add config now
                 res.render('admin/create_config', {user: req.user});
             }
         }).catch(function (err) {
@@ -25,29 +27,20 @@ router.get('/', function (req, res) {
     }
 });
 
-// todo - convert this over to promises or just remove it all together for now
 router.post('/', function (req, res) {
-    // request an access token from tab server and save
     if (req.user && req.user.isAdmin) {
-        var parsedToken = authUtil.getTabServerToken(function (err, token) {
-            if (err) {
-                console.log(err);
+        TabServerConfig.find({}).exec()
+        .then(function (config) {
+            if (config.length == 0) {
+                console.log('tada!');
             } else {
-                var tokenInfo = new ServerToken({
-                    refreshDate: Date.now(),
-                    tabServerToken: token
-                });
-                tokenInfo.save(function (err) {
-                    if (err) {
-                        req.flash('info', 'An error occurred');
-                    } else {
-                        req.flash('info', 'Server token refreshed!');
-                        console.log(token);
-                    }
-                });
+                req.flash('info', 'Invalid request');
+                res.redirect(302, '/admin');
             }
+        }).catch(function (err) {
+            req.flash('info', 'An error occurred: ' + err);
+            res.redirect('/admin');
         });
-        res.redirect('/admin');
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(302, '/');
