@@ -32,7 +32,35 @@ router.post('/', function (req, res) {
         TabServerConfig.find({}).exec()
         .then(function (config) {
             if (config.length == 0) {
-                console.log('tada!');
+                if (req.body.hasOwnProperty('submit')) {
+                    if (req.body.submit === 'Add Config') {
+                        var configInfo = new TabServerConfig({
+                            tabServerUsername: req.body.tabServerUsername,
+                            tabServerPassword: req.body.tabServerPassword,
+                            tabServerUrl: req.body.tabServerUrl,
+                            addedDate: Date.now(),
+                            updatedDate: Date.now()
+                        });
+                        configInfo.save(function (saveError) {
+                            if (saveError) {
+                                req.flash('info', 'Error on save: ' + saveError);
+                                res.redirect('/');
+                            } else {
+                                req.flash('info', 'Config settings added');
+                                res.redirect('/admin');
+                            }
+                        });
+                    } else if (req.body.submit === 'Skip For Now') {
+                        // todo - save empty string fields here
+                        console.log('skip for now!');
+                    } else {
+                        req.flash('info', 'Unknown submit data');
+                        res.redirect('/');
+                    }
+                } else {
+                    req.flash('info', 'Missing submit data');
+                    res.redirect('/');
+                }
             } else {
                 req.flash('info', 'Invalid request');
                 res.redirect(302, '/admin');
