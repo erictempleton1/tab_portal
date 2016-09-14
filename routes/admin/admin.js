@@ -33,7 +33,8 @@ router.post('/', function (req, res) {
         .then(function (config) {
             if (config.length == 0) {
                 if (req.body.hasOwnProperty('submit')) {
-                    if (req.body.submit === 'Add Config') {
+                    var submitVal = req.body.submit;
+                    if (submitVal === 'Add Config') {
                         var configInfo = new TabServerConfig({
                             tabServerUsername: req.body.tabServerUsername,
                             tabServerPassword: req.body.tabServerPassword,
@@ -50,9 +51,10 @@ router.post('/', function (req, res) {
                                 res.redirect('/admin');
                             }
                         });
-                    } else if (req.body.submit === 'Skip For Now') {
+                    } else if (submitVal === 'Skip For Now') {
                         // todo - save empty string fields here
                         console.log('skip for now!');
+                        res.redirect('/');
                     } else {
                         req.flash('info', 'Unknown submit data');
                         res.redirect('/');
