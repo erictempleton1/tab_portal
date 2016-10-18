@@ -42,9 +42,9 @@ router.post('/', function (req, res) {
                             addedDate: Date.now(),
                             updatedDate: Date.now()
                         });
-                        configInfo.save(function (saveError) {
-                            if (saveError) {
-                                req.flash('info', 'Error on save: ' + saveError);
+                        configInfo.save(function (saveErr) {
+                            if (saveErr) {
+                                req.flash('info', 'Error on save: ' + saveErr);
                                 res.redirect('/');
                             } else {
                                 req.flash('info', 'Config settings added');
@@ -53,8 +53,22 @@ router.post('/', function (req, res) {
                         });
                     } else if (submitVal === 'Skip For Now') {
                         // todo - save empty string fields here
-                        console.log('skip for now!');
-                        res.redirect('/');
+                        var emptyConfigInfo = new TabServerConfig({
+                            tabServerUsername: null,
+                            tabServerPassword: null,
+                            tabServerUrl: null,
+                            addedDate: Date.now(),
+                            updatedDate: Date.now()
+                        });
+                        emptyConfigInfo.save(function (emptySaveErr) {
+                            if (emptySaveErr) {
+                                req.flash('info', 'Error on save: ' + emptySaveErr);
+                                res.redirect('/');
+                            } else {
+                                req.flash('info', 'Skipped setting config');
+                                res.redirect('/admin');
+                            }
+                        });
                     } else {
                         req.flash('info', 'Unknown submit data');
                         res.redirect('/');
