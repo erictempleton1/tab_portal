@@ -16,6 +16,7 @@ var routes = require('./routes/index'),
     admin = require('./routes/admin/admin'),
     adminUsers = require('./routes/admin/users'),
     adminSites = require('./routes/admin/sites'),
+    adminSettings = require('./routes/admin/settings'),
     user = require('./routes/user/user');
 
 
@@ -49,6 +50,7 @@ app.use('/', routes);
 app.use('/admin', admin);
 app.use('/admin/users/', adminUsers);
 app.use('/admin/sites/', adminSites);
+app.use('/admin/settings', adminSettings);
 app.use('/site/', site);
 app.use('/user/', user);
 
