@@ -32,7 +32,8 @@ router.post('/', function (req, res) {
         TabServerConfig.find({}).exec()
         .then(function (config) {
             if (config.length == 0) {
-                if (req.body.hasOwnProperty('submit')) {
+                console.log(req.body);
+                if (Object.hasOwnProperty.call(req.body,'submit')) {
                     var submitVal = req.body.submit;
                     if (submitVal === 'Add Config') {
                         var configInfo = new TabServerConfig({

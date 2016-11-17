@@ -3,7 +3,7 @@ var request = require('request'),
     parseString = require('xml2js').parseString,
     Promise = require('bluebird');
 
-
+/*
 exports.getTabServerToken = function(callback) {
     var tabReqUrl = config.tabServer.baseUrl + 'api/2.2/auth/signin';
     var formData = '<tsRequest><credentials name=' + '"' + config.tabServer.username + '" ' +
@@ -30,6 +30,7 @@ exports.getTabServerToken = function(callback) {
         }
     });
 }
+*/
 
 exports.getTrustedTicket = function(username, siteName) {
     var ticketReqUrl = config.tabServer.baseUrl + 'trusted',
