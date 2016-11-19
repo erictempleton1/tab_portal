@@ -11,6 +11,10 @@
         <p>Tableau Server Url: <%= (config[0].tabServerUrl) %></p>
         <p>Added: <%= (config[0].addedDate) %></p>
         <p>Last Updated: <%= (config[0].updatedDate) %></p>
+        <form id="configEditForm" method="POST" action="/admin/settings/config/edit">
+            <label>Tableau Server Username:</label>
+            <input type="text" class="form-control" name="tabServerUsername" required="" data-parsley-error-message="Please Enter Username">
+        </form>
       </div>
     </div>
     <% include ../includes/index_footer %>
