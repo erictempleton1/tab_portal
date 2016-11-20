@@ -99,7 +99,14 @@ router.get('/remove/:sitename', function (req, res) {
     if (req.user && req.user.isAdmin) {
         Sites.findOne({siteName: req.params.sitename}).exec()
         .then(function (site) {
-            res.render('admin/remove_site', {site: site});
+            res.render(
+                'admin/remove_site',
+                {
+                    user: req.user,
+                    site: site,
+                    moment: moment
+                }
+            );
         }).catch(function (err) {
             req.flash('info', 'There was an error loading site >> ' + err);
             res.redirect('/admin/sites');
