@@ -7,10 +7,11 @@
       <div class="row">
         <% include ../includes/admin/admin_navbar_left %>
         <h4>Config Settings</h4>
+        <p><%- messages() %></p>
         <p>Tableau Server Username: <%= (config[0].tabServerUsername) %></p>
         <p>Tableau Server Url: <%= (config[0].tabServerUrl) %></p>
-        <p>Added: <%= moment(config[0].addedDate).format('MMM d, Y hh:mm') %></p>
-        <p>Last Updated: <%= moment(config[0].updatedDate).format('MMM d, Y hh:mm') %></p>
+        <p>Added: <%= moment(config[0].addedDate).format('MMM D, YYYY hh:mm') %></p>
+        <p>Last Updated: <%= moment(config[0].updatedDate).format('MMM D, YYYY hh:mm') %></p>
         <a href="settings/config/edit"><h5>Edit Config</h5></a>
       </div>
     </div>

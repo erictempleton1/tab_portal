@@ -7,7 +7,7 @@
       <div class="row">
         <% include ../includes/admin/admin_navbar_left %>
         <h4>Edit Config Settings</h4>
-        <p>Last Updated <%= moment(config[0].updatedDate).format('MMM d, Y hh:mm') %></p>
+        <p>Last Updated <%= moment(config[0].updatedDate).format('MMM D, YYYY hh:mm') %></p>
         <div class="col-sm-3">
         <form id="configEditForm" method="POST" action="/admin/settings/config/edit">
             <p>
