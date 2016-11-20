@@ -1,5 +1,6 @@
 var express = require('express'),
     router = express.Router(),
+    moment = require('moment'),
     TabServerConfig = require('../../models/tabServerConfig');
 
 
@@ -12,7 +13,14 @@ router.get('/', function (req, res) {
         TabServerConfig.find({}).exec()
         .then(function(config) {
             if (config.length == 1) {
-                res.render('admin/settings', {user: req.user, config: config});
+                res.render(
+                    'admin/settings',
+                    {
+                        user: req.user,
+                        config: config,
+                        moment: moment
+                    }
+                );
             } else {
                 req.flash(
                     'info',
@@ -39,7 +47,14 @@ router.get('/config/edit', function (req, res) {
         TabServerConfig.find({}).exec()
         .then(function(config) {
             if (config.length == 1) {
-                res.render('admin/edit_config', {user: req.user, config: config});
+                res.render(
+                    'admin/edit_config',
+                    {
+                        user: req.user,
+                        config: config,
+                        moment: moment
+                    }
+                );
             } else {
                 req.flash(
                     'info',

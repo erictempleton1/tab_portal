@@ -9,8 +9,8 @@
         <h4>Config Settings</h4>
         <p>Tableau Server Username: <%= (config[0].tabServerUsername) %></p>
         <p>Tableau Server Url: <%= (config[0].tabServerUrl) %></p>
-        <p>Added: <%= (config[0].addedDate) %></p>
-        <p>Last Updated: <%= (config[0].updatedDate) %></p>
+        <p>Added: <%= moment(config[0].addedDate).format('MMM d, Y hh:mm') %></p>
+        <p>Last Updated: <%= moment(config[0].updatedDate).format('MMM d, Y hh:mm') %></p>
         <a href="settings/config/edit"><h5>Edit Config</h5></a>
       </div>
     </div>
