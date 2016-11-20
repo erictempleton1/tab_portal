@@ -1,31 +1,46 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Title</title>
-  </head>
+  <% include ../includes/index_header %>
   <body>
-    <h3><a href="/admin">Admin</a></h3>
-    <h4><a href="/admin/sites/new">Add New Site</a></h4>
-    <h4>All Sites</h4>
-    <p><%- messages() %></p>
-    <ul>
-    <% if (sites.length > 0) { %>
-        <% for(var i = 0; i < sites.length; i++) { %>
-            <li>
-                <a href="/site/<%= sites[i].siteName %>"><%= sites[i].siteName %></a>
-                <%= "Site Name: " + sites[i].siteName %>
-                <%= "Created: " + sites[i].createdDate %>
-                <%= "Allowed Users: " + sites[i].allowedUsers %>
-                <%= "Site Url: " + sites[i].siteUrl %>
-                <%= "Private: " + sites[i].isPrivate %>
-                <%= "Is Tab Server Viz: " + sites[i].isTabServerViz %>
-                <a href="/admin/sites/edit/<%= sites[i].siteName %>">edit</a>
-                <a href="/admin/sites/remove/<%= sites[i].siteName %>">remove</a>
-            </li>
-        <% } %>
-    <% } else { %>
-        <p>No sites found</p>
-    <% } %>
-    </ul>
+    <% include ../includes/index_navbar %>
+        <div class="container-fluid">
+            <div class="row">
+                <% include ../includes/admin/admin_navbar_left %>
+                <div class="col-md-8">
+                <h4>Sites</h4>
+                <p><%- messages() %></p>
+                <% if (sites.length > 0) { %>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Site</th>
+                                <th>Created</th>
+                                <th>Members</th>
+                                <th>Private</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <% for(var i = 0; i < sites.length; i++) { %>
+                            <tr>
+                                <td><a href="/site/<%= sites[i].siteName %>"><%= sites[i].siteName %></a</td>
+                                <td><%= moment(sites[i].createdDate).format('MMM D, YYYY hh:mm') %></td>
+                                <td><%= sites[i].allowedUsers.length %></td>
+                                <td><%= sites[i].isPrivate %></td>
+                                <td>
+                                    <a href="sites/edit/<%= sites[i].siteName %>">Edit</a> | 
+                                    <a href="sites/remove/<%= sites[i].siteName %>">Remove</a>
+                                </td>
+                            </tr>
+                        <% } %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <p>No sites found</p>
+                <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
     </body>
 </html>

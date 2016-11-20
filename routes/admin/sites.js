@@ -1,5 +1,6 @@
 var express = require('express'),
     router = express.Router(),
+    moment = require('moment'),
     Account = require('../../models/account'),
     Sites = require('../../models/sites'),
     util = require('../../utility/utility');
@@ -9,7 +10,14 @@ router.get('/', function (req, res) {
     if (req.user && req.user.isAdmin) {
         Sites.find({}).exec()
         .then(function (sites) {
-            res.render('admin/sites_list', {sites: sites});
+            res.render(
+                'admin/sites_list',
+                {
+                    user: req.user,
+                    sites: sites,
+                    moment: moment
+                }
+            );
         }).catch(function (err) {
             req.flash('info', 'There was an error loading sites >> ' + err);
         });

@@ -1,6 +1,7 @@
 var express = require('express'),
     router = express.Router(),
     passport = require('passport'),
+    moment = require('moment'),
     Account = require('../../models/account'),
     Sites = require('../../models/sites'),
     util = require('../../utility/utility');
@@ -10,7 +11,14 @@ router.get('/', function (req, res) {
     if (req.user && req.user.isAdmin) {
         Account.find({}).exec()
         .then(function (users) {
-            res.render('admin/users_list', {users: users, user: req.user});
+            res.render(
+                'admin/users_list',
+                {
+                    users: users,
+                    user: req.user,
+                    moment: moment
+                }
+            );
         }).catch(function (err) {
             req.flash('info', 'Error getting users >> ' + err);
             res.redirect('/admin');

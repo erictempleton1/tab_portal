@@ -7,7 +7,7 @@
             <div class="row">
                 <% include ../includes/admin/admin_navbar_left %>
                 <div class="col-md-8">
-                <h4>All Users</h4>
+                <h4>Users</h4>
                 <p><%- messages() %></p>
                 <% if (users.length > 0) { %>
                     <table class="table">
@@ -24,7 +24,7 @@
                         <tr>
                             <td><a href="/user/<%= users[i].username %>"><%= users[i].username %></a></td>
                             <td><%= users[i].isAdmin %></td>
-                            <td><%= users[i].regDate %></td>
+                            <td><%= moment(users[i].regDate).format('MMM D, YYYY hh:mm') %></td>
                             <td>
                             <a href="/admin/users/edit/<%= users[i].username %>">Edit</a> | 
                             <a href="/admin/users/remove/<%= users[i].username %>">Remove</a>
