@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Register</title>
-  </head>
+  <% include ../includes/index_header %>
   <body>
-    <p>Create new user</p>
-    <p><%- messages() %></p>
-    <form method="POST" action="/admin/users/new">
-        <p>
-            <label>Username:</label>
-            <input type="text" name="username">
-        </p>
-        <p>
-            <label>Password:</label>
-            <input type="password" name="password">
-        </p>
-        <p>
-            <input type="submit" value="Register">
-        </p>
-    </form>
+    <% include ../includes/index_navbar %>
+    <div class="container-fluid">
+      <div class="row">
+        <% include ../includes/admin/admin_navbar_left %>
+        <h4>Add User</h4>
+            <div class="col-sm-3">
+                <form id="newUserForm" method="POST" action="/admin/users/new">
+                    <p>
+                        <label>Username:</label>
+                        <input type="text" class="form-control" required="" name="username">
+                    </p>
+                    <p>
+                        <label>Password:</label>
+                        <input type="password" class="form-control" required="" name="password">
+                    </p>
+                    <p>
+                        <input class="btn btn-default" type="submit" value="Create User">
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+    <% include ../includes/index_footer %>
 </body>
 </html>

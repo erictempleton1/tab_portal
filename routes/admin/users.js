@@ -113,7 +113,7 @@ router.post('/remove/:username', function (req, res) {
 router.get('/new', function (req, res) {
     // form for adding a new user
     if (req.user && req.user.isAdmin) {
-        res.render('admin/add_user');
+        res.render('admin/add_user', {user: req.user});
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(302, '/');
