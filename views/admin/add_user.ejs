@@ -11,11 +11,11 @@
                 <form id="newUserForm" method="POST" action="/admin/users/new">
                     <p>
                         <label>Username:</label>
-                        <input type="text" class="form-control" required="" name="username">
+                        <input type="text" class="form-control" name="username" required="" data-parsley-error-message="Please Enter Username">
                     </p>
                     <p>
                         <label>Password:</label>
-                        <input type="password" class="form-control" required="" name="password">
+                        <input type="password" class="form-control" name="password" required="" data-parsley-error-message="Please Enter Password">
                     </p>
                     <p>
                         <input class="btn btn-default" type="submit" value="Create User">
@@ -25,5 +25,9 @@
         </div>
     </div>
     <% include ../includes/index_footer %>
+    <script src="/javascripts/parsley.min.js"></script>
 </body>
+<script type="text/javascript">
+    $("#newUserForm").parsley();
+</script>
 </html>
