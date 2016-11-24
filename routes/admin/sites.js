@@ -81,7 +81,7 @@ router.post('/edit/:sitename', function (req, res) {
                 res.redirect('/admin/sites');
             // save if the site name is unchanged, or isn't already in use
             } else if (!existingSite || existingSite.siteName === site.siteName) {
-                site.siteName = req.body.siteName;
+                site.siteName = util.cleanString(req.body.siteName);
                 site.siteUrl = req.body.siteUrl;
                 site.isPrivate = req.body.isPrivate;
                 site.allowedUsers = req.body.allowedUsers;
