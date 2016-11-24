@@ -1,44 +1,55 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>New Site</title>
-  </head>
+  <% include ../includes/index_header %>
   <body>
-    <p>Add New Site</p>
-    <%- messages() %>
-    <form method="POST" action="/admin/sites/new">
-        <p>
-            <label>Site Url:</label>
-            <input type="text" name="siteUrl">
-        </p>
-        <p>
-            <label>Site Name:</label>
-            <input type="text" name="siteName">
-        </p>
-        <p>
-            <label>Private Site:</label>
-            <select name="isPrivate">
-                <option value=true>True</option>
-                <option value=false>False</option>
-            </select>
-        </p>
-        <p>
-            <label>Is Tableau Server Viz:</label>
-            <select name="isTabServerViz">
-                <option value=true>True</option>
-                <option value=false>False</option>
-            </select>
-        </p>
-        <p>
-            <label>Add Users:</label>
-            <select name="allowedUsers" multiple>
-            <% for (var i = 0; i < users.length; i++) { %>
-                <option value="<%= users[i].username %>"><%= users[i].username %></option>
-            <% } %>
-            </select>
-        <p>
-            <input type="submit" value="Add Site">
-        </p>
-    </form>
-  </body>
+    <% include ../includes/index_navbar %>
+    <div class="container-fluid">
+      <div class="row">
+        <% include ../includes/admin/admin_navbar_left %>
+        <h4>Add Site</h4>
+            <%- messages() %>
+            <div class="col-sm-3">
+                <form id="newSiteForm" method="POST" action="/admin/sites/new">
+                    <p>
+                        <label>Site Name:</label>
+                        <input type="text" class="form-control" name="siteName" required="" data-parsley-error-message="Please Enter a Site Name">
+                    </p>
+                    <p>
+                        <label>Site Url:</label>
+                        <input type="text" class="form-control" name="siteUrl" required="" data-parsley-error-message="Please Enter a Site Url">
+                    </p>
+                    <p>
+                        <label>Private Site:</label>
+                        <select name="isPrivate" class="form-control" required="">
+                            <option value=true>True</option>
+                            <option value=false>False</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label>Is Tableau Server Viz:</label>
+                        <select name="isTabServerViz" class="form-control" required="">
+                            <option value=true>True</option>
+                            <option value=false>False</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label>Add Users:</label>
+                        <select name="allowedUsers" class="form-control" required="" data-parsley-error-message="Please Select Users" multiple>
+                        <% for (var i = 0; i < users.length; i++) { %>
+                            <option value="<%= users[i].username %>"><%= users[i].username %></option>
+                        <% } %>
+                        </select>
+                    <p>
+                        <input class="btn btn-default" type="submit" value="Add Site">
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+    <% include ../includes/index_footer %>
+    <script src="/javascripts/parsley.min.js"></script>
+</body>
+<script type="text/javascript">
+    $("#newSiteForm").parsley();
+</script>
 </html>

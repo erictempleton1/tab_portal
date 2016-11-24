@@ -7,6 +7,7 @@
       <div class="row">
         <% include ../includes/admin/admin_navbar_left %>
         <h4>Add User</h4>
+            <%- messages() %>
             <div class="col-sm-3">
                 <form id="newUserForm" method="POST" action="/admin/users/new">
                     <p>

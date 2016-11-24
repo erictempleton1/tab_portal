@@ -40,7 +40,14 @@ router.get('/edit/:sitename', function (req, res) {
             var site = result[0],
                 users = result[1];
             if (site) {
-                res.render('admin/site_edit', {site: site, users: users});
+                res.render(
+                    'admin/site_edit',
+                    {
+                        site: site,
+                        users: users,
+                        user: req.user
+                    }
+                );
             } else {
                 req.flash('info', 'Site not found');
                 res.redirect('/admin/sites');
@@ -140,7 +147,7 @@ router.get('/new', function (req, res) {
         // query all users to populate allowed users form
         Account.find({}).exec()
         .then(function (users) {
-            res.render('admin/new_site', {users: users});
+            res.render('admin/new_site', {users: users, user: req.user});
         }).catch(function (err) {
             req.flash('info', 'Error getting users');
             res.redirect('/admin/sites');
