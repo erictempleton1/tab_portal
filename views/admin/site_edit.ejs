@@ -1,64 +1,71 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Title</title>
-  </head>
+  <% include ../includes/index_header %>
   <body>
-  <h3><a href="/admin">Admin</a></h3>
-  <h4>Edit Site</h4>
-  <p><%= "site name: " + site.siteName %></p>
-  <p><%= "created: " + site.createdDate %></p>
-  <p><%= "allowed users: " + site.allowedUsers %></p>
-  <p><%= "site Url: " + site.siteUrl %></p>
-  <p><%= "private: " + site.isPrivate %></p>
-  <form method="POST" action="/admin/sites/edit/<%= site.siteName %>">
-    <p>
-      <label>Site Name:</label>
-      <input type="text" name="siteName" value="<%= site.siteName %>">
-    </p>
-    <p>
-      <label>Site Url:</label>
-      <input type="text" name="siteUrl" value="<%= site.siteUrl %>">
-    </p>
-    <p>
-      <label>Private Site:</label>
-      <select name="isPrivate">
-        <% if (site.isPrivate) { %>
-          <option value=true>True</option>
-          <option value=false>False</option>
-        <% } else { %>
-          <option value=false>False</option>
-          <option value=true>True</option>
-        <% } %>
-      </select>
-      </p>
-      <p>
-        <label>Is Tableau Server Viz:</label>
-        <select name="isTabServerViz">
-          <% if (site.isTabServerViz) { %>
-            <option value=true>True</option>
-            <option value=false>False</option>
-          <% } else { %>
-            <option value=false>False</option>
-            <option value=true>True</option>
-          <% } %>
-        </select>
-      </p>
-      <P>
-        <label>Allowed Users:</label>
-        <select name="allowedUsers" multiple>
-        <% for (var i = 0; i < users.length; i++) { %>
-            <% if (site.allowedUsers.indexOf(users[i].username) > -1) { %>
-                <option selected value="<%= users[i].username %>"><%= users[i].username %></option>
-            <% } else { %>
-                <option value="<%= users[i].username %>"><%= users[i].username %></option>
-            <% } %>
-        <% } %>
-        </select>
-      </p>
-      <p>
-        <input type="submit" value="Update Site">
-      </p>
-    </form>
+    <% include ../includes/index_navbar %>
+    <div class="container-fluid">
+      <div class="row">
+        <% include ../includes/admin/admin_navbar_left %>
+        <h4>Add Site</h4>
+            <%- messages() %>
+            <div class="col-sm-3">
+              <form id="editSiteForm" method="POST" action="/admin/sites/edit/<%= site.siteName %>">
+                <p>
+                  <label>Site Name:</label>
+                  <input type="text" class="form-control" name="siteName" required="" data-parsley-error-message="Please Enter a Site Name"  value="<%= site.siteName %>">
+                </p>
+                <p>
+                  <label>Site Url:</label>
+                  <input type="text" class="form-control" name="siteUrl" require="" data-parsley-error-message="Please Enter a Site Url" value="<%= site.siteUrl %>">
+                </p>
+                <p>
+                  <label>Private Site:</label>
+                  <select name="isPrivate" class="form-control" required="">
+                    <% if (site.isPrivate) { %>
+                      <option value=true>True</option>
+                      <option value=false>False</option>
+                    <% } else { %>
+                      <option value=false>False</option>
+                      <option value=true>True</option>
+                    <% } %>
+                  </select>
+                  </p>
+                  <p>
+                    <label>Is Tableau Server Viz:</label>
+                    <select name="isTabServerViz" class="form-control" required="">
+                      <% if (site.isTabServerViz) { %>
+                        <option value=true>True</option>
+                        <option value=false>False</option>
+                      <% } else { %>
+                        <option value=false>False</option>
+                        <option value=true>True</option>
+                      <% } %>
+                    </select>
+                  </p>
+                  <P>
+                    <label>Allowed Users:</label>
+                    <select name="allowedUsers" class="form-control" required="" data-parsley-error-message="Please Select Users" multiple>
+                    <% for (var i = 0; i < users.length; i++) { %>
+                        <% if (site.allowedUsers.indexOf(users[i].username) > -1) { %>
+                            <option selected value="<%= users[i].username %>"><%= users[i].username %></option>
+                        <% } else { %>
+                            <option value="<%= users[i].username %>"><%= users[i].username %></option>
+                        <% } %>
+                    <% } %>
+                    </select>
+                  </p>
+                  <p>
+                    <input class="btn btn-default" type="submit" value="Update Site">
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    <% include ../includes/index_footer %>
+    <script src="/javascripts/parsley.min.js"></script>
   </body>
+  <script type="text/javascript">
+    $("#editSiteForm").parsley();
+  </script>
 </html>

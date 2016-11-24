@@ -35,7 +35,8 @@ router.get('/edit/:sitename', function (req, res) {
             Sites.findOne({siteName: req.params.sitename}).exec(),
             Account.find({}).exec()
         ];
-        Promise.all(findSitesAccounts).then(function (result) {
+        Promise.all(findSitesAccounts)
+        .then(function (result) {
             // access the result of the execs, and send to template
             var site = result[0],
                 users = result[1];
@@ -70,7 +71,8 @@ router.post('/edit/:sitename', function (req, res) {
             Sites.findOne({siteName: req.body.siteName}).exec()
         ];
         // run the two queries in parallel
-        Promise.all(checkSitesQueries).then(function (siteResults) {
+        Promise.all(checkSitesQueries)
+        .then(function (siteResults) {
             var site = siteResults[0],
                 existingSite = siteResults[1];
             // check to be sure the site actually exists before going any futher    
