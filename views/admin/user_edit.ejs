@@ -1,37 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Title</title>
-  </head>
+  <% include ../includes/index_header %>
   <body>
-    <h3><a href="/admin">Admin</a></h3>
-    <h4>Edit User</h4>
-    <p><%- messages() %></p>
-    <p>Username: <%= (user.username) %></p>
-    <p>Admin: <%= (user.isAdmin) %></p>
-    <p>Reg Date: <%= (user.regDate) %></p>
-    <p>Last Login: <%= user.lastLogin %></p>
-    <form method="POST" action="/admin/users/edit/<%= (user.username) %>">
-      <p>
-        <label>Username:</lable>
-        <input type="text" name="username" value="<%= (user.username) %>">
-      </p>
-      <p>
-        <label>Is Admin:</lable>
-        <select name="isAdmin">
-          <% if (user.isAdmin) { %>
-            <option value=true>True</option>
-            <option value=false>False</option>
-          <% } else { %>
-            <option value=false>False</option>
-            <option value=true>True</option>
-          <% } %>
-        </select>
-      </p>
-      <p>
-        <input type="submit" value="Save">
-      </p>
-    </form>
-
+    <% include ../includes/index_navbar %>
+    <div class="container-fluid">
+      <div class="row">
+        <% include ../includes/admin/admin_navbar_left %>
+        <h4>Edit User</h4>
+            <%- messages() %>
+          <div class="col-sm-3"
+            <form id="editUserForm" method="POST" action="/admin/users/edit/<%= (user.username) %>">
+              <p>
+                <label>Username:</lable>
+                <input class="form-control" type="text" name="username" value="<%= (user.username) %>" required="" data-parsley-error-message="Please Enter Username">
+              </p>
+              <p>
+                <label>Is Admin:</lable>
+                <select class="form-control" name="isAdmin" required="">
+                  <% if (user.isAdmin) { %>
+                    <option value=true>True</option>
+                    <option value=false>False</option>
+                  <% } else { %>
+                    <option value=false>False</option>
+                    <option value=true>True</option>
+                  <% } %>
+                </select>
+              </p>
+              <p>
+                <input class="btn btn-default" type="submit" value="Save">
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% include ../includes/index_footer %>
+    <script src="/javascripts/parsley.min.js"></script>
   </body>
+  <script type="text/javascript">
+    $("#editUserForm").parsley();
+  </script>
 </html>
