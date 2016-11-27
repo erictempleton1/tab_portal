@@ -54,7 +54,8 @@ router.post('/edit/:username', function(req, res) {
             Account.findOne({username: req.body.username}).exec()
         ];
         // run the two queries in paralell
-        Promise.all(checkAccountQueries).then(function (userResults) {
+        Promise.all(checkAccountQueries)
+        .then(function (userResults) {
             var user = userResults[0],
                 existingUser = userResults[1];
             if (!user) {
@@ -113,7 +114,7 @@ router.post('/remove/:username', function (req, res) {
 router.get('/new', function (req, res) {
     // form for adding a new user
     if (req.user && req.user.isAdmin) {
-        res.render('admin/add_user', {user: req.user});
+        res.render('admin/add_user');
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(302, '/');
