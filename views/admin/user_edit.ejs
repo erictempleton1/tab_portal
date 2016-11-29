@@ -9,15 +9,15 @@
         <h4>Edit User</h4>
             <%- messages() %>
           <div class="col-sm-3">
-            <form id="editUserForm" method="POST" action="/admin/users/edit/<%= (user.username) %>">
+            <form id="editUserForm" method="POST" action="/admin/users/edit/<%= (userEdit.username) %>">
               <p>
                 <label>Username:</lable>
-                <input class="form-control" type="text" name="username" value="<%= (user.username) %>" required="" data-parsley-error-message="Please Enter Username">
+                <input class="form-control" type="text" name="username" value="<%= (userEdit.username) %>" required="" data-parsley-error-message="Please Enter Username">
               </p>
               <p>
                 <label>Is Admin:</lable>
                 <select class="form-control" name="isAdmin" required="">
-                  <% if (user.isAdmin) { %>
+                  <% if (userEdit.isAdmin) { %>
                     <option value=true>True</option>
                     <option value=false>False</option>
                   <% } else { %>

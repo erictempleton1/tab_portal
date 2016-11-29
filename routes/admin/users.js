@@ -34,8 +34,10 @@ router.get('/edit/:username', function (req, res) {
     if (req.user && req.user.isAdmin) {
         // query the single user using the _id param
         Account.findOne({username: req.params.username}).exec()
-        .then(function (user) {
-            res.render('admin/user_edit', {user: user});
+        .then(function (userEdit) {
+            res.render(
+                'admin/user_edit',
+                {userEdit: userEdit, user: req.user});
         }).catch(function (err) {
             req.flash('info', 'Error querying user >> ' + err);
             res.redirect('/admin/users');
