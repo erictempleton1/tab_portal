@@ -93,7 +93,8 @@ router.post('/edit/:sitename', function (req, res) {
                 req.flash('info', 'Site name already in use');
                 res.redirect('/admin/sites');
             }
-        }).catch(function (err) {
+        })
+        .catch(function (err) {
             req.flash('info', 'There was an error loading the site >> ' + err);
             res.redirect('/admin/sites');
         });

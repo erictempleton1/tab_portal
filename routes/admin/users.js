@@ -37,7 +37,11 @@ router.get('/edit/:username', function (req, res) {
         .then(function (userEdit) {
             res.render(
                 'admin/user_edit',
-                {userEdit: userEdit, user: req.user});
+                {
+                    userEdit: userEdit,
+                    user: req.user
+                }
+            );
         }).catch(function (err) {
             req.flash('info', 'Error querying user >> ' + err);
             res.redirect('/admin/users');
