@@ -23,7 +23,7 @@ router.get('/', function (req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect(302, '/');
+        res.redirect(403, '/');
     }
 });
 
@@ -88,7 +88,7 @@ router.post('/', function (req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect(302, '/');
+        res.redirect(403, '/');
     }
 });
 
