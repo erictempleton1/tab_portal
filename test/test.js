@@ -5,6 +5,7 @@ var assert = require('assert'),
     should = chai.should(),
     app = require('../app');
 
+process.env.NODE_ENV = 'testing';
 chai.use(chaiHttp);
 
 
@@ -40,3 +41,25 @@ describe('GET admin unauthorized', function() {
         });
     });
 });
+
+// TODO - switch this directly to model and re-write
+describe('POST add new admin user', function() {
+    it('should send params to post and create an admins user', function(done){
+        chai.request(app)
+        .post('/')
+        .set('content-type','application/x-www-form-urlencoded')
+        .send(
+            {
+                username: 'admin',
+                isAdmin: true,
+                regDate: Date.now(),
+                lastLogin: Date.now(),
+                password: 'admin'
+            }
+        )
+       .end(function(err, res) {
+            res.should.have.status(200);
+            done();
+        })
+    }) 
+})
