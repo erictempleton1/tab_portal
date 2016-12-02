@@ -1,5 +1,6 @@
 var express = require('express'),
     path = require('path'),
+    dbSettings = require('./db_config'),
     favicon = require('serve-favicon'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
@@ -60,8 +61,9 @@ passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
-// mongodb connection
-mongoose.connect('mongodb://localhost/tab_portal');
+// mongodb connection based on env var
+var mongoUri = dbSettings.dbUri[app.get('env')];
+mongoose.connect(mongoUri);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -72,9 +74,9 @@ app.use(function(req, res, next) {
 
 // error handlers
 
-// development error handler
+// development and testing error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+if (app.get('env') === 'development' || app.get('env') === 'testing') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
@@ -93,6 +95,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;
