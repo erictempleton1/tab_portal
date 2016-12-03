@@ -3,10 +3,12 @@ var assert = require('assert'),
     chai = require('chai'),
     chaiHttp = require('chai-http'),
     should = chai.should(),
-    app = require('../app');
+    expect = chai.expect(),
+    Account = require('../models/account');
 
 process.env.NODE_ENV = 'testing';
 chai.use(chaiHttp);
+var app = require('../app');
 
 
 describe('GET index', function() {
@@ -42,24 +44,18 @@ describe('GET admin unauthorized', function() {
     });
 });
 
-// TODO - switch this directly to model and re-write
-describe('POST add new admin user', function() {
-    it('should send params to post and create an admins user', function(done){
-        chai.request(app)
-        .post('/')
-        .set('content-type','application/x-www-form-urlencoded')
-        .send(
-            {
-                username: 'admin',
-                isAdmin: true,
-                regDate: Date.now(),
-                lastLogin: Date.now(),
-                password: 'admin'
-            }
-        )
-       .end(function(err, res) {
-            res.should.have.status(200);
+describe('Create admin user', function() {
+    it('should create admin user', function(done) {
+        var regInfo = {
+            username: 'eric',
+            isAdmin: true,
+            regDate: Date.now(),
+            lastLogin: Date.now()
+        };
+        Account.register(new Account(regInfo), 'eric', function(err, user) {
+            console.log(user);
+            should.not.exist(err);
             done();
         })
-    }) 
-})
+    });
+});
