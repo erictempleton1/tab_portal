@@ -23,21 +23,18 @@ describe('Test create user', function() {
                 should.not.exist(err);
             });
         });
-    });
 
-    describe('Create admin user', function() {
-        it('should create admin user', function(done) {
-            var regInfo = {
+        // create admin user
+        var regInfo = {
                 username: 'eric',
                 isAdmin: true,
                 regDate: Date.now(),
                 lastLogin: Date.now()
             };
-            Account.register(new Account(regInfo), 'eric', function(err, user) {
+        Account.register(new Account(regInfo), 'eric', function(err, user) {
+            if (!err) {
                 console.log(user);
-                should.not.exist(err);
-                done();
-            })
+            };
         });
     });
 
