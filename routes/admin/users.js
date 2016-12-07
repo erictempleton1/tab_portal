@@ -25,7 +25,7 @@ router.get('/', function (req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect('/');
+        res.redirect(403, '/');
     }
 });
 
@@ -48,9 +48,28 @@ router.get('/edit/:username', function (req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect(302, '/');
+        res.redirect(403, '/');
     }
 });
+
+router.get('/edit/password/:username', function(req, res) {
+    if (req.user && req.user.isAdmin) {
+        Account.findOne({username: req.params.username})
+        .exec()
+        .then(function(userEdit) {
+            res.render(
+                'admin/change_user_pw',
+                {
+                    userEdit: userEdit,
+                    user: req.user
+                }
+            )
+        })
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect(403, '/');
+    }
+})
 
 router.post('/edit/:username', function(req, res) {
     // post request to edit a single user
@@ -84,7 +103,7 @@ router.post('/edit/:username', function(req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect(302, '/');
+        res.redirect(403, '/');
     }
 });
 
@@ -100,7 +119,7 @@ router.get('/remove/:username', function (req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect('/');
+        res.redirect(403, '/');
     }
 });
 
@@ -117,7 +136,7 @@ router.post('/remove/:username', function (req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect('/');
+        res.redirect(403, '/');
     }
 });
 
@@ -127,7 +146,7 @@ router.get('/new', function (req, res) {
         res.render('admin/add_user', {user: req.user});
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect(302, '/');
+        res.redirect(403, '/');
     }
 });
 
@@ -151,7 +170,7 @@ router.post('/new', function (req, res) {
       });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect(302, '/');
+        res.redirect(403, '/');
     }
 });
 
