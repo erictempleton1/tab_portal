@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <% include ../includes/index_header %>
+  <body>
+    <% include ../includes/index_navbar %>
+    <div class="container-fluid">
+      <div class="row">
+        <% include ../includes/admin/admin_navbar_left %>
+        <h4>Change Password (<%= (userEdit.username) %>)</h4>
+            <%- messages() %>
+          <div class="col-sm-3">
+              <form id="changeUserPwForm" method="POST" action="/admin/users/edit/password/<%= (userEdit.username) %>">
+                <p>
+                    <label>New Password:</label>
+                    <input class="form-control" type="password" name="password" required="" data-parsley-error-message="Please Enter Password">
+                </p>
+                <p>
+                    <label>Confirm Password:</label>
+                    <input class="form-control" type="password" name="passwordCheck"required="" data-parsley-error-message="Please Confirm Password">
+                </p>
+                <p>
+                    <input class="btn btn-default" type="submit" value="Save">
+                </p>
+            </form>
+        </div>
+    </div>
+    </div>
+    <% include ../includes/index_footer %>
+    <script src="/javascripts/parsley.min.js"></script>
+    </body>
+    <script type="text/javascript">
+        $("#editUserForm").parsley();
+    </script>
+</html>

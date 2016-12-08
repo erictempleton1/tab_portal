@@ -69,6 +69,15 @@ router.get('/edit/password/:username', function(req, res) {
         req.flash('info', 'Unauthorized');
         res.redirect(403, '/');
     }
+});
+
+router.post('/edit/password/:username', function(req, res) {
+    if (req.user && req.user.isAdmin) {
+        // TODO - add change pw stuff here!
+    } else {
+        req.flash('info', 'Unauthorized');
+        res.redirect(403, '/');
+    }
 })
 
 router.post('/edit/:username', function(req, res) {
