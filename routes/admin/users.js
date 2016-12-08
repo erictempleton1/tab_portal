@@ -35,13 +35,12 @@ router.get('/edit/:username', function (req, res) {
         // query the single user using the _id param
         Account.findOne({username: req.params.username}).exec()
         .then(function (userEdit) {
-            res.render(
-                'admin/user_edit',
-                {
-                    userEdit: userEdit,
-                    user: req.user
-                }
-            );
+            if (userEdit) {
+                res.render('admin/user_edit', {userEdit: userEdit, user: req.user});
+            } else {
+                req.flash('info', 'Unable to find user');
+                res.redirect('/admin/users');
+            }
         }).catch(function (err) {
             req.flash('info', 'Error querying user >> ' + err);
             res.redirect('/admin/users');
@@ -57,14 +56,20 @@ router.get('/edit/password/:username', function(req, res) {
         Account.findOne({username: req.params.username})
         .exec()
         .then(function(userEdit) {
-            res.render(
-                'admin/change_user_pw',
-                {
-                    userEdit: userEdit,
-                    user: req.user
-                }
-            )
+            if (userEdit) {
+                res.render(
+                    'admin/change_user_pw',
+                    {userEdit: userEdit, user: req.user}
+                );
+            } else {
+                req.flash('info', 'Unable to find user');
+                res.redirect('/admin/users');
+            }
         })
+        .catch(function (err) {
+            req.flash('info', 'Error finding user >> ' + err);
+            res.redirect('/admin/users');
+        });
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(403, '/');
@@ -73,7 +78,24 @@ router.get('/edit/password/:username', function(req, res) {
 
 router.post('/edit/password/:username', function(req, res) {
     if (req.user && req.user.isAdmin) {
-        // TODO - add change pw stuff here!
+        Account.findOne({username: req.params.username})
+        .exec()
+        .then(function(userEdit) {
+            if (userEdit) {
+                userEdit.setPassword(req.body.password, function() {
+                    userEdit.save();
+                    req.flash('info', 'Password Updated');
+                    res.redirect('/admin/users');
+                });
+            } else {
+                req.flash('info', 'Unable to find user');
+                res.redirect('/admin/users');
+            }
+        })
+        .catch(function (err) {
+            req.flash('info', 'Error finding user >> ' + err);
+            res.redirect('/admin/users');
+        });
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(403, '/');
@@ -121,7 +143,12 @@ router.get('/remove/:username', function (req, res) {
     if (req.user && req.user.isAdmin) {
         Account.findOne({username: req.params.username}).exec()
         .then(function (user) {
-            res.render('admin/remove_user', {user: user});
+            if (user) {
+                res.render('admin/remove_user', {user: user});
+            } else {
+                req.flash('info', 'Unable to find user');
+                res.redirect('/admin/users');
+            }
         }).catch(function (err) {
             req.flash('info', 'There was an error loading user >> ' + err);
             res.redirect('/admin/users');
@@ -137,8 +164,13 @@ router.post('/remove/:username', function (req, res) {
     if (req.user && req.user.isAdmin) {
         Account.remove({username: req.params.username}).exec()
         .then(function (user) {
-            req.flash('info', 'User removed');
-            res.redirect('/admin/users');
+            if (user) {
+                req.flash('info', 'User removed');
+                res.redirect('/admin/users');
+            } else {
+                req.flash('info', 'Unable to find user');
+                res.redirect('/admin/users');
+            }
         }).catch(function (err) {
             req.flash('info', 'An error occurred deleting user');
             res.redirect('/admin/users');
