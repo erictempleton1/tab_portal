@@ -9,6 +9,7 @@ var express = require('express'),
     passport = require('passport'),
     session = require('express-session'),
     flash = require('connect-flash'),
+    expressValidator = require('express-validator'),
     LocalStrategy = require('passport-local').Strategy;
 
 // route files
@@ -32,6 +33,7 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressValidator());
 app.use(cookieParser());
 app.use(session ({
   secret: 'supersecretkey',
