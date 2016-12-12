@@ -181,18 +181,26 @@ router.get('/remove/:username', function (req, res) {
 router.post('/remove/:username', function (req, res) {
     // post request to delete a user
     if (req.user && req.user.isAdmin) {
-        Account.remove({username: req.params.username}).exec()
-        .then(function (user) {
-            if (user) {
-                req.flash('info', 'User removed');
-                res.redirect('/admin/users');
+        req.checkParams('username', 'Missing parameter').notEmpty();
+        req.getValidationResult()
+        .then(function(valResult) {
+            if (valResult.isEmpty()) {
+                Account.remove({username: req.params.username}).exec()
+                .then(function (user) {
+                    if (user) {
+                        req.flash('info', 'User removed');
+                        res.redirect('/admin/users');
+                    } else {
+                        req.flash('info', 'Unable to find user');
+                        res.redirect('/admin/users');
+                    }
+                }).catch(function (err) {
+                    req.flash('info', 'An error occurred deleting user');
+                    res.redirect('/admin/users');
+                });
             } else {
-                req.flash('info', 'Unable to find user');
-                res.redirect('/admin/users');
+                res.send('Validation error');
             }
-        }).catch(function (err) {
-            req.flash('info', 'An error occurred deleting user');
-            res.redirect('/admin/users');
         });
     } else {
         req.flash('info', 'Unauthorized');
