@@ -221,21 +221,29 @@ router.get('/new', function (req, res) {
 router.post('/new', function (req, res) {
     // post request for adding a new user
     if (req.user && req.user.isAdmin) {
-        var regInfo = {
-            username: util.cleanString(req.body.username),
-            isAdmin: false,
-            regDate: Date.now(),
-            lastLogin: Date.now()
-        };
-        Account.register(new Account(regInfo), req.body.password, function (err, account) {
-        if (err) {
-            req.flash("info", "Sorry, this account already exists");
-            res.render('admin/add_user');
-        } else {
-            req.flash('info', 'User created');
-            res.redirect('/admin/users');
-        }
-      });
+        req.checkBody('username', 'Invalid username').notEmpty();
+        req.getValidationResult()
+        .then(function(valResult) {
+            if (valResult.isEmpty()) {
+                var regInfo = {
+                    username: util.cleanString(req.body.username),
+                    isAdmin: false,
+                    regDate: Date.now(),
+                    lastLogin: Date.now()
+                };
+                Account.register(new Account(regInfo), req.body.password, function (err, account) {
+                if (err) {
+                    req.flash("info", "Sorry, this account already exists");
+                    res.render('admin/add_user');
+                } else {
+                    req.flash('info', 'User created');
+                    res.redirect('/admin/users');
+                }    
+                });
+            } else {
+                res.send('Validation error');
+            }
+        });
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(403, '/');
