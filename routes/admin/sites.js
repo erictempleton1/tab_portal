@@ -23,7 +23,7 @@ router.get('/', function (req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect('/');
+        res.redirect(403, '/');
     }
 });
 
@@ -59,7 +59,7 @@ router.get('/edit/:sitename', function (req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect(302, '/');
+        res.redirect(403, '/');
     }
 });
 
@@ -112,7 +112,7 @@ router.post('/edit/:sitename', function (req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect('/');
+        res.redirect(403, '/');
     }
 });
 
@@ -140,7 +140,7 @@ router.get('/remove/:sitename', function (req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect('/');
+        res.redirect(403, '/');
     }
 });
 
@@ -170,7 +170,7 @@ router.post('/remove/:sitename', function (req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect('/');
+        res.redirect(403, '/');
     }
 });
 
@@ -187,7 +187,7 @@ router.get('/new', function (req, res) {
         });
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect('/');
+        res.redirect(403, '/');
     }
 });
 
@@ -227,7 +227,7 @@ router.post('/new', function (req, res) {
         }
     } else {
         req.flash('info', 'Unauthorized');
-        res.redirect('/');
+        res.redirect(403, '/');
     }
 });
 
