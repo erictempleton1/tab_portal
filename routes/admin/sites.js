@@ -65,7 +65,6 @@ router.get('/edit/:sitename', function (req, res) {
 
 router.post('/edit/:sitename', function (req, res) {
     if (req.user && req.user.isAdmin) {
-        // todo - need some form validation here!
         req.checkBody('siteName', 'Invalid site name').notEmpty();
         req.checkBody('siteUrl', 'Invalid site url').notEmpty();
         req.checkBody('isPrivate', 'Invalid private setting').notEmpty().isBoolean();
@@ -124,11 +123,7 @@ router.get('/remove/:sitename', function (req, res) {
             if (site) {
                 res.render(
                     'admin/remove_site',
-                    {
-                        user: req.user,
-                        site: site,
-                        moment: moment
-                    }
+                    {user: req.user, site: site, moment: moment}
                 );
             } else {
                 req.flash('info', 'Site not found');
@@ -194,37 +189,44 @@ router.get('/new', function (req, res) {
 router.post('/new', function (req, res) {
     // add a new site
     if (req.user && req.user.isAdmin) {
+        req.checkBody('siteName', 'Invalid site name').notEmpty();
+        req.checkBody('siteUrl', 'Invalid site url').notEmpty();
+        req.checkBody('isPrivate', 'Invalid private setting').notEmpty().isBoolean();
+        req.checkBody('allowedUsers', 'Invalid allowed users list').notEmpty();
+        req.checkBody('isTabServerViz', 'Invalid tab server viz setting').notEmpty().isBoolean();
+        req.getValidationResult()
+        .then(function(valResult) {
         // todo - add more form validation
-        if (req.body.allowedUsers === undefined) {
-            req.flash('info', 'Please select users');
-            res.redirect('/admin/sites/new');
-        } else {
-            // check to see if the site name is in use already before saving
-            Sites.findOne({siteName: util.cleanString(req.body.siteName)}).exec()
-            .then(function (siteFind) {
-                if (!siteFind) {
-                    // crete the new site if the name isn't in use
-                    var newSite = new Sites({
-                        createdDate: Date.now(),
-                        editedDate: Date.now(),
-                        allowedUsers: req.body.allowedUsers,
-                        siteUrl: req.body.siteUrl,
-                        siteName: util.cleanString(req.body.siteName),
-                        isPrivate: req.body.isPrivate,
-                        isTabServerViz: req.body.isTabServerViz
-                    });
-                    newSite.save();
-                    req.flash('info', 'New site created');
+            if (valResult.isEmpty()) {
+                // check to see if the site name is in use already before saving
+                Sites.findOne({siteName: util.cleanString(req.body.siteName)}).exec()
+                .then(function (siteFind) {
+                    if (!siteFind) {
+                        // crete the new site if the name isn't in use
+                        var newSite = new Sites({
+                            createdDate: Date.now(),
+                            editedDate: Date.now(),
+                            allowedUsers: req.body.allowedUsers,
+                            siteUrl: req.body.siteUrl,
+                            siteName: util.cleanString(req.body.siteName),
+                            isPrivate: req.body.isPrivate,
+                            isTabServerViz: req.body.isTabServerViz
+                        });
+                        newSite.save();
+                        req.flash('info', 'New site created');
+                        res.redirect('/admin/sites');
+                    } else {
+                        req.flash('info', 'Site name already in use');
+                        res.redirect('/admin/sites/new');
+                    }
+                }).catch(function (err) {
+                    req.flash('info', 'An error occurred while saving site >> ' + err);
                     res.redirect('/admin/sites');
-                } else {
-                    req.flash('info', 'Site name already in use');
-                    res.redirect('/admin/sites/new');
-                }
-            }).catch(function (err) {
-                req.flash('info', 'An error occurred while saving site >> ' + err);
-                res.redirect('/admin/sites');
-            });
-        }
+                });
+            } else {
+                res.send('Validation error');
+            }
+        });
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(403, '/');
