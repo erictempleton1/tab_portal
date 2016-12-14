@@ -66,37 +66,49 @@ router.get('/edit/:sitename', function (req, res) {
 router.post('/edit/:sitename', function (req, res) {
     if (req.user && req.user.isAdmin) {
         // todo - need some form validation here!
-        var checkSitesQueries = [
-            Sites.findOne({siteName: req.params.sitename}).exec(),
-            Sites.findOne({siteName: req.body.siteName}).exec()
-        ];
-        // run the two queries in parallel
-        Promise.all(checkSitesQueries)
-        .then(function (siteResults) {
-            var site = siteResults[0],
-                existingSite = siteResults[1];
-            // check to be sure the site actually exists before going any futher    
-            if (!site) {
-                req.flash('info', 'Site not found');
-                res.redirect('/admin/sites');
-            // save if the site name is unchanged, or isn't already in use
-            } else if (!existingSite || existingSite.siteName === site.siteName) {
-                site.siteName = util.cleanString(req.body.siteName);
-                site.siteUrl = req.body.siteUrl;
-                site.isPrivate = req.body.isPrivate;
-                site.allowedUsers = req.body.allowedUsers;
-                site.isTabServerViz = req.body.isTabServerViz;
-                site.save();
-                req.flash('info', 'Site updated!');
-                res.redirect('/admin/sites');
+        req.checkBody('siteName', 'Invalid site name').notEmpty();
+        req.checkBody('siteUrl', 'Invalid site url').notEmpty();
+        req.checkBody('isPrivate', 'Invalid private setting').notEmpty().isBoolean();
+        req.checkBody('allowedUsers', 'Invalid allowed users list').notEmpty();
+        req.checkBody('isTabServerViz', 'Invalid tab server viz setting').notEmpty().isBoolean();
+        req.checkParams('sitename', 'Invalid sitename parameter').notEmpty();
+        req.getValidationResult()
+        .then(function(valResult) {
+            if (valResult.isEmpty()) {
+                var checkSitesQueries = [
+                    Sites.findOne({siteName: req.params.sitename}).exec(),
+                    Sites.findOne({siteName: req.body.siteName}).exec()
+                ];
+                // run the two queries in parallel
+                Promise.all(checkSitesQueries)
+                .then(function (siteResults) {
+                    var site = siteResults[0],
+                        existingSite = siteResults[1];
+                    if (!site) {
+                        req.flash('info', 'Site not found');
+                        res.redirect('/admin/sites');
+                    // save if the site name is unchanged, or isn't already in use
+                    } else if (!existingSite || existingSite.siteName === site.siteName) {
+                        site.siteName = util.cleanString(req.body.siteName);
+                        site.siteUrl = req.body.siteUrl;
+                        site.isPrivate = req.body.isPrivate;
+                        site.allowedUsers = req.body.allowedUsers;
+                        site.isTabServerViz = req.body.isTabServerViz;
+                        site.save();
+                        req.flash('info', 'Site updated!');
+                        res.redirect('/admin/sites');
+                    } else {
+                        req.flash('info', 'Site name already in use');
+                        res.redirect('/admin/sites');
+                    }
+                })
+                .catch(function (err) {
+                    req.flash('info', 'There was an error loading the site >> ' + err);
+                    res.redirect('/admin/sites');
+                });
             } else {
-                req.flash('info', 'Site name already in use');
-                res.redirect('/admin/sites');
+                res.send('Validation error');
             }
-        })
-        .catch(function (err) {
-            req.flash('info', 'There was an error loading the site >> ' + err);
-            res.redirect('/admin/sites');
         });
     } else {
         req.flash('info', 'Unauthorized');
@@ -109,14 +121,19 @@ router.get('/remove/:sitename', function (req, res) {
     if (req.user && req.user.isAdmin) {
         Sites.findOne({siteName: req.params.sitename}).exec()
         .then(function (site) {
-            res.render(
-                'admin/remove_site',
-                {
-                    user: req.user,
-                    site: site,
-                    moment: moment
-                }
-            );
+            if (site) {
+                res.render(
+                    'admin/remove_site',
+                    {
+                        user: req.user,
+                        site: site,
+                        moment: moment
+                    }
+                );
+            } else {
+                req.flash('info', 'Site not found');
+                res.redirect('/admin/sites');
+            }
         }).catch(function (err) {
             req.flash('info', 'There was an error loading site >> ' + err);
             res.redirect('/admin/sites');
