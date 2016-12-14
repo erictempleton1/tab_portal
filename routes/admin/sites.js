@@ -147,13 +147,26 @@ router.get('/remove/:sitename', function (req, res) {
 router.post('/remove/:sitename', function (req, res) {
     // post request to delete a site
     if (req.user && req.user.isAdmin) {
-        Sites.remove({siteName: req.params.sitename}).exec()
-        .then(function (site) {
-            req.flash('info', 'Site removed!');
-            res.redirect('/admin/sites');
-        }).catch(function (err) {
-            req.flash('info', 'An error occurred while deleting site');
-            res.redirect('/admin/sites');
+        req.checkParams('sitename', 'Missing parameter').notEmpty();
+        req.getValidationResult()
+        .then(function(valResult) {
+            if (valResult.isEmpty()) {
+                Sites.remove({siteName: req.params.sitename}).exec()
+                .then(function (site) {
+                    if (site) {
+                        req.flash('info', 'Site removed!');
+                        res.redirect('/admin/sites');
+                    } else {
+                        req.flash('info', 'Site not found');
+                        res.redirect('/admin/sites');
+                    }
+                }).catch(function (err) {
+                    req.flash('info', 'An error occurred while deleting site');
+                    res.redirect('/admin/sites');
+                });
+            } else {
+                res.send('Validation error');
+            }
         });
     } else {
         req.flash('info', 'Unauthorized');
