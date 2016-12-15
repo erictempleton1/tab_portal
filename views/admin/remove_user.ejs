@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Title</title>
-  </head>
+  <% include ../includes/index_header %>
   <body>
-    <h3><a href="/admin">Admin</a></h3>
-    <p><%- messages() %></p>
-    <p>Username: <%= (user.username) %></p>
-    <p>Admin: <%= (user.isAdmin) %></p>
-    <p>Reg Date: <%= (user.regDate) %></p>
-    <p>Last Login: <%= user.lastLogin %></p>
-    <form method="POST" action="/admin/users/remove/<%= user.username %>">
-        <input type="submit" value="Remove User">
-    </form>
+    <% include ../includes/index_navbar %>
+    <div class="container-fluid">
+      <div class="row">
+          <% include ../includes/admin/admin_navbar_left %>
+          <h4>Confirm Remove User</h4>
+          <p><%- messages() %></p>
+          <p>Username: <%= (user.username) %></p>
+          <p>Admin: <%= (user.isAdmin) %></p>
+          <p>Reg Date: <%= (user.regDate) %></p>
+          <p>Last Login: <%= user.lastLogin %></p>
+          <form method="POST" action="/admin/users/remove/<%= user.username %>">
+                <input class="btn btn-default" type="submit" value="Remove User">
+          </form>
+        </div>
+      </div>
+      <% include ../includes/index_footer %>
     </body>
 </html>
