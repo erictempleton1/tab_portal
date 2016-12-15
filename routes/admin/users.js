@@ -185,19 +185,24 @@ router.post('/remove/:username', function (req, res) {
         req.getValidationResult()
         .then(function(valResult) {
             if (valResult.isEmpty()) {
-                Account.remove({username: req.params.username}).exec()
-                .then(function (user) {
-                    if (user) {
-                        req.flash('info', 'User removed');
+                if (req.params.username !== req.user.username) {
+                    Account.remove({username: req.params.username}).exec()
+                    .then(function (user) {
+                        if (user) {
+                            req.flash('info', 'User removed');
+                            res.redirect('/admin/users');
+                        } else {
+                            req.flash('info', 'Unable to find user');
+                            res.redirect('/admin/users');
+                        }
+                    }).catch(function (err) {
+                        req.flash('info', 'An error occurred deleting user');
                         res.redirect('/admin/users');
-                    } else {
-                        req.flash('info', 'Unable to find user');
-                        res.redirect('/admin/users');
-                    }
-                }).catch(function (err) {
-                    req.flash('info', 'An error occurred deleting user');
+                    });
+                } else {
+                    req.flash('info', 'Unable to delete current user');
                     res.redirect('/admin/users');
-                });
+                }
             } else {
                 res.send('Validation error');
             }
