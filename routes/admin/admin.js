@@ -32,52 +32,64 @@ router.post('/', function (req, res) {
         TabServerConfig.find({}).exec()
         .then(function (config) {
             if (config.length == 0) {
-                console.log(req.body);
-                if (Object.hasOwnProperty.call(req.body,'submit')) {
-                    var submitVal = req.body.submit;
-                    if (submitVal === 'Add Config') {
-                        var configInfo = new TabServerConfig({
-                            tabServerUsername: req.body.tabServerUsername,
-                            tabServerPassword: req.body.tabServerPassword,
-                            tabServerUrl: req.body.tabServerUrl,
-                            addedDate: Date.now(),
-                            updatedDate: Date.now()
-                        });
-                        configInfo.save(function (saveErr) {
-                            if (saveErr) {
-                                req.flash('info', 'Error on save: ' + saveErr);
-                                res.redirect('/');
-                            } else {
-                                req.flash('info', 'Config settings added');
-                                res.redirect('/admin');
-                            }
-                        });
-                    } else if (submitVal === 'Skip For Now') {
-                        // todo - save empty string fields here
-                        var emptyConfigInfo = new TabServerConfig({
-                            tabServerUsername: null,
-                            tabServerPassword: null,
-                            tabServerUrl: null,
-                            addedDate: Date.now(),
-                            updatedDate: Date.now()
-                        });
-                        emptyConfigInfo.save(function (emptySaveErr) {
-                            if (emptySaveErr) {
-                                req.flash('info', 'Error on save: ' + emptySaveErr);
-                                res.redirect('/');
-                            } else {
-                                req.flash('info', 'Skipped setting config');
-                                res.redirect('/admin');
-                            }
-                        });
+                req.checkBody('submit', 'Missing submit value').notEmpty();
+                req.getValidationResults()
+                .then(function(submitValResult) {
+                    if (submitValResult.isEmpty()) {
+                        var submitVal = req.body.submit;
+                        if (submitVal === 'Add Config') {
+                            req.checkBody('tabServerUsername', 'Missing username').notEmpty();
+                            req.checkBody('tabServerPassword', 'Missing password').notEmpty();
+                            req.checkBody('tabServerUrl', 'Missing Url').notEmpty();
+                            req.getValidationResults()
+                            .then(function(valResult) {
+                                if (valResult.isEmpty()) {
+                                    var configInfo = new TabServerConfig({
+                                        tabServerUsername: req.body.tabServerUsername,
+                                        tabServerPassword: req.body.tabServerPassword,
+                                        tabServerUrl: req.body.tabServerUrl,
+                                        addedDate: Date.now(),
+                                        updatedDate: Date.now()
+                                    });
+                                    configInfo.save(function (saveErr) {
+                                        if (saveErr) {
+                                            req.flash('info', 'Error on save: ' + saveErr);
+                                            res.redirect('/');
+                                        } else {
+                                            req.flash('info', 'Config settings added');
+                                            res.redirect('/admin');
+                                        }
+                                    });
+                                } else {
+                                    res.send('Validation error');
+                                }
+                            });
+                        } else if (submitVal === 'Skip For Now') {
+                            // todo - save empty string fields here
+                            var emptyConfigInfo = new TabServerConfig({
+                                tabServerUsername: null,
+                                tabServerPassword: null,
+                                tabServerUrl: null,
+                                addedDate: Date.now(),
+                                updatedDate: Date.now()
+                            });
+                            emptyConfigInfo.save(function (emptySaveErr) {
+                                if (emptySaveErr) {
+                                    req.flash('info', 'Error on save: ' + emptySaveErr);
+                                    res.redirect('/');
+                                } else {
+                                    req.flash('info', 'Skipped setting config');
+                                    res.redirect('/admin');
+                                }
+                            });
+                        } else {
+                            req.flash('info', 'Unknown submit data');
+                            res.redirect('/');
+                        }
                     } else {
-                        req.flash('info', 'Unknown submit data');
-                        res.redirect('/');
+                        res.send('Validation error');
                     }
-                } else {
-                    req.flash('info', 'Missing submit data');
-                    res.redirect('/');
-                }
+                });
             } else {
                 req.flash('info', 'Invalid request');
                 res.redirect(302, '/admin');
