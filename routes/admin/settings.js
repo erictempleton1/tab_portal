@@ -1,8 +1,6 @@
 var express = require('express'),
     router = express.Router(),
-    moment = require('moment'),
-    TabServerConfig = require('../../models/tabServerConfig');
-
+    moment = require('moment');
 
 /**
  * Render settings page for admins to view config and other settings.

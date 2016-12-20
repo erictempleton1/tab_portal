@@ -66,10 +66,10 @@ router.get('/edit/:sitename', function (req, res) {
 router.post('/edit/:sitename', function (req, res) {
     if (req.user && req.user.isAdmin) {
         req.checkBody('siteName', 'Invalid site name').notEmpty();
-        req.checkBody('siteUrl', 'Invalid site url').notEmpty();
-        req.checkBody('isPrivate', 'Invalid private setting').notEmpty().isBoolean();
+        req.checkBody('vizUrl', 'Invalid site url').notEmpty();
         req.checkBody('allowedUsers', 'Invalid allowed users list').notEmpty();
         req.checkBody('isTabServerViz', 'Invalid tab server viz setting').notEmpty().isBoolean();
+        req.checkBody('trustedLogin', 'Invalid trusted viz setting').notEmpty().isBoolean();
         req.checkParams('sitename', 'Invalid sitename parameter').notEmpty();
         req.getValidationResult()
         .then(function(valResult) {
@@ -89,10 +89,10 @@ router.post('/edit/:sitename', function (req, res) {
                     // save if the site name is unchanged, or isn't already in use
                     } else if (!existingSite || existingSite.siteName === site.siteName) {
                         site.siteName = util.cleanString(req.body.siteName);
-                        site.siteUrl = req.body.siteUrl;
-                        site.isPrivate = req.body.isPrivate;
+                        site.vizUrl = req.body.vizUrl;
                         site.allowedUsers = req.body.allowedUsers;
                         site.isTabServerViz = req.body.isTabServerViz;
+                        site.trustedLogin = req.body.trustedLogin;
                         site.save();
                         req.flash('info', 'Site updated!');
                         res.redirect('/admin/sites');
@@ -190,10 +190,10 @@ router.post('/new', function (req, res) {
     // add a new site
     if (req.user && req.user.isAdmin) {
         req.checkBody('siteName', 'Invalid site name').notEmpty();
-        req.checkBody('siteUrl', 'Invalid site url').notEmpty();
-        req.checkBody('isPrivate', 'Invalid private setting').notEmpty().isBoolean();
+        req.checkBody('vizUrl', 'Invalid site url').notEmpty();
         req.checkBody('allowedUsers', 'Invalid allowed users list').notEmpty();
         req.checkBody('isTabServerViz', 'Invalid tab server viz setting').notEmpty().isBoolean();
+        req.checkBody('trustedLogin', 'Invalid trusted login setting').notEmpty().isBoolean();
         req.getValidationResult()
         .then(function(valResult) {
         // todo - add more form validation
@@ -207,9 +207,9 @@ router.post('/new', function (req, res) {
                             createdDate: Date.now(),
                             editedDate: Date.now(),
                             allowedUsers: req.body.allowedUsers,
-                            siteUrl: req.body.siteUrl,
+                            vizUrl: req.body.vizUrl,
+                            trustedLogin: req.body.trustedLogin,
                             siteName: util.cleanString(req.body.siteName),
-                            isPrivate: req.body.isPrivate,
                             isTabServerViz: req.body.isTabServerViz
                         });
                         newSite.save();

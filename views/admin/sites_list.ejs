@@ -16,7 +16,8 @@
                                 <th>Site</th>
                                 <th>Created</th>
                                 <th>Members</th>
-                                <th>Private</th>
+                                <th>Tab Server Viz</th>
+                                <th>Trusted Login</th>
                                 <th>Options</th>
                             </tr>
                         </thead>
@@ -26,7 +27,8 @@
                                 <td><a href="/site/<%= sites[i].siteName %>"><%= sites[i].siteName %></a</td>
                                 <td><%= moment(sites[i].createdDate).format('MMM D, YYYY hh:mm') %></td>
                                 <td><%= sites[i].allowedUsers.length %></td>
-                                <td><%= sites[i].isPrivate %></td>
+                                <td><%= sites[i].isTabServerViz %></td>
+                                <td><%= sites[i].trustedLogin %></td>
                                 <td>
                                     <a href="sites/edit/<%= sites[i].siteName %>">Edit</a> | 
                                     <a href="sites/remove/<%= sites[i].siteName %>">Remove</a>

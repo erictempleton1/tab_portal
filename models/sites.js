@@ -5,10 +5,10 @@ var Sites = new Schema({
     createdDate: Date,
     editedDate: Date,
     allowedUsers: Array,
-    siteUrl: String,
+    vizUrl: String,
     siteName: String,
-    isPrivate: Boolean,
-    isTabServerViz: Boolean
+    isTabServerViz: Boolean,
+    trustedLogin: Boolean
 });
 
 module.exports = mongoose.model('Sites', Sites);
