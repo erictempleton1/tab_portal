@@ -1,6 +1,5 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    encrypt = require('mongoose-encryption'),
     config = require('../config');
 
 

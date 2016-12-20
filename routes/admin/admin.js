@@ -8,19 +8,7 @@ var express = require('express'),
 router.get('/', function (req, res) {
     // main admin page
     if (req.user && req.user.isAdmin) {
-        TabServerConfig.find({}).exec()
-        .then(function (config) {
-            // check if config file exists
-            if (config.length > 0) {
-                res.render('admin/admin', {user: req.user});
-            } else {
-                // ask user if they want to add config now
-                res.render('admin/create_config', {user: req.user});
-            }
-        }).catch(function (err) {
-            req.flash('info', 'An error occurred: ' + err);
-            res.redirect('/admin');
-        });
+        res.render('admin/admin', {user: req.user});
     } else {
         req.flash('info', 'Unauthorized');
         res.redirect(403, '/');
