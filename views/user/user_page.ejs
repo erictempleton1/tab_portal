@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Title</title>
-  </head>
+  <% include ../includes/index_header %>
   <body>
-    <h4>Sites</h4>
-    <p><%- messages() %></p>
-    <ul>
-    <% if (sites.length > 0) { %>
-        <% for(var i = 0; i < sites.length; i++) { %>
-            <li>
-                <a href="/site/<%= sites[i].siteName %>">
-                    <%= sites[i].siteName %>
-                </a>
-                <%= "trusted ticket: " + sites[i].requestTrustedTicket %>
-                <%= "created: " + sites[i].createdDate %>
-                <%= "allowed users: " + sites[i].allowedUsers %>
-                <%= "site Url: " + sites[i].siteUrl %>
-                <%= "private: " + sites[i].isPrivate %>
-                <form method="POST" action="/site/<%= sites[i].siteName %>">
-                <input type="submit" value="View Site">
-                </form>
-            </li>
-        <% } %>
-    <% } else { %>
-        <p>No sites found</p>
-    <% } %>
-    </ul>
+    <% include ../includes/index_navbar %>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+            <h4>Sites</h4>
+            <p><%- messages() %></p>
+            <% if (sites.length > 0) { %>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Site</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <% for(var i = 0; i < sites.length; i++) { %>
+                        <tr>
+                            <td><a href="/site/<%= sites[i].siteName %>"><%= sites[i].siteName %></a</td>
+                        </tr>
+                    <% } %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p>No sites found</p>
+            <% } %>
+        </div>
+    <% include ../includes/index_footer %>
     </body>
 </html>
