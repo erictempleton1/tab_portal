@@ -75,7 +75,7 @@ router.post('/login', passport.authenticate("local", {
       if (req.user.isAdmin) {
         res.redirect('/admin');
       } else {
-        res.redirect('/sites/' + req.user.username);
+        res.redirect('/user/' + req.user.username);
       }
     }).catch(function (err) {
       req.flash('info', 'There was an error!');
