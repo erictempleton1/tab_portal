@@ -1,5 +1,6 @@
 var express = require('express'),
     router = express.Router(),
+    moment = require('moment'),
     Account = require('../../models/account'),
     Sites = require('../../models/sites');
 
@@ -9,14 +10,21 @@ router.get('/:username', function (req, res) {
         if (req.user.isAdmin || req.user.username === req.params.username) {
             Sites.find({allowedUsers: req.params.username}).exec()
             .then(function (sites) {
-                res.render('user/user_page', {sites: sites, user: req.user});
+                res.render(
+                    'user/user_page', 
+                    {
+                        sites: sites,
+                        user: req.user,
+                        moment: moment
+                    }
+                );
             }).catch(function (err) {
                 req.flash('info', 'There was an error loading sites >> ' + err);
                 res.redirect('/user/' + req.params.username);
             });
         } else {
             req.flash('info', 'Unauthorized');
-            res.redirect('/');
+            res.redirect('/user/' + req.user.username);
         }
     } else {
         req.flash('info', 'Unauthorized');

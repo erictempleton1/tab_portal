@@ -5,6 +5,7 @@
     <% include ../includes/index_navbar %>
     <div class="container">
         <div class="row">
+            <div class="col-md-2"></div>
             <div class="col-md-8">
             <h4>Sites</h4>
             <p><%- messages() %></p>
@@ -12,13 +13,17 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Site</th>
+                            <th>Name</th>
+                            <th>Created</th>
+                            <th>Members</th>
                         </tr>
                     </thead>
                     <tbody>
                     <% for(var i = 0; i < sites.length; i++) { %>
                         <tr>
                             <td><a href="/site/<%= sites[i].siteName %>"><%= sites[i].siteName %></a</td>
+                            <td><%= moment(sites[i].createdDate).format('MMM D, YYYY hh:mm') %></td>
+                            <td><%= sites[i].allowedUsers.length %></td>
                         </tr>
                     <% } %>
                     </tbody>
