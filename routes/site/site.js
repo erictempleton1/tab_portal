@@ -5,6 +5,7 @@ var express = require('express'),
     Account = require('../../models/account'),
     Sites = require('../../models/sites');
 
+// TODO - move this to util
 function ticketUrl (siteUrl, trustedTicket) {
     // todo - add more url checks? index of views?
     var splitUrl = siteUrl.split("/t/"),
@@ -17,59 +18,54 @@ function ticketUrl (siteUrl, trustedTicket) {
     }
 }
     
-router.get('/:sitename', function (req, res) {
+router.get('/:sitename', util.ensureUser, function (req, res) {
     // render the site page that displays the given workbook
-    if (req.user) {
-        Sites.findOne({siteName: req.params.sitename}).exec()
-        .then(function (site) {
-            if (site) {
-                // make sure that the user is allowed to view the site or an admin
-                if (site.allowedUsers.indexOf(req.user.username) >= 0 || req.user.isAdmin) {
-                    var renderUrl;
-                    if (site.isTabServerViz) {
-                        tabServerUtil.getTrustedTicket(req.user.username, req.params.sitename).
-                        then(function (ticket) {
-                            // try to build the url and pass to template
-                            renderUrl = ticketUrl(site.siteUrl, ticket);
-                            if (renderUrl) {
-                                res.render('site/site_page', {
-                                    site: site,
-                                    user: req.user,
-                                    renderUrl: renderUrl
-                                });
-                            } else {
-                                req.flash('info', 'Error building render url');
-                                res.redirect('/');
-                            }
-                        }).catch(function (err) {
-                            req.flash('info', 'Error loading site');
+    Sites.findOne({siteName: req.params.sitename}).exec()
+    .then(function (site) {
+        if (site) {
+            // make sure that the user is allowed to view the site or an admin
+            if (site.allowedUsers.indexOf(req.user.username) >= 0 || req.user.isAdmin) {
+                var renderUrl;
+                if (site.isTabServerViz) {
+                    tabServerUtil.getTrustedTicket(req.user.username, req.params.sitename).
+                    then(function (ticket) {
+                        // try to build the url and pass to template
+                        renderUrl = ticketUrl(site.siteUrl, ticket);
+                        if (renderUrl) {
+                            res.render('site/site_page', {
+                                site: site,
+                                user: req.user,
+                                renderUrl: renderUrl
+                            });
+                        } else {
+                            req.flash('info', 'Error building render url');
                             res.redirect('/');
-                        });
-                    } else {
-                        // set non-tab server url
-                        renderUrl = site.siteUrl;
-                        res.render('site/site_page', {
-                            site: site,
-                            user: req.user,
-                            renderUrl: site.siteUrl
-                        });
-                    }
+                        }
+                    }).catch(function (err) {
+                        req.flash('info', 'Error loading site');
+                        res.redirect('/');
+                    });
                 } else {
-                    req.flash('info', 'User is not authorized to view this site');
-                    res.redirect('/');
+                    // set non-tab server url
+                    renderUrl = site.siteUrl;
+                    res.render('site/site_page', {
+                        site: site,
+                        user: req.user,
+                        renderUrl: site.siteUrl
+                    });
                 }
             } else {
-                req.flash('info', 'Site not found');
+                req.flash('info', 'User is not authorized to view this site');
                 res.redirect('/');
             }
-        }).catch(function (err) {
-            req.flash('info', 'There was an error loading site >> ' + err);
+        } else {
+            req.flash('info', 'Site not found');
             res.redirect('/');
-        });
-    } else {
-        req.flash('info', 'Unauthorized');
+        }
+    }).catch(function (err) {
+        req.flash('info', 'There was an error loading site >> ' + err);
         res.redirect('/');
-    }
+    });
 });
 
 module.exports = router;
