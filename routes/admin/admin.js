@@ -1,16 +1,13 @@
 var express = require('express'),
-    router = express.Router();
+    router = express.Router(),
+    util = require('../../utility/utility');
+
 
 /**
  * Render admin index
  */
-router.get('/', function (req, res) {
-    if (req.user && req.user.isAdmin) {
-        res.render('admin/admin', {user: req.user});
-    } else {
-        req.flash('info', 'Unauthorized');
-        res.redirect(403, '/');
-    }
+router.get('/', util.ensureAdmin, function (req, res) {
+    res.render('admin/admin', {user: req.user});
 });
 
 module.exports = router;
