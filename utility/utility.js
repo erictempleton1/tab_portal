@@ -13,6 +13,14 @@ exports.ensureAdmin = function(req, res, next) {
     res.redirect(403, '/'); 
 };
 
+exports.ensureUser = function(req, res, next) {
+    if (req.user) {
+        return next();
+    }
+    req.flash('info', 'Login required');
+    res.redirect(403, '/');
+};
+
 exports.ensureUserAdmin = function(req, res, next) {
     if (req.user.isAdmin || req.user.username === req.params.username) {
         return next();
