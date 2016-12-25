@@ -3,7 +3,8 @@ var express = require('express'),
     moment = require('moment'),
     Account = require('../../models/account'),
     Sites = require('../../models/sites'),
-    util = require('../../utility/utility');
+    util = require('../../utility/utility'),
+    valAdmin = require('../../validators/admin');
 
 router.get('/', util.ensureAdmin, function (req, res) {
     // page for listing all sites
@@ -52,50 +53,37 @@ router.get('/edit/:sitename', util.ensureAdmin, function (req, res) {
     });
 });
 
-router.post('/edit/:sitename', util.ensureAdmin, function (req, res) {
-    req.checkBody('siteName', 'Invalid site name').notEmpty();
-    req.checkBody('vizUrl', 'Invalid site url').notEmpty();
-    req.checkBody('allowedUsers', 'Invalid allowed users list').notEmpty();
-    req.checkBody('isTabServerViz', 'Invalid tab server viz setting').notEmpty().isBoolean();
-    req.checkBody('trustedLogin', 'Invalid trusted viz setting').notEmpty().isBoolean();
-    req.checkParams('sitename', 'Invalid sitename parameter').notEmpty();
-    req.getValidationResult()
-    .then(function(valResult) {
-        if (valResult.isEmpty()) {
-            var checkSitesQueries = [
-                Sites.findOne({siteName: req.params.sitename}).exec(),
-                Sites.findOne({siteName: req.body.siteName}).exec()
-            ];
-            // run the two queries in parallel
-            Promise.all(checkSitesQueries)
-            .then(function (siteResults) {
-                var site = siteResults[0],
-                    existingSite = siteResults[1];
-                if (!site) {
-                    req.flash('info', 'Site not found');
-                    res.redirect('/admin/sites');
-                // save if the site name is unchanged, or isn't already in use
-                } else if (!existingSite || existingSite.siteName === site.siteName) {
-                    site.siteName = util.cleanString(req.body.siteName);
-                    site.vizUrl = req.body.vizUrl;
-                    site.allowedUsers = req.body.allowedUsers;
-                    site.isTabServerViz = req.body.isTabServerViz;
-                    site.trustedLogin = req.body.trustedLogin;
-                    site.save();
-                    req.flash('info', 'Site updated!');
-                    res.redirect('/admin/sites');
-                } else {
-                    req.flash('info', 'Site name already in use');
-                    res.redirect('/admin/sites');
-                }
-            })
-            .catch(function (err) {
-                req.flash('info', 'There was an error loading the site >> ' + err);
-                res.redirect('/admin/sites');
-            });
+router.post('/edit/:sitename', [util.ensureAdmin, valAdmin.validateSiteEditPost], function (req, res) {
+    var checkSitesQueries = [
+        Sites.findOne({siteName: req.params.sitename}).exec(),
+        Sites.findOne({siteName: req.body.siteName}).exec()
+    ];
+    // run the two queries in parallel
+    Promise.all(checkSitesQueries)
+    .then(function (siteResults) {
+        var site = siteResults[0],
+            existingSite = siteResults[1];
+        if (!site) {
+            req.flash('info', 'Site not found');
+            res.redirect('/admin/sites');
+        // save if the site name is unchanged, or isn't already in use
+        } else if (!existingSite || existingSite.siteName === site.siteName) {
+            site.siteName = util.cleanString(req.body.siteName);
+            site.vizUrl = req.body.vizUrl;
+            site.allowedUsers = req.body.allowedUsers;
+            site.isTabServerViz = req.body.isTabServerViz;
+            site.trustedLogin = req.body.trustedLogin;
+            site.save();
+            req.flash('info', 'Site updated!');
+            res.redirect('/admin/sites');
         } else {
-            res.send('Validation error');
+            req.flash('info', 'Site name already in use');
+            res.redirect('/admin/sites');
         }
+    })
+    .catch(function (err) {
+        req.flash('info', 'There was an error loading the site >> ' + err);
+        res.redirect('/admin/sites');
     });
 });
 
@@ -121,25 +109,18 @@ router.get('/remove/:sitename', util.ensureAdmin, function (req, res) {
 router.post('/remove/:sitename', util.ensureAdmin, function (req, res) {
     // post request to delete a site
     req.checkParams('sitename', 'Missing parameter').notEmpty();
-    req.getValidationResult()
-    .then(function(valResult) {
-        if (valResult.isEmpty()) {
-            Sites.remove({siteName: req.params.sitename}).exec()
-            .then(function (site) {
-                if (site) {
-                    req.flash('info', 'Site removed!');
-                    res.redirect('/admin/sites');
-                } else {
-                    req.flash('info', 'Site not found');
-                    res.redirect('/admin/sites');
-                }
-            }).catch(function (err) {
-                req.flash('info', 'An error occurred while deleting site');
-                res.redirect('/admin/sites');
-            });
+    Sites.remove({siteName: req.params.sitename}).exec()
+    .then(function (site) {
+        if (site) {
+            req.flash('info', 'Site removed!');
+            res.redirect('/admin/sites');
         } else {
-            res.send('Validation error');
+            req.flash('info', 'Site not found');
+            res.redirect('/admin/sites');
         }
+    }).catch(function (err) {
+        req.flash('info', 'An error occurred while deleting site');
+        res.redirect('/admin/sites');
     });
 });
 
