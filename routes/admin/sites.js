@@ -106,9 +106,8 @@ router.get('/remove/:sitename', util.ensureAdmin, function (req, res) {
     });
 });
 
-router.post('/remove/:sitename', util.ensureAdmin, function (req, res) {
+router.post('/remove/:sitename', [util.ensureAdmin, valAdmin.validateSiteRemovePost], function (req, res) {
     // post request to delete a site
-    req.checkParams('sitename', 'Missing parameter').notEmpty();
     Sites.remove({siteName: req.params.sitename}).exec()
     .then(function (site) {
         if (site) {
@@ -136,45 +135,31 @@ router.get('/new', util.ensureAdmin, function (req, res) {
     });
 });
 
-router.post('/new', util.ensureAdmin, function (req, res) {
-    // add a new site
-    req.checkBody('siteName', 'Invalid site name').notEmpty();
-    req.checkBody('vizUrl', 'Invalid site url').notEmpty();
-    req.checkBody('allowedUsers', 'Invalid allowed users list').notEmpty();
-    req.checkBody('isTabServerViz', 'Invalid tab server viz setting').notEmpty().isBoolean();
-    req.checkBody('trustedLogin', 'Invalid trusted login setting').notEmpty().isBoolean();
-    req.getValidationResult()
-    .then(function(valResult) {
-    // todo - add more form validation
-        if (valResult.isEmpty()) {
-            // check to see if the site name is in use already before saving
-            Sites.findOne({siteName: util.cleanString(req.body.siteName)}).exec()
-            .then(function (siteFind) {
-                if (!siteFind) {
-                    // crete the new site if the name isn't in use
-                    var newSite = new Sites({
-                        createdDate: Date.now(),
-                        editedDate: Date.now(),
-                        allowedUsers: req.body.allowedUsers,
-                        vizUrl: req.body.vizUrl,
-                        trustedLogin: req.body.trustedLogin,
-                        siteName: util.cleanString(req.body.siteName),
-                        isTabServerViz: req.body.isTabServerViz
-                    });
-                    newSite.save();
-                    req.flash('info', 'New site created');
-                    res.redirect('/admin/sites');
-                } else {
-                    req.flash('info', 'Site name already in use');
-                    res.redirect('/admin/sites/new');
-                }
-            }).catch(function (err) {
-                req.flash('info', 'An error occurred while saving site >> ' + err);
-                res.redirect('/admin/sites');
+router.post('/new', [util.ensureAdmin, valAdmin.validateNewSitePost], function (req, res) {
+    // check to see if the site name is in use already before saving
+    Sites.findOne({siteName: util.cleanString(req.body.siteName)}).exec()
+    .then(function (siteFind) {
+        if (!siteFind) {
+            // crete the new site if the name isn't in use
+            var newSite = new Sites({
+                createdDate: Date.now(),
+                editedDate: Date.now(),
+                allowedUsers: req.body.allowedUsers,
+                vizUrl: req.body.vizUrl,
+                trustedLogin: req.body.trustedLogin,
+                siteName: util.cleanString(req.body.siteName),
+                isTabServerViz: req.body.isTabServerViz
             });
+            newSite.save();
+            req.flash('info', 'New site created');
+            res.redirect('/admin/sites');
         } else {
-            res.send('Validation error');
+            req.flash('info', 'Site name already in use');
+            res.redirect('/admin/sites/new');
         }
+    }).catch(function (err) {
+        req.flash('info', 'An error occurred while saving site >> ' + err);
+        res.redirect('/admin/sites');
     });
 });
 

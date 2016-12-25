@@ -18,3 +18,19 @@ exports.validateSiteEditPost = function(req, res, next) {
         );
     });
 };
+
+exports.validateSiteRemovePost = function(req, res, next) {
+    req.checkParams('sitename', 'Missing parameter').notEmpty();
+    req.getValidationResult()
+    .then(function(valResult) {
+        if (valResult.isEmpty()) {
+            return next();
+        }
+        res.status(400).json(
+            {
+                message: 'validation error',
+                error: valResult.array()
+            }
+        );
+    });
+};
