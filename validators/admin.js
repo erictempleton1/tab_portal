@@ -16,7 +16,7 @@ exports.validateNewSitePost = function(req, res, next) {
             }
         );
     });
-}
+};
 
 exports.validateSiteEditPost = function(req, res, next) {
     req.checkBody('siteName', 'Invalid site name').notEmpty();
