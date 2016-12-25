@@ -10,6 +10,11 @@ exports.validateSiteEditPost = function(req, res, next) {
         if (valResult.isEmpty()) {
             return next();
         }
-        res.status(400).json({message: 'validation error', error: valResult.array()});
+        res.status(400).json(
+            {
+                message: 'validation error', 
+                error: valResult.array()
+            }
+        );
     });
 };
