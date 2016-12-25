@@ -4,7 +4,9 @@ var express = require('express'),
     moment = require('moment'),
     Account = require('../../models/account'),
     Sites = require('../../models/sites'),
-    util = require('../../utility/utility');
+    util = require('../../utility/utility'),
+    valAdmin = require('../../validators/admin');
+
 
 router.get('/', util.ensureAdmin, function (req, res) {
     // page for listing all users
@@ -39,7 +41,7 @@ router.get('/edit/:username', util.ensureAdmin, function (req, res) {
     });
 });
 
-router.get('/edit/password/:username', util.ensureAdmin, function(req, res) {
+router.get('/edit/password/:username', [util.ensureAdmin, valAdmin.validateUserPasswordPost], function(req, res) {
     Account.findOne({username: req.params.username})
     .exec()
     .then(function(userEdit) {
@@ -60,32 +62,23 @@ router.get('/edit/password/:username', util.ensureAdmin, function(req, res) {
 });
 
 router.post('/edit/password/:username', util.ensureAdmin, function(req, res) {
-    req.checkBody('password', 'Invalid password').notEmpty();
-    req.checkParams('username', 'Invalid username').notEmpty();
-    req.getValidationResult()
-    .then(function(valResult) {
-        if (valResult.isEmpty()) {
-            Account.findOne({username: req.params.username})
-            .exec()
-            .then(function(userEdit) {
-                if (userEdit) {
-                    userEdit.setPassword(req.body.password, function() {
-                        userEdit.save();
-                        req.flash('info', 'Password Updated');
-                        res.redirect('/admin/users');
-                    });
-                } else {
-                    req.flash('info', 'Unable to find user');
-                    res.redirect('/admin/users');
-                }
-            })
-            .catch(function (err) {
-                req.flash('info', 'Error finding user >> ' + err);
+    Account.findOne({username: req.params.username})
+    .exec()
+    .then(function(userEdit) {
+        if (userEdit) {
+            userEdit.setPassword(req.body.password, function() {
+                userEdit.save();
+                req.flash('info', 'Password Updated');
                 res.redirect('/admin/users');
             });
         } else {
-            res.send('Validation error');
+            req.flash('info', 'Unable to find user');
+            res.redirect('/admin/users');
         }
+    })
+    .catch(function (err) {
+        req.flash('info', 'Error finding user >> ' + err);
+        res.redirect('/admin/users');
     });
 });
 

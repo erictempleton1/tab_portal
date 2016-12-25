@@ -1,3 +1,5 @@
+// admin site.js validators
+
 exports.validateNewSitePost = function(req, res, next) {
     req.checkBody('siteName', 'Invalid site name').notEmpty();
     req.checkBody('vizUrl', 'Invalid site url').notEmpty();
@@ -54,3 +56,23 @@ exports.validateSiteRemovePost = function(req, res, next) {
         );
     });
 };
+
+
+// admin user.js validators
+
+exports.validateUserPasswordPost = function(req, res, next) {
+    req.checkBody('password', 'Invalid password').notEmpty();
+    req.checkParams('username', 'Invalid username').notEmpty();
+    req.getValidationResult()
+    .then(function(valResult) {
+        if (valResult.isEmpty()) {
+            return next();
+        }
+        res.status(400).json(
+            {
+                message: 'validation error',
+                error: valResult.array()
+            }
+        );
+    });
+}
