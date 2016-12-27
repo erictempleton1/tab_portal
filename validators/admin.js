@@ -75,4 +75,22 @@ exports.validateUserPasswordPost = function(req, res, next) {
             }
         );
     });
-}
+};
+
+exports.validateUserEditPost = function(req, res, next) {
+    req.checkBody('username', 'Invalid username').notEmpty();
+    req.checkParams('username', 'Missing parameter').notEmpty();
+    req.checkBody('isAdmin', 'Invalid admin status').notEmpty().isBoolean();
+    req.getValidationResult()
+    .then(function(valResult) {
+        if (valResult) {
+            return next();
+        }
+        res.status(400).json(
+            {
+                message: 'validation error',
+                error: valResult.array()
+            }
+        );
+    });
+};

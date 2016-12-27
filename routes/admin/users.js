@@ -41,7 +41,7 @@ router.get('/edit/:username', util.ensureAdmin, function (req, res) {
     });
 });
 
-router.get('/edit/password/:username', [util.ensureAdmin, valAdmin.validateUserPasswordPost], function(req, res) {
+router.get('/edit/password/:username', util.ensureAdmin, function(req, res) {
     Account.findOne({username: req.params.username})
     .exec()
     .then(function(userEdit) {
@@ -61,7 +61,7 @@ router.get('/edit/password/:username', [util.ensureAdmin, valAdmin.validateUserP
     });
 });
 
-router.post('/edit/password/:username', util.ensureAdmin, function(req, res) {
+router.post('/edit/password/:username', [util.ensureAdmin, valAdmin.validateUserPasswordPost], function(req, res) {
     Account.findOne({username: req.params.username})
     .exec()
     .then(function(userEdit) {
@@ -82,44 +82,34 @@ router.post('/edit/password/:username', util.ensureAdmin, function(req, res) {
     });
 });
 
-router.post('/edit/:username', util.ensureAdmin, function(req, res) {
+router.post('/edit/:username', [util.ensureAdmin, valAdmin.validateUserEditPost], function(req, res) {
     // post request to edit a single user
-    req.checkBody('username', 'Invalid username').notEmpty();
-    req.checkParams('username', 'Missing parameter').notEmpty();
-    req.checkBody('isAdmin', 'Invalid admin status').notEmpty().isBoolean();
-    req.getValidationResult()
-    .then(function(valResult) {
-        if (valResult.isEmpty()) {
-            var checkAccountQueries = [
-                Account.findOne({username: req.params.username}).exec(),
-                Account.findOne({username: req.body.username}).exec()
-            ];
-            // run the two queries in paralell
-            Promise.all(checkAccountQueries)
-            .then(function (userResults) {
-                var user = userResults[0],
-                    existingUser = userResults[1];
-                if (!user) {
-                    req.flash('info', 'User not found');
-                    res.redirect('/admin/sites');
-                } else if (!existingUser || existingUser.username === user.username) {
-                    user.username = req.body.username;
-                    user.isAdmin = req.body.isAdmin;
-                    user.save();
-                    req.flash('info', 'User updated!');
-                    res.redirect('/admin/users');
-                } else {
-                    req.flash('info', 'Username already in use');
-                    res.redirect('/admin/users');
-                }
-            })
-            .catch(function(err) {
-                req.flash('info', 'There was an error loading the user >> ' + err);
-                res.redirect('/admin/users');
-            });
+    var checkAccountQueries = [
+        Account.findOne({username: req.params.username}).exec(),
+        Account.findOne({username: req.body.username}).exec()
+    ];
+    // run the two queries in paralell
+    Promise.all(checkAccountQueries)
+    .then(function (userResults) {
+        var user = userResults[0],
+            existingUser = userResults[1];
+        if (!user) {
+            req.flash('info', 'User not found');
+            res.redirect('/admin/sites');
+        } else if (!existingUser || existingUser.username === user.username) {
+            user.username = req.body.username;
+            user.isAdmin = req.body.isAdmin;
+            user.save();
+            req.flash('info', 'User updated!');
+            res.redirect('/admin/users');
         } else {
-            res.send('Validation error');
+            req.flash('info', 'Username already in use');
+            res.redirect('/admin/users');
         }
+    })
+    .catch(function(err) {
+        req.flash('info', 'There was an error loading the user >> ' + err);
+        res.redirect('/admin/users');
     });
 });
 
