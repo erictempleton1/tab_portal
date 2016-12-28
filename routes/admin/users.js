@@ -134,8 +134,15 @@ router.post('/remove/:username', [util.ensureAdmin, valAdmin.validateUserRemoveP
         Account.remove({username: req.params.username}).exec()
         .then(function (user) {
             if (user) {
-                req.flash('info', 'User removed');
-                res.redirect('/admin/users');
+                // remove user from allowedUsers array in all docs
+                Sites.update({}, {$pull: {allowedUsers: req.params.username}}, {multi: true}).exec()
+                .then(function() {
+                    req.flash('info', 'User removed');
+                    res.redirect('/admin/users');  
+                })
+                .catch(function(siteErr) {
+                    req.flash('info', 'Error removing user from sites')
+                });
             } else {
                 req.flash('info', 'Unable to find user');
                 res.redirect('/admin/users');
