@@ -129,34 +129,26 @@ router.get('/remove/:username', util.ensureAdmin, function (req, res) {
     });
 });
 
-router.post('/remove/:username', util.ensureAdmin, function (req, res) {
-    // post request to delete a user
-    req.checkParams('username', 'Missing parameter').notEmpty();
-    req.getValidationResult()
-    .then(function(valResult) {
-        if (valResult.isEmpty()) {
-            if (req.params.username !== req.user.username) {
-                Account.remove({username: req.params.username}).exec()
-                .then(function (user) {
-                    if (user) {
-                        req.flash('info', 'User removed');
-                        res.redirect('/admin/users');
-                    } else {
-                        req.flash('info', 'Unable to find user');
-                        res.redirect('/admin/users');
-                    }
-                }).catch(function (err) {
-                    req.flash('info', 'An error occurred deleting user');
-                    res.redirect('/admin/users');
-                });
+router.post('/remove/:username', [util.ensureAdmin, valAdmin.validateUserRemovePost], function (req, res) {
+    if (req.params.username !== req.user.username) {
+        Account.remove({username: req.params.username}).exec()
+        .then(function (user) {
+            if (user) {
+                req.flash('info', 'User removed');
+                res.redirect('/admin/users');
             } else {
-                req.flash('info', 'Unable to delete current user');
+                req.flash('info', 'Unable to find user');
                 res.redirect('/admin/users');
             }
-        } else {
-            res.send('Validation error');
-        }
-    });
+        }).catch(function (err) {
+            req.flash('info', 'An error occurred deleting user');
+            res.redirect('/admin/users');
+        });
+    } else {
+        // prevent admin users from delete themselves
+        req.flash('info', 'Unable to delete current user');
+        res.redirect('/admin/users');
+    }
 });
 
 router.get('/new', util.ensureAdmin, function (req, res) {
