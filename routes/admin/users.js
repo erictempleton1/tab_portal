@@ -156,30 +156,21 @@ router.get('/new', util.ensureAdmin, function (req, res) {
     res.render('admin/add_user', {user: req.user});
 });
 
-router.post('/new', util.ensureAdmin, function (req, res) {
-    // post request for adding a new user
-    req.checkBody('username', 'Invalid username').notEmpty();
-    req.getValidationResult()
-    .then(function(valResult) {
-        if (valResult.isEmpty()) {
-            var regInfo = {
-                username: util.cleanString(req.body.username),
-                isAdmin: false,
-                regDate: Date.now(),
-                lastLogin: Date.now()
-            };
-            Account.register(new Account(regInfo), req.body.password, function (err, account) {
-            if (err) {
-                req.flash("info", "Sorry, this account already exists");
-                res.render('admin/add_user');
-            } else {
-                req.flash('info', 'User created');
-                res.redirect('/admin/users');
-            }    
-            });
-        } else {
-            res.send('Validation error');
-        }
+router.post('/new', [util.ensureAdmin, valAdmin.validateNewUserPost], function (req, res) {
+    var regInfo = {
+        username: util.cleanString(req.body.username),
+        isAdmin: false,
+        regDate: Date.now(),
+        lastLogin: Date.now()
+    };
+    Account.register(new Account(regInfo), req.body.password, function (err, account) {
+    if (err) {
+        req.flash("info", "Sorry, this account already exists");
+        res.render('admin/add_user');
+    } else {
+        req.flash('info', 'User created');
+        res.redirect('/admin/users');
+    }    
     });
 });
 

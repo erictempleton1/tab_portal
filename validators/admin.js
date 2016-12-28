@@ -110,3 +110,19 @@ exports.validateUserRemovePost = function(req, res, next) {
         );
     });
 };
+
+exports.validateNewUserPost = function(req, res, next) {
+    req.checkBody('username', 'Invalid username').notEmpty();
+    req.getValidationResult()
+    .then(function(valResult) {
+        if (valResult) {
+            return next();
+        }
+        res.status(400).json(
+            {
+                message: 'validation error',
+                error: valResult.array()
+            }
+        );
+    });
+};
