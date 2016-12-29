@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <% include ../includes/index_header %>
+  <body>
+    <% include ../includes/index_navbar %>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+        <h4>Settings</h4>
+            <%- messages() %>
+            <a href="#">Change Password</a>
+        </div>
+    </div>
+</div>
+<% include ../includes/index_footer %>
+<script src="/javascripts/parsley.min.js"></script>
+</body>
+<script type="text/javascript">
+    $("#changeUserPwForm").parsley();
+</script>
+</html>
