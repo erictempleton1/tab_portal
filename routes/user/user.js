@@ -9,19 +9,30 @@ var express = require('express'),
 // route only viewable by a logged in owner, and admin
 var authReqs = [util.ensureUser, util.ensureUserAdmin];
 router.get('/:username', authReqs, function (req, res) {
-    Sites.find({allowedUsers: req.params.username}).exec()
-    .then(function (sites) {
-        res.render(
-            'user/user_page', 
-            {
-                sites: sites,
-                user: req.user,
-                moment: moment
-            }
-        );
-    }).catch(function (err) {
-        req.flash('info', 'There was an error loading sites >> ' + err);
-        res.redirect('/user/' + req.params.username);
+    Account.findOne({username: req.params.username}).exec()
+    .then(function(user) {
+        if (user) {
+            Sites.find({allowedUsers: req.params.username}).exec()
+            .then(function (sites) {
+                res.render(
+                    'user/user_page', 
+                    {
+                        sites: sites,
+                        user: req.user,
+                        moment: moment
+                    }
+                );
+            }).catch(function (siteErr) {
+                req.flash('info', 'There was an error loading sites >> ' + siteErr);
+                res.redirect('/user/' + req.params.username);
+            });
+        } else {
+            req.flash('info', 'User not found');
+            res.redirect('/');
+        }
+    }).catch(function(userErr) {
+        req.flash('info', 'Error finding user');
+        res.redirect('/');
     });
 });
 
