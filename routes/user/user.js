@@ -39,7 +39,7 @@ router.get('/:username', authReqs, function(req, res) {
 });
 
 router.get('/:username/settings', authReqs, function (req, res) {
-    var redirectUrl = '/' + req.params.username + '/settings';
+    var redirectUrl = '/user/' + req.params.username + '/settings';
     Account.findOne({username: req.params.username})
     .exec()
     .then(function(user) {
@@ -59,21 +59,21 @@ router.get('/:username/settings/password', authReqs, function(req, res) {
     Account.findOne({username: req.params.username})
     .exec()
     .then(function(user) {
-        var redirectUrl = '/' + req.params.username + '/settings/password';
+        var redirectUrl = '/user/' + req.params.username + '/settings/password';
         if (user) {
             res.render('user/user_change_pw', {user: user});
         } else {
             req.flash('info', 'User not found');
             res.redirect(redirectUrl);
         }
-    })
-})
+    });
+});
 
 router.post('/:username/settings/password', [authReqs, valUser.validateUserPasswordPost], function(req, res) {
     Account.findOne({username: req.params.username})
     .exec()
     .then(function(userEdit) {
-        var redirectUrl = '/' + req.params.username + '/settings';
+        var redirectUrl = '/user/' + req.params.username + '/settings';
         if (userEdit) {
             userEdit.setPassword(req.body.password, function() {
                 userEdit.save();
