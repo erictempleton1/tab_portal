@@ -20,7 +20,7 @@ router.get('/:username', authReqs, function(req, res) {
                     'user/user_page', 
                     {
                         sites: sites,
-                        user: req.user,
+                        user: user,
                         moment: moment
                     }
                 );
@@ -39,22 +39,37 @@ router.get('/:username', authReqs, function(req, res) {
 });
 
 router.get('/:username/settings', authReqs, function (req, res) {
+    var redirectUrl = '/' + req.params.username + '/settings';
     Account.findOne({username: req.params.username})
     .exec()
     .then(function(user) {
         if (user) {
-            res.render('user/user_settings', {user: req.user});
+            res.render('user/user_settings', {user: user});
         } else {
             req.flash('info', 'User not found');
-            res.redirect('/');
+            res.redirect(redirectUrl);
         }
     }).catch(function(userErr) {
         req.flash('info', 'Error finding user');
-        res.redirect('/');
+        res.redirect(redirectUrl);
     });
 });
 
-router.post('/:username/settings/password', [authReqs,valUser.validateUserPasswordPost], function(req, res) {
+router.get('/:username/settings/password', authReqs, function(req, res) {
+    Account.findOne({username: req.params.username})
+    .exec()
+    .then(function(user) {
+        var redirectUrl = '/' + req.params.username + '/settings/password';
+        if (user) {
+            res.render('user/user_change_pw', {user: user});
+        } else {
+            req.flash('info', 'User not found');
+            res.redirect(redirectUrl);
+        }
+    })
+})
+
+router.post('/:username/settings/password', [authReqs, valUser.validateUserPasswordPost], function(req, res) {
     Account.findOne({username: req.params.username})
     .exec()
     .then(function(userEdit) {
