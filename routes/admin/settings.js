@@ -7,7 +7,10 @@ var express = require('express'),
  * Render settings page for admins to view config and other settings.
  */
 router.get('/', util.ensureAdmin, function (req, res) {
-    res.send('In progress...');
+    res.render(
+        'admin/settings',
+        {user: req.user}
+    );
 });
 
 module.exports = router;

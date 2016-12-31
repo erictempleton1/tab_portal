@@ -10,7 +10,7 @@ exports.ensureAdmin = function(req, res, next) {
         return next();
     }
     req.flash('info', 'Unauthorized');
-    res.redirect(403, '/'); 
+    res.redirect(303, '/'); 
 };
 
 exports.ensureUser = function(req, res, next) {
@@ -18,7 +18,7 @@ exports.ensureUser = function(req, res, next) {
         return next();
     }
     req.flash('info', 'Login required');
-    res.redirect(403, '/');
+    res.redirect(303, '/');
 };
 
 exports.ensureUserAdmin = function(req, res, next) {
@@ -26,5 +26,5 @@ exports.ensureUserAdmin = function(req, res, next) {
         return next();
     }
     req.flash('info', 'Unauthorized');
-    res.redirect(403, '/');
+    res.redirect(303, '/');
 };
