@@ -1,3 +1,23 @@
+var winston = require('winston');
+
+
+// logging configuration
+
+winston.level = 'debug';
+logFilename = 'tab_portal.log';
+winston.configure({
+    transports: [
+        new (winston.transports.File)({filename: logFilename})
+    ]
+});
+logLevelMapping = {
+    0: 'debug',
+    1: 'info',
+    2:  'warn',
+    3: 'error'
+};
+
+
 // helper functions
 
 exports.cleanString = function(stringToClean) {
@@ -27,4 +47,8 @@ exports.ensureUserAdmin = function(req, res, next) {
     }
     req.flash('info', 'Unauthorized');
     res.redirect(303, '/');
+};
+
+exports.log = function(level, message) {
+    winston.log(logLevelMapping.level, message);
 };

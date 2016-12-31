@@ -26,6 +26,7 @@
     "request": "^2.75.0",
     "serve-favicon": "~2.2.0",
     "underscore": "^1.8.3",
+    "winston": "^2.3.0",
     "xml2js": "^0.4.17"
   },
   "description": "Custom Tableau Portal",
