@@ -50,5 +50,5 @@ exports.ensureUserAdmin = function(req, res, next) {
 };
 
 exports.log = function(level, message) {
-    winston.log(logLevelMapping.level, message);
+    winston.log(logLevelMapping[level], message);
 };
