@@ -18,8 +18,10 @@ router.get('/', function (req, res) {
         // no users have been found so prompt user to create an admin
         res.render('create_admin', {user: req.user});
     }
-  }).catch(function (findOneErr) {
-      console.log(findOneErr);
+  }).catch(function (findErr) {
+      util.log(3, 'index get request error: ' + findErr);
+      req.flash('info', 'Error loading index');
+      res.redirect('/');
   });
 });
 
@@ -40,7 +42,8 @@ router.post('/', function (req, res) {
       };
       Account.register(new Account(regInfo), req.body.password, function (regErr, account) {
         if (regErr) {
-          req.flash('info', 'Error creating account: ' + regErr);
+          util.log(3, 'index post request error creating admin user: ' + regErr);
+          req.flash('info', 'Error creating admin user');
           res.redirect('/');
         } else {
           req.flash('info', 'Admin user created. Please log in.');
@@ -60,11 +63,7 @@ router.get('/login', function (req, res) {
   }
 });
 
-router.post('/login', passport.authenticate("local", {
-        failureRedirect: "/login",
-        failureFlash: "Invalid username or password"
-  }),
-  function (req, res) {
+router.post('/login', passport.authenticate("local", failureMessages()), function (req, res) {
     // update the last login date
     var conditions = {'username': req.user.username},
         update = {'lastLogin': Date.now()},
@@ -78,7 +77,8 @@ router.post('/login', passport.authenticate("local", {
         res.redirect('/user/' + req.user.username);
       }
     }).catch(function (err) {
-      req.flash('info', 'There was an error!');
+      util.log(3, 'login update document error: ' + err);
+      req.flash('info', 'Error logging in');
       res.redirect('login');
     });
 });
@@ -91,5 +91,12 @@ router.get('/logout', function (req, res) {
 router.get('/ping', function (req, res) {
   res.status(200).send('pong!');
 });
+
+function failureMessages() {
+    return {
+      failureRedirect: "/login",
+      failureFlash: "Invalid username or password"
+    };
+};
 
 module.exports = router;
