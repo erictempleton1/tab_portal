@@ -19,7 +19,9 @@ router.get('/', util.ensureAdmin, function (req, res) {
             }
         );
     }).catch(function (err) {
-        req.flash('info', 'There was an error loading sites >> ' + err);
+        util.log(3, 'sites get request error: ' + err)
+        req.flash('info', 'Error loading sites');
+        res.redirect('/admin');
     });
 });
 
@@ -48,7 +50,8 @@ router.get('/edit/:sitename', util.ensureAdmin, function (req, res) {
             res.redirect('/admin/sites');
         }
     }).catch(function (err) {
-        req.flash('info', 'There was an error loading site');
+        util.log(3, 'site edit get request error: ' + err);
+        req.flash('info', 'Error loading site');
         res.redirect('/admin/sites');
     });
 });
@@ -82,7 +85,8 @@ router.post('/edit/:sitename', [util.ensureAdmin, valAdmin.validateSiteEditPost]
         }
     })
     .catch(function (err) {
-        req.flash('info', 'There was an error loading the site >> ' + err);
+        util.log(3, 'site edit post request error: ' + err);
+        req.flash('info', 'Error updating site');
         res.redirect('/admin/sites');
     });
 });
@@ -101,7 +105,8 @@ router.get('/remove/:sitename', util.ensureAdmin, function (req, res) {
             res.redirect('/admin/sites');
         }
     }).catch(function (err) {
-        req.flash('info', 'There was an error loading site >> ' + err);
+        util.log(3, 'site remove get request error: ' + err);
+        req.flash('info', 'Error removing site');
         res.redirect('/admin/sites');
     });
 });
@@ -118,7 +123,8 @@ router.post('/remove/:sitename', [util.ensureAdmin, valAdmin.validateSiteRemoveP
             res.redirect('/admin/sites');
         }
     }).catch(function (err) {
-        req.flash('info', 'An error occurred while deleting site');
+        util.log(3, 'site remove post request error: ' + err);
+        req.flash('info', 'Error removing site');
         res.redirect('/admin/sites');
     });
 });
@@ -130,6 +136,7 @@ router.get('/new', util.ensureAdmin, function (req, res) {
     .then(function (users) {
         res.render('admin/new_site', {users: users, user: req.user});
     }).catch(function (err) {
+        util.log(3, 'add new site get request error: ' + err);
         req.flash('info', 'Error getting users');
         res.redirect('/admin/sites');
     });
@@ -158,7 +165,8 @@ router.post('/new', [util.ensureAdmin, valAdmin.validateNewSitePost], function (
             res.redirect('/admin/sites/new');
         }
     }).catch(function (err) {
-        req.flash('info', 'An error occurred while saving site >> ' + err);
+        util.log(3, 'add new site post request error: ' + err);
+        req.flash('info', 'Error saving site');
         res.redirect('/admin/sites');
     });
 });
