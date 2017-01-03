@@ -25,7 +25,8 @@ router.get('/:username', authReqs, function(req, res) {
                     }
                 );
             }).catch(function(siteErr) {
-                req.flash('info', 'There was an error loading sites >> ' + siteErr);
+                util.log(3, 'user page sites get request error: ' + siteErr);
+                req.flash('info', 'Error loading sites');
                 res.redirect('/user/' + req.params.username);
             });
         } else {
@@ -33,6 +34,7 @@ router.get('/:username', authReqs, function(req, res) {
             res.redirect('/');
         }
     }).catch(function(userErr) {
+        util.log(3, 'user page get request error: ' + userErr);
         req.flash('info', 'Error finding user');
         res.redirect('/');
     });
@@ -50,6 +52,7 @@ router.get('/:username/settings', authReqs, function (req, res) {
             res.redirect(redirectUrl);
         }
     }).catch(function(userErr) {
+        util.log(3, 'user page settings get request error: ' + userErr);
         req.flash('info', 'Error finding user');
         res.redirect(redirectUrl);
     });
@@ -66,7 +69,11 @@ router.get('/:username/settings/password', authReqs, function(req, res) {
             req.flash('info', 'User not found');
             res.redirect(redirectUrl);
         }
-    });
+    }).catch(function(userErr) {
+        util.log(3, 'user page settings password get request error: ' + userErr);
+        req.flash('info', 'Error getting user');
+        res.redirect(redirectUrl);
+    })
 });
 
 router.post('/:username/settings/password', [authReqs, valUser.validateUserPasswordPost], function(req, res) {
@@ -84,8 +91,8 @@ router.post('/:username/settings/password', [authReqs, valUser.validateUserPassw
             req.flash('info', 'Unable to find user');
             res.redirect(redirectUrl);
         }
-    })
-    .catch(function(err) {
+    }).catch(function(err) {
+        util.log(3, 'user page settings password post request error: ' + err);
         req.flash('info', 'An error occurred');
         res.redirect(redirectUrl);
     });
