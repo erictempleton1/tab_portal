@@ -21,7 +21,8 @@ router.get('/', util.ensureAdmin, function (req, res) {
             }
         );
     }).catch(function (err) {
-        req.flash('info', 'Error getting users >> ' + err);
+        util.log(3, 'users get request error: ' + err);
+        req.flash('info', 'Error getting users');
         res.redirect('/admin');
     });
 });
@@ -36,7 +37,8 @@ router.get('/edit/:username', util.ensureAdmin, function (req, res) {
             res.redirect('/admin/users');
         }
     }).catch(function (err) {
-        req.flash('info', 'Error querying user >> ' + err);
+        util.log(3, 'user edit get request error: ' + err);
+        req.flash('info', 'Error getting user');
         res.redirect('/admin/users');
     });
 });
@@ -56,7 +58,8 @@ router.get('/edit/password/:username', util.ensureAdmin, function(req, res) {
         }
     })
     .catch(function (err) {
-        req.flash('info', 'Error finding user >> ' + err);
+        util.log(3, 'user edit password get request error: ' + err);
+        req.flash('info', 'Error getting user');
         res.redirect('/admin/users');
     });
 });
@@ -77,7 +80,8 @@ router.post('/edit/password/:username', [util.ensureAdmin, valAdmin.validateUser
         }
     })
     .catch(function (err) {
-        req.flash('info', 'Error finding user >> ' + err);
+        util.log(3, 'user edit password post request error: ' + err);
+        req.flash('info', 'Error getting user');
         res.redirect('/admin/users');
     });
 });
@@ -108,7 +112,8 @@ router.post('/edit/:username', [util.ensureAdmin, valAdmin.validateUserEditPost]
         }
     })
     .catch(function(err) {
-        req.flash('info', 'There was an error loading the user >> ' + err);
+        util.log(3, 'user edit get request error: ' + err);
+        req.flash('info', 'Error getting user');
         res.redirect('/admin/users');
     });
 });
@@ -124,7 +129,8 @@ router.get('/remove/:username', util.ensureAdmin, function (req, res) {
             res.redirect('/admin/users');
         }
     }).catch(function (err) {
-        req.flash('info', 'There was an error loading user >> ' + err);
+        util.log(3, 'user remove get request error:' + err);
+        req.flash('info', 'Error getting user');
         res.redirect('/admin/users');
     });
 });
@@ -148,7 +154,8 @@ router.post('/remove/:username', [util.ensureAdmin, valAdmin.validateUserRemoveP
                 res.redirect('/admin/users');
             }
         }).catch(function (err) {
-            req.flash('info', 'An error occurred deleting user');
+            util.log(3, 'user remove post request error: ' + err);
+            req.flash('info', 'Error deleting user');
             res.redirect('/admin/users');
         });
     } else {
