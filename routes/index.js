@@ -3,6 +3,7 @@ var express = require('express'),
     passport = require('passport'),
     Account = require('../models/account'),
     util = require('../utility/utility'),
+	valIndex = require('../validators/index'),
     Promise = require('bluebird');
 
 // todo - add check for config collection
@@ -25,7 +26,7 @@ router.get('/', function (req, res) {
 	});
 });
 
-router.post('/', function (req, res) {
+router.post('/', valIndex.validateCreateAdminUser, function (req, res) {
 	// post request for first startup when there is no admin user
 	Account.find({}).exec()
 	.then(function (users) {
@@ -67,14 +68,12 @@ router.get('/login', function (req, res) {
 	}
 });
 
-router.post('/login', passport.authenticate("local", failureMessages()), function (req, res) {
-	// update the last login date
+router.post('/login', passport.authenticate("local", util.failureMessages), function (req, res) {
 	var conditions = {'username': req.user.username},
 		update = {'lastLogin': Date.now()},
 		options = {'upsert': false};
     Account.update(conditions, update, options).exec()
 	.then(function (user) {
-		// send admin users to the admin site
 		if (req.user.isAdmin) {
 			res.redirect('/admin');
 		} else {
@@ -95,12 +94,5 @@ router.get('/logout', function (req, res) {
 router.get('/ping', function (req, res) {
 	res.status(200).send('pong!');
 });
-
-function failureMessages() {
-    return {
-      failureRedirect: "/login",
-      failureFlash: "Invalid username or password"
-    };
-};
 
 module.exports = router;

@@ -52,3 +52,8 @@ exports.ensureUserAdmin = function(req, res, next) {
 exports.log = function(level, message) {
     winston.log(logLevelMapping[level], message);
 };
+
+exports.failureMessages = {
+      failureRedirect: "/login",
+      failureFlash: "Invalid username or password"
+    };
