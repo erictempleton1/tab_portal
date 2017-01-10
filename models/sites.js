@@ -5,6 +5,7 @@ var Sites = new Schema({
     createdDate: Date,
     editedDate: Date,
     allowedUsers: Array,
+    slug: String,
     vizUrl: String,
     siteName: String,
     isTabServerViz: Boolean,
