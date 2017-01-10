@@ -47,11 +47,11 @@ router.get('/:sitename', util.ensureUser, function (req, res) {
                     });
                 } else {
                     // set non-tab server url
-                    renderUrl = site.siteUrl;
+                    renderUrl = site.vizUrl;
                     res.render('site/site_page', {
                         site: site,
                         user: req.user,
-                        renderUrl: site.siteUrl
+                        renderUrl: renderUrl
                     });
                 }
             } else {
