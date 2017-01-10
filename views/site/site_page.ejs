@@ -1,29 +1,27 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>User Site</title>
-    <script src="https://public.tableau.com/javascripts/api/tableau-2.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-  </head>
+  <% include ../includes/index_header %>
+  <script src="https://public.tableau.com/javascripts/api/tableau-2.js"></script>
   <body>
-    <%= site %>
-    <p><%- messages() %></p>
-    <p><a href="/user/<%= user.username %>"<p><%= (user.username) %></p></a>
-    <% if (user.isAdmin) { %>
-      <p><a href="/admin">Admin Site</a></p>
-    <% } %>
-    <p><a href="/logout">Logout</a></p>
-    <div id="vizContainer"></div>
+    <% include ../includes/index_navbar %>
+    <div class="container">
+            <div class="col-md-2"></div>
+              <p><%- messages() %></p>
+              <div id="vizContainer"></div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+    <% include ../includes/index_footer %>
   </body>
     <script>
-    function initViz() {
-      var containerDiv = document.getElementById("vizContainer"),
-          url = "<%= (renderUrl) %>",
-          options = {hideToolbar: true},
-          viz = new tableau.Viz(containerDiv, url, options);
-    }
-    $(document).ready(function() {
-        $(initViz);
-    });
+      function initViz() {
+        var containerDiv = document.getElementById("vizContainer"),
+            url = "<%= (renderUrl) %>",
+            options = {hideToolbar: true},
+            viz = new tableau.Viz(containerDiv, url, options);
+      };
+      $(document).ready(function() {
+          $(initViz);
+      });
   </script>
 </html>
