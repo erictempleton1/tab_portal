@@ -25,6 +25,14 @@ exports.cleanString = function(stringToClean) {
     return cleanedString.toLowerCase();
 };
 
+exports.slugify = function(rawString) {
+    return rawString.toString().toLowerCase()
+        .replace(/\s+/g, '-')  // replace spaces with -
+        .replace(/[^\w\-]+/g, '')  // replace non-alpha chars leaving -
+        .replace(/^-+/, '')  // replace - from start of str
+        .replace(/-+$/, '');  // replace - from end of str
+};
+
 exports.ensureAdmin = function(req, res, next) {
     if (req.user && req.user.isAdmin) {
         return next();
