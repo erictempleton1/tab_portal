@@ -68,6 +68,17 @@ describe('GET login', function() {
     });
 });
 
+describe('POST login', function() {
+    it('should not login', function(done) {
+        chai.request(app)
+        .post('/login')
+        .end(function(err, res) {
+            console.log(res.status);
+            done();
+        });
+    });
+});
+
 describe('GET admin unauthorized', function() {
     it('should respond with HTTP 403', function(done) {
         chai.request(app)
