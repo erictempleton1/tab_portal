@@ -71,7 +71,7 @@ router.post('/edit/:sitename', [util.ensureAdmin, valAdmin.validateSiteEditPost]
             res.redirect('/admin/sites');
         // save if the site name is unchanged, or isn't already in use
         } else if (!existingSite || existingSite.siteName === site.siteName) {
-            site.siteName = req.body.siteName;
+            site.siteName = util.cleanString(req.body.siteName);
             site.slug = util.slugify(req.body.siteName);
             site.vizUrl = req.body.vizUrl;
             site.allowedUsers = req.body.allowedUsers;
@@ -155,7 +155,7 @@ router.post('/new', [util.ensureAdmin, valAdmin.validateNewSitePost], function (
                 allowedUsers: req.body.allowedUsers,
                 vizUrl: req.body.vizUrl,
                 trustedLogin: req.body.trustedLogin,
-                siteName: req.body.siteName,
+                siteName: util.cleanString(req.body.siteName),
                 slug: util.slugify(req.body.siteName),
                 isTabServerViz: req.body.isTabServerViz
             });
