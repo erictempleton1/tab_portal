@@ -3,7 +3,7 @@ var assert = require('assert'),
     chai = require('chai'),
     chaiHttp = require('chai-http'),
     should = chai.should(),
-    expect = chai.expect(),
+    expect = chai.expect,
     MongoClient = require('mongodb').MongoClient,
     dbSettings = require('../db_config'),
     Account = require('../models/account');
@@ -73,18 +73,18 @@ describe('POST login', function() {
         chai.request(app)
         .post('/login')
         .end(function(err, res) {
-            console.log(res.status);
+            res.should.redirect;
             done();
         });
     });
 });
 
 describe('GET admin unauthorized', function() {
-    it('should respond with HTTP 403', function(done) {
+    it('should redirect to home', function(done) {
         chai.request(app)
         .get('/admin')
         .end(function(err, res) {
-            res.should.have.status(403);
+            res.should.redirect;
             done();
         });
     });
