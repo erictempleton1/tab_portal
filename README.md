@@ -1,6 +1,8 @@
-# Project Title
+# Tab Portal
 
-Custom Tableau portal to render Tableau Server & Tableau Public workbooks. Built using the Tableau JavaScript API, Node.js, and MongoDB. 
+Custom Tableau portal to render Tableau Server & Tableau Public workbooks. Built using the Tableau JavaScript API, Node.js, and MongoDB.
+
+NOTE: This project is under heavy development and will likely change drastically at any given time.
 
 ### Prerequisites
 
