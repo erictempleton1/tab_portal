@@ -1,4 +1,6 @@
-var prompt = require('prompt');
+var prompt = require('prompt'),
+    Account = require('../models/account'),
+    util = require('../utility/utility');
 
 var schema = {
     properties: {
@@ -24,9 +26,22 @@ var schema = {
 prompt.start();
 prompt.get(schema, function(err, result) {
     if (result.password === result.confirmPassword) {
-        console.log('   username: ' + result.username);
-        console.log('   password: ' + result.password);
+        var newAccount = new Account({
+            username: util.cleanString(result.username),
+            isAdmin: true,
+            regDate: Date.now(),
+            lastLogin: Date.now()
+        });
+        Account.register(newAccount, result.password, function(err, account){
+            if (err) {
+                console.log('Username already in use. Please try another username');
+            } else {
+                console.log('Admin account created');
+            }
+        });
     } else {
         console.log('Error - passwords do not match');
     }
 });
+
+// TODO - mongoose deprecated warning being thrown and no account is added!
