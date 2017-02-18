@@ -32,7 +32,7 @@ prompt.get(schema, function(err, result) {
             regDate: Date.now(),
             lastLogin: Date.now()
         });
-        Account.register(newAccount, result.password, function(err, account){
+        Account.register(newAccount, result.password, function(err, account) {
             if (err) {
                 console.log('Username already in use. Please try another username');
             } else {
