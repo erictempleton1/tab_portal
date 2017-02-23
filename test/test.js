@@ -1,15 +1,16 @@
-var assert = require('assert'),
-    express = require('express'),
+var app = require('../app'),
     chai = require('chai'),
     chaiHttp = require('chai-http'),
-    should = chai.should(),
-    expect = chai.expect,
+    assert = chai.assert,
     MongoClient = require('mongodb').MongoClient,
     dbSettings = require('../db_config'),
     Account = require('../models/account');
 
+//app.listen(3000, function () {
+//  console.log('Example app listening on port 3000!')
+//});
+
 process.env.NODE_ENV = 'testing';
-var app = require('../app');
 chai.use(chaiHttp);
 
 
@@ -20,7 +21,7 @@ describe('Test create user', function() {
         .then(function(dbConn){
             db = dbConn;
             db.dropDatabase(function(err, result) {
-                should.not.exist(err);
+                assert.isFalse(err);
             });
         });
 
@@ -32,15 +33,16 @@ describe('Test create user', function() {
                 lastLogin: Date.now()
             };
         Account.register(new Account(regInfo), 'eric', function(err, user) {
-            if (!err) {
-                console.log(user);
-            };
+            // TODO - figure out what's going on here. no user created? not executing?'
+            console.log(user);
         });
     });
 
+    // TODO - add user login tests here!
+
     after(function() {
         db.dropDatabase(function(err, result) {
-            should.not.exist(err);
+            assert.isFalse(err);
         });
     });
 });
@@ -51,7 +53,7 @@ describe('GET index', function() {
         chai.request(app)
         .get('/')
         .end(function(err, res) {
-            res.should.have.status(200);
+            assert.equal(res.statusCode, 200);
             done();
         });
     });
@@ -62,18 +64,7 @@ describe('GET login', function() {
         chai.request(app)
         .get('/login')
         .end(function(err, res) {
-            res.should.have.status(200);
-            done();
-        });
-    });
-});
-
-describe('POST login', function() {
-    it('should not login', function(done) {
-        chai.request(app)
-        .post('/login')
-        .end(function(err, res) {
-            res.should.redirect;
+            assert.equal(res.statusCode, 200);
             done();
         });
     });
@@ -84,7 +75,20 @@ describe('GET admin unauthorized', function() {
         chai.request(app)
         .get('/admin')
         .end(function(err, res) {
-            res.should.redirect;
+            assert.equal(res.redirects.length, 1);
+            assert(res.redirects[0].endsWith('/'));
+            done();
+        });
+    });
+});
+
+describe('POST login', function() {
+    it('empty post body should not login', function(done) {
+        chai.request(app)
+        .post('/login')
+        .end(function(err, res) {
+            assert.equal(res.redirects.length, 1);
+            assert(res.redirects[0].endsWith('login'));
             done();
         });
     });
