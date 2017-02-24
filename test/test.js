@@ -64,6 +64,7 @@ describe('test create user', function() {
 });
 */
 
+/*
 describe('GET admin unauthorized', function() {
     it('should redirect to home', function(done) {
         chai.request(app)
@@ -75,3 +76,4 @@ describe('GET admin unauthorized', function() {
         });
     });
 });
+*/
