@@ -10,7 +10,7 @@ var app = require('../app'),
 
 chai.use(chaiHttp);
 
-
+/*
 describe('Test create user', function() {
     var db;
     before(function() {
@@ -43,6 +43,7 @@ describe('Test create user', function() {
         });
     });
 });
+*/
 
 /*
 describe('test create user', function() {
@@ -63,18 +64,6 @@ describe('test create user', function() {
 });
 */
 
-
-describe('GET login', function() {
-    it('should respond with HTTP 200', function(done) {
-        chai.request(app)
-        .get('/login')
-        .end(function(err, res) {
-            assert.equal(res.statusCode, 200);
-            done();
-        });
-    });
-});
-
 describe('GET admin unauthorized', function() {
     it('should redirect to home', function(done) {
         chai.request(app)
@@ -82,18 +71,6 @@ describe('GET admin unauthorized', function() {
         .end(function(err, res) {
             assert.equal(res.redirects.length, 1);
             assert(res.redirects[0].endsWith('/'));
-            done();
-        });
-    });
-});
-
-describe('POST login', function() {
-    it('empty post body should not login', function(done) {
-        chai.request(app)
-        .post('/login')
-        .end(function(err, res) {
-            assert.equal(res.redirects.length, 1);
-            assert(res.redirects[0].endsWith('login'));
             done();
         });
     });
