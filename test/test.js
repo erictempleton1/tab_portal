@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'testing';
+
 var app = require('../app'),
     chai = require('chai'),
     chaiHttp = require('chai-http'),
@@ -6,11 +8,6 @@ var app = require('../app'),
     dbSettings = require('../db_config'),
     Account = require('../models/account');
 
-//app.listen(3000, function () {
-//  console.log('Example app listening on port 3000!')
-//});
-
-process.env.NODE_ENV = 'testing';
 chai.use(chaiHttp);
 
 
@@ -47,17 +44,25 @@ describe('Test create user', function() {
     });
 });
 
-
-describe('GET index', function() {
-    it('should respond with HTTP 200', function(done) {
-        chai.request(app)
-        .get('/')
-        .end(function(err, res) {
-            assert.equal(res.statusCode, 200);
+/*
+describe('test create user', function() {
+    it('should create a new user', function(done) {
+        // create admin user
+        var regInfo = {
+                username: 'eric',
+                isAdmin: true,
+                regDate: Date.now(),
+                lastLogin: Date.now()
+            };
+        Account.register(new Account(regInfo), 'eric', function(err, user) {
+            console.log(user);
+            assert(user);
             done();
         });
     });
 });
+*/
+
 
 describe('GET login', function() {
     it('should respond with HTTP 200', function(done) {
