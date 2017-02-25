@@ -13,7 +13,7 @@ describe('GET logout', function() {
             assert.equal(res.statusCode, 200);
             assert.equal(res.redirects.length, 1);
             assert(res.redirects[0].endsWith('/'));
-            done;
+            done();
         });
     });
 });
