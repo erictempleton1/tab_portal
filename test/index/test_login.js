@@ -1,12 +1,12 @@
 process.env.NODE_ENV = 'testing';
 
-var app = require('../app'),
+var app = require('../../app'),
     chai = require('chai'),
     chaiHttp = require('chai-http'),
     assert = chai.assert,
     MongoClient = require('mongodb').MongoClient,
-    dbSettings = require('../db_config'),
-    Account = require('../models/account');
+    dbSettings = require('../../db_config'),
+    Account = require('../../models/account');
 
 chai.use(chaiHttp);
 
@@ -15,7 +15,7 @@ describe('GET login', function() {
         chai.request(app)
         .get('/login')
         .end(function(err, res) {
-            assert.equal(res.statusCode, 200)
+            assert.equal(res.statusCode, 200);
             done();
         });
     });
@@ -38,3 +38,4 @@ describe('POST login with empty body', function() {
 // test invalid username
 // test invalid password
 // incomplete post
+// test already logged in redirect

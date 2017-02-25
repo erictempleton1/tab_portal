@@ -1,6 +1,6 @@
 process.env.NODE_ENV = 'testing';
 
-var app = require('../app'),
+var app = require('../../app'),
     chai = require('chai'),
     chaiHttp = require('chai-http'),
     assert = chai.assert
