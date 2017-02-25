@@ -10,6 +10,15 @@ var app = require('../../app'),
 
 chai.use(chaiHttp);
 
+before(function() {
+    MongoClient.connect(dbSettings.dbUri.testing)
+    .then(function(dbConn) {
+        dbConn.dropDatabase(function (err, result) {
+            assert.isFalse(err);
+        });
+    });
+});
+
 describe('GET login', function() {
     it('should respond with HTTP 200', function(done) {
         chai.request(app)
@@ -32,6 +41,72 @@ describe('POST login with empty body', function() {
         });
     });
 });
+
+describe('POST login with valid credentials', function() {
+    it('should redirect to user page', function(done) {
+        chai.request(app)
+        .post('/login')
+        .send({username: 'eric', password: 'eric'})
+        .end(function(err, res) {
+            console.log(res.redirects);
+            done();
+        });
+    });
+});
+
+/*
+describe('Test create user', function() {
+-    var db;
+-    before(function() {
+-        MongoClient.connect(dbSettings.dbUri.testing)
+-        .then(function(dbConn){
+-            db = dbConn;
+-            db.dropDatabase(function(err, result) {
+-                assert.isFalse(err);
+-            });
+-        });
+-
+-        // create admin user
+-        var regInfo = {
+-                username: 'eric',
+-                isAdmin: true,
+-                regDate: Date.now(),
+-                lastLogin: Date.now()
+-            };
+-        Account.register(new Account(regInfo), 'eric', function(err, user) {
+-            // TODO - figure out what's going on here. no user created? not executing?'
+-            console.log(user);
+-        });
+-    });
+-
+-    // TODO - add user login tests here!
+-
+-    after(function() {
+-        db.dropDatabase(function(err, result) {
+-            assert.isFalse(err);
+-        });
+-    });
+-});
+-
+-
+-
+-describe('test create user', function() {
+-    it('should create a new user', function(done) {
+-        // create admin user
+-        var regInfo = {
+-                username: 'eric',
+-                isAdmin: true,
+-                regDate: Date.now(),
+-                lastLogin: Date.now()
+-            };
+-        Account.register(new Account(regInfo), 'eric', function(err, user) {
+-            console.log(user);
+-            assert(user);
+-            done();
+-        });
+-    });
+-});
+-*/
 
 // todo tests:
 // create user and test valid login
