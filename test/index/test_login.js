@@ -10,37 +10,49 @@ var app = require('../../app'),
 
 chai.use(chaiHttp);
 
-before(function() {
-    MongoClient.connect(dbSettings.dbUri.testing)
-    .then(function(dbConn) {
-        dbConn.dropDatabase(function (err, result) {
-            assert.isFalse(err);
+describe('login tests', function() {
+    before(function() {
+        MongoClient.connect(dbSettings.dbUri.testing)
+        .then(function(dbConn) {
+            dbConn.dropDatabase(function (err, result) {
+                assert.isFalse(err);
+            });
+        });
+    });
+
+    describe('GET login', function() {
+        it('should respond with HTTP 200', function(done) {
+            chai.request(app)
+            .get('/login')
+            .end(function(err, res) {
+                assert.equal(res.statusCode, 200);
+                done();
+            });
+        });
+    });
+
+    describe('POST login with empty body', function() {
+        it('should redirect back to login page', function(done) {
+            chai.request(app)
+            .post('/login')
+            .end(function(err, res) {
+                assert.equal(res.redirects.length, 1);
+                assert(res.redirects[0].endsWith('login'));
+                done();
+            });
+        });
+    });
+
+    after(function() {
+        MongoClient.connect(dbSettings.dbUri.testing)
+        .then(function(dbConn) {
+            dbConn.dropDatabase(function (err, result) {
+                assert.isFalse(err);
+            });
         });
     });
 });
 
-describe('GET login', function() {
-    it('should respond with HTTP 200', function(done) {
-        chai.request(app)
-        .get('/login')
-        .end(function(err, res) {
-            assert.equal(res.statusCode, 200);
-            done();
-        });
-    });
-});
-
-describe('POST login with empty body', function() {
-    it('should redirect back to login page', function(done) {
-        chai.request(app)
-        .post('/login')
-        .end(function(err, res) {
-            assert.equal(res.redirects.length, 1);
-            assert(res.redirects[0].endsWith('login'));
-            done();
-        });
-    });
-});
 
 describe('POST login with valid credentials', function() {
     it('should redirect to user page', function(done) {
