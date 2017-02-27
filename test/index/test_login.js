@@ -11,13 +11,41 @@ var app = require('../../app'),
 chai.use(chaiHttp);
 
 describe('login tests', function() {
-    before(function() {
+    before(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
         .then(function(dbConn) {
             dbConn.dropDatabase(function (err, result) {
                 if (err) {
                     console.log(err);
                 }
+            });
+        })
+        .then(function() {
+            var regInfo = {
+                username: 'eric',
+                isAdmin: false,
+                regDate: Date.now(),
+                lastLogin: Date.now()
+            };
+            Account.register(new Account(regInfo), 'eric', function(err, user) {
+                if (err) {
+                    console.log(err);
+                }
+                done();
+            });
+        });
+    });
+
+    describe('POST login non-admin valid', function() {
+        it('should redirect to user page', function(done) {
+            chai.request(app)
+            .post('/login')
+            .send({username: 'eric', password: 'eric'})
+            .end(function(err, res) {
+                assert.equal(res.statusCode, 200);
+                assert.isAbove(res.redirects.length, 1);
+                assert(res.redirects[0].endsWith('/user/eric'));
+                done();
             });
         });
     });
@@ -45,7 +73,7 @@ describe('login tests', function() {
         });
     });
 
-    after(function() {
+    after(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
         .then(function(dbConn) {
             dbConn.dropDatabase(function (err, result) {
@@ -54,10 +82,12 @@ describe('login tests', function() {
                 }
             });
         });
+        done();
     });
 });
 
 
+/*
 describe('POST login with valid credentials', function() {
     it('should redirect to user page', function(done) {
         chai.request(app)
@@ -69,6 +99,7 @@ describe('POST login with valid credentials', function() {
         });
     });
 });
+*/
 
 /*
 describe('Test create user', function() {
