@@ -50,6 +50,20 @@ describe('login tests', function() {
         });
     });
 
+    describe('POST login invalid credentials', function() {
+        it('should redirect to login', function(done) {
+            chai.request(app)
+            .post('/login')
+            .send({username: 'eric', password: 'invalid'})
+            .end(function(err, res) {
+                assert.equal(res.statusCode, 200);
+                assert.equal(res.redirects.length, 1);
+                assert(res.redirects[0].endsWith('/login'));
+                done();
+            });
+        });
+    });
+
     describe('GET login', function() {
         it('should respond with HTTP 200', function(done) {
             chai.request(app)
