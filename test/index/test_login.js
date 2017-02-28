@@ -31,6 +31,30 @@ describe('login tests', function() {
                 if (err) {
                     console.log(err);
                 }
+            });
+        })
+        .then(function() {
+            var regInfo = {
+                username: 'admin',
+                isAdmin: true,
+                regDate: Date.now(),
+                lastLogin: Date.now()
+            };
+            Account.register(new Account(regInfo), 'admin', function(err, user) {
+                if (err) {
+                    console.log(err);
+                }
+                done();
+            });
+        });
+    });
+
+    describe('GET login', function() {
+        it('should respond with HTTP 200', function(done) {
+            chai.request(app)
+            .get('/login')
+            .end(function(err, res) {
+                assert.equal(res.statusCode, 200);
                 done();
             });
         });
@@ -59,17 +83,6 @@ describe('login tests', function() {
                 assert.equal(res.statusCode, 200);
                 assert.equal(res.redirects.length, 1);
                 assert(res.redirects[0].endsWith('/login'));
-                done();
-            });
-        });
-    });
-
-    describe('GET login', function() {
-        it('should respond with HTTP 200', function(done) {
-            chai.request(app)
-            .get('/login')
-            .end(function(err, res) {
-                assert.equal(res.statusCode, 200);
                 done();
             });
         });
