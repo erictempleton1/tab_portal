@@ -1,4 +1,5 @@
 # Tab Portal
+[![Build Status](https://travis-ci.org/erictempleton1/tab_portal.svg?branch=master)](https://travis-ci.org/erictempleton1/tab_portal)
 
 Custom Tableau portal to render Tableau Server & Tableau Public workbooks. Built using the Tableau JavaScript API, Node.js, and MongoDB.
 
