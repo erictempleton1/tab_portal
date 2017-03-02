@@ -27,6 +27,8 @@ router.get('/:sitename', util.ensureUser, function (req, res) {
             if (site.allowedUsers.indexOf(req.user.username) >= 0 || req.user.isAdmin) {
                 var renderUrl;
                 if (site.isTabServerViz) {
+                    // todo - update this!
+                    /*
                     tabServerUtil.getTrustedTicket(req.user.username, req.params.sitename).
                     then(function (ticket) {
                         // try to build the url and pass to template
@@ -45,6 +47,7 @@ router.get('/:sitename', util.ensureUser, function (req, res) {
                         req.flash('info', 'Error loading site');
                         res.redirect('/');
                     });
+                    */
                 } else {
                     // set non-tab server url
                     renderUrl = site.vizUrl;
