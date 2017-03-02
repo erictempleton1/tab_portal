@@ -157,10 +157,3 @@ describe('login tests', function() {
         done();
     });
 });
-
-// todo tests:
-// create user and test valid login
-// test invalid username
-// test invalid password
-// incomplete post
-// test already logged in redirect
