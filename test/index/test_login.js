@@ -6,7 +6,8 @@ var app = require('../../app'),
     assert = chai.assert,
     MongoClient = require('mongodb').MongoClient,
     dbSettings = require('../../db_config'),
-    Account = require('../../models/account');
+    Account = require('../../models/account'),
+    agent = chai.request.agent(app);
 
 chai.use(chaiHttp);
 
@@ -114,7 +115,35 @@ describe('login tests', function() {
         });
     });
 
-    // TODO - add test for logged in user redirect on GET /login
+    describe('POST login valid and GET login', function() {
+        it('should redirect home', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'eric', password: 'eric'})
+            .then(function(res) {
+                assert.equal(res.statusCode, 200);
+                assert.equal(res.redirects.length, 1);
+                assert(res.redirects[0].endsWith('/user/eric'));
+                return agent.get('/login')
+                .then(function(res) {
+                    assert.equal(res.redirects.length, 1);
+                    assert(res.redirects[0].endsWith('/'));
+                    done();
+                });
+            });
+        });
+    });
+
+    afterEach(function(done) {
+        chai.request(app)
+        .get('/logout')
+        .end(function(err, res) {
+            if (err) { 
+                console.log(err); 
+            }
+        });
+        done();
+    });
 
     after(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
