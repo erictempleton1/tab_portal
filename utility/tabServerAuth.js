@@ -1,5 +1,5 @@
 var request = require('request'),
-    config = require('../config'),
+    // config = require('../config'),
     parseString = require('xml2js').parseString,
     Promise = require('bluebird');
 
@@ -32,6 +32,7 @@ exports.getTabServerToken = function(callback) {
 }
 */
 
+/*
 exports.getTrustedTicket = function(username, siteName) {
     var ticketReqUrl = config.tabServer.baseUrl + 'trusted',
         formData = {username: username, target_site: siteName},
@@ -51,3 +52,4 @@ exports.getTrustedTicket = function(username, siteName) {
         });
     });
 }
+*/
