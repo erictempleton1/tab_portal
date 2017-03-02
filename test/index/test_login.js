@@ -114,20 +114,7 @@ describe('login tests', function() {
         });
     });
 
-    // TODO - work on this failing test
-    describe('POST login then GET login page', function() {
-        it('should redirect home', function(done) {
-            chai.request(app)
-            .get('/logout')
-            .post('/login')
-            .send({username: 'eric', password: 'eric'})
-            .get('/login')
-            .end(function(err, res) {
-                console.log(res.redirects);
-                done();
-            });
-        });
-    });
+    // TODO - add test for logged in user redirect on GET /login
 
     after(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
