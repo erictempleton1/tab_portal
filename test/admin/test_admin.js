@@ -33,17 +33,7 @@ describe('admin tests', function() {
                     console.log(err);
                 }
             });
-        })
-        .then(function() {
-            chai.request(app)
-            .post('/login')
-            .send({username: 'admin', password: 'admin'})
-            .end(function(err, res) {
-                if (err) {
-                    console.log(err);
-                }
-                done();
-            });
+            done();
         });
     });
 
