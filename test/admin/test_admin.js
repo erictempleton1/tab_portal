@@ -48,22 +48,6 @@ describe('admin tests', function() {
         });
     });
 
-    describe('login and test admin GET', function() {
-        it('should return valid admin page', function(done) {
-            agent
-            .post('/login')
-            .send({username: 'admin', password: 'admin'})
-            .then(function(err, res) {
-                assert(res.redirects[0].endsWith('/admin'));
-                return agent.get('/admin')
-                .then(function(err, res) {
-                    assert.equal(res.statusCode, 200);
-                    done();
-                });
-            });
-        });
-    });
-
     after(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
         .then(function(dbConn) {
