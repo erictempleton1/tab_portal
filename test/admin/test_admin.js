@@ -6,8 +6,7 @@ var app = require('../../app'),
     assert = chai.assert,
     MongoClient = require('mongodb').MongoClient,
     dbSettings = require('../../db_config'),
-    Account = require('../../models/account'),
-    agent = chai.request.agent(app);
+    Account = require('../../models/account');
 
 chai.use(chaiHttp);
 
