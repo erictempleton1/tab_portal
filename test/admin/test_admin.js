@@ -63,11 +63,12 @@ describe('admin tests', function() {
             agent
             .post('/login')
             .send({username: 'admin', password: 'admin'})
-            .then(function(res) {
+            .then(function(err, res) {
                 assert(res.redirects[0].endsWith('/admin'));
                 return agent.get('/admin')
-                .then(function(res) {
+                .then(function(err, res) {
                     assert.equal(res.statusCode, 200);
+                    done();
                 });
             });
         });
