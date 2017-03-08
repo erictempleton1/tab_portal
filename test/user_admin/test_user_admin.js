@@ -1,23 +1,21 @@
 process.env.NODE_ENV = 'testing';
+
 var app = require('../../app'),
-    chai = require('chai');
-    //chaiHttp = require('chai-http'),
-    //assert = chai.assert,
-    //MongoClient = require('mongodb').MongoClient,
-    //dbSettings = require('../../db_config'),
-    //Account = require('../../models/account');
-   // agent = chai.request.agent(app);
+    chai = require('chai'),
+    chaiHttp = require('chai-http'),
+    assert = chai.assert,
+    agent = chai.request.agent(app),
+    MongoClient = require('mongodb').MongoClient,
+    dbSettings = require('../../db_config'),
+    Account = require('../../models/account');
 
-console.log('test_admin');
-console.log(chai);
-//chai.use(chaiHttp);
+chai.use(chaiHttp);
 
-/*
-describe('admin tests', function() {
+describe('admin test', function() {
     before(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
         .then(function(dbConn) {
-            dbConn.dropDatabase(function(err, result) {
+            dbConn.dropDatabase(function( err, result) {
                 if (err) {
                     console.log(err);
                 }
@@ -26,7 +24,7 @@ describe('admin tests', function() {
         .then(function() {
             var regInfo = {
                 username: 'admin',
-                isAdmin: true,
+                isAdmin: false,
                 regDate: Date.now(),
                 lastLogin: Date.now()
             };
@@ -35,19 +33,8 @@ describe('admin tests', function() {
                     console.log(err);
                 }
             });
-            done();
         });
-    });
-
-    describe('GET admin page', function() {
-        it('should return admin page', function(done) {
-            chai.request(app)
-            .get('/admin')
-            .end(function(err, res) {
-                console.log(res.redirects);
-                done();
-            });
-        });
+        done();
     });
 
     after(function(done) {
@@ -62,4 +49,3 @@ describe('admin tests', function() {
         done();
     });
 });
-*/
