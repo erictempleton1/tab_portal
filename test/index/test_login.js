@@ -9,6 +9,8 @@ var app = require('../../app'),
     Account = require('../../models/account'),
     agent = chai.request.agent(app);
 
+console.log('test_login')
+console.log(chai);
 chai.use(chaiHttp);
 
 describe('login tests', function() {

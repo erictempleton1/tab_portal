@@ -6,8 +6,7 @@ var app = require('../../app'),
     assert = chai.assert,
     MongoClient = require('mongodb').MongoClient,
     dbSettings = require('../../db_config'),
-    Account = require('../../models/account'),
-    agent = chai.request.agent(app);
+    Account = require('../../models/account');
 
 chai.use(chaiHttp);
 
@@ -33,25 +32,6 @@ describe('logout tests', function() {
                     console.log(err);
                 }
                 done();
-            });
-        });
-    });
-
-    describe('GET logout after login', function() {
-        it('should redirect home', function(done) {
-            agent
-            .post('/login')
-            .send({username: 'tom', password: 'tom'})
-            .then(function(res) {
-                assert.equal(res.statusCode, 200);
-                assert.equal(res.redirects.length, 1);
-                assert(res.redirects[0].endsWith('/user/tom'));
-                return agent.get('/logout')
-                .then(function(res) {
-                    assert.equal(res.redirects.length, 1);
-                    assert(res.redirects[0].endsWith('/'));
-                    done();
-                });
             });
         });
     });

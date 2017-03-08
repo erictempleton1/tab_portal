@@ -1,15 +1,18 @@
 process.env.NODE_ENV = 'testing';
-
 var app = require('../../app'),
-    chai = require('chai'),
-    chaiHttp = require('chai-http'),
-    assert = chai.assert,
-    MongoClient = require('mongodb').MongoClient,
-    dbSettings = require('../../db_config'),
-    Account = require('../../models/account');
+    chai = require('chai');
+    //chaiHttp = require('chai-http'),
+    //assert = chai.assert,
+    //MongoClient = require('mongodb').MongoClient,
+    //dbSettings = require('../../db_config'),
+    //Account = require('../../models/account');
+   // agent = chai.request.agent(app);
 
-chai.use(chaiHttp);
+console.log('test_admin');
+console.log(chai);
+//chai.use(chaiHttp);
 
+/*
 describe('admin tests', function() {
     before(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
@@ -59,3 +62,4 @@ describe('admin tests', function() {
         done();
     });
 });
+*/
