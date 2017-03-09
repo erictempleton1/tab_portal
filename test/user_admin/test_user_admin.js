@@ -24,7 +24,7 @@ describe('admin test', function() {
         .then(function() {
             var regInfo = {
                 username: 'admin',
-                isAdmin: false,
+                isAdmin: true,
                 regDate: Date.now(),
                 lastLogin: Date.now()
             };
@@ -32,9 +32,35 @@ describe('admin test', function() {
                 if (err) {
                     console.log(err);
                 }
+                done();
             });
         });
-        done();
+    });
+
+    // TODO - add non-admin user and write other GET page tests
+
+    describe("GET admin", function() {
+        it('should return HTTP 200 for all pages', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'admin', password: 'admin'})
+            .then(function(res) {
+                assert(res.statusCode === 200);
+            })
+            .then(function() {
+                agent.get('/admin')
+                .then(function(res) {
+                    assert(res.statusCode === 200);
+                });
+            })
+            .then(function() {
+                agent.get('/admin/users')
+                .then(function(res) {
+                    assert(res.statusCode === 200);
+                    done();
+                });
+            });
+        });
     });
 
     after(function(done) {
@@ -44,8 +70,8 @@ describe('admin test', function() {
                 if (err) {
                     console.log(err);
                 }
+                done();
             });
         });
-        done();
     });
 });
