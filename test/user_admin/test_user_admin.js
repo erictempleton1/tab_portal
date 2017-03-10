@@ -32,12 +32,27 @@ describe('admin test', function() {
                 if (err) {
                     console.log(err);
                 }
+            });
+        })
+        .then(function() {
+            var newUser = {
+                username: 'eric',
+                isAdmin: false,
+                regDate: Date.now(),
+                lastLogin: Date.now()
+            };
+            Account.register(new Account(newUser), 'eric', function(err, user) {
+                if (err) {
+                    console.log(err);
+                }
                 done();
             });
         });
     });
 
     // TODO - add non-admin user and write other GET page tests
+    // TODO - probably want to break these up with their own it() for
+    // easier debugging later.
 
     describe("GET admin", function() {
         it('should return HTTP 200 for all pages', function(done) {
@@ -57,6 +72,26 @@ describe('admin test', function() {
                 agent.get('/admin/users')
                 .then(function(res) {
                     assert(res.statusCode === 200);
+                });
+            })
+            .then(function() {
+                agent.get('/admin/users/edit/eric')
+                .then(function(res) {
+                    assert(res.statusCode === 200);
+                });
+            })
+            .then(function() {
+                agent.get('/admin/users/edit/eric123')
+                .then(function(res) {
+                    assert(res.statusCode === 200);
+                    assert(res.redirects[0].endsWith('/users'));
+                });
+            })
+            .then(function() {
+                agent.get('/admin/users/edit/password/eric')
+                .then(function(res) {
+                    assert(res.statusCode === 200);
+                    assert(res.redirects.length === 0);
                     done();
                 });
             });
