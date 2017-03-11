@@ -50,45 +50,13 @@ describe('admin test', function() {
         });
     });
 
-    // TODO - add non-admin user and write other GET page tests
-    // TODO - probably want to break these up with their own it() for
-    // easier debugging later.
-
-    describe("GET admin", function() {
-        it('should return HTTP 200 for all pages', function(done) {
+    describe('GET admin', function() {
+        it('should return HTTP 200 for admin home', function(done) {
             agent
             .post('/login')
             .send({username: 'admin', password: 'admin'})
-            .then(function(res) {
-                assert(res.statusCode === 200);
-            })
             .then(function() {
                 agent.get('/admin')
-                .then(function(res) {
-                    assert(res.statusCode === 200);
-                });
-            })
-            .then(function() {
-                agent.get('/admin/users')
-                .then(function(res) {
-                    assert(res.statusCode === 200);
-                });
-            })
-            .then(function() {
-                agent.get('/admin/users/edit/eric')
-                .then(function(res) {
-                    assert(res.statusCode === 200);
-                });
-            })
-            .then(function() {
-                agent.get('/admin/users/edit/eric123')
-                .then(function(res) {
-                    assert(res.statusCode === 200);
-                    assert(res.redirects[0].endsWith('/users'));
-                });
-            })
-            .then(function() {
-                agent.get('/admin/users/edit/password/eric')
                 .then(function(res) {
                     assert(res.statusCode === 200);
                     assert(res.redirects.length === 0);
