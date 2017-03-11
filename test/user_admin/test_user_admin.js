@@ -56,7 +56,25 @@ describe('admin test', function() {
             .post('/login')
             .send({username: 'admin', password: 'admin'})
             .then(function() {
-                agent.get('/admin')
+                agent
+                .get('/admin')
+                .then(function(res) {
+                    assert(res.statusCode === 200);
+                    assert(res.redirects.length === 0);
+                    done();
+                });
+            });
+        });
+    });
+
+    describe('GET admin edit user', function() {
+        it('should return HTTP 200 for edit user page', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'admin', password: 'admin'})
+            .then(function() {
+                agent
+                .get('/admin/users/edit/eric')
                 .then(function(res) {
                     assert(res.statusCode === 200);
                     assert(res.redirects.length === 0);
