@@ -51,7 +51,7 @@ describe('admin test', function() {
     });
 
     describe('GET admin', function() {
-        it('should return HTTP 200 for admin home', function(done) {
+        it('should return HTTP 200 with no redirects', function(done) {
             agent
             .post('/login')
             .send({username: 'admin', password: 'admin'})
@@ -68,13 +68,47 @@ describe('admin test', function() {
     });
 
     describe('GET admin edit user', function() {
-        it('should return HTTP 200 for edit user page', function(done) {
+        it('should return HTTP 200 with no redirects', function(done) {
             agent
             .post('/login')
             .send({username: 'admin', password: 'admin'})
             .then(function() {
                 agent
                 .get('/admin/users/edit/eric')
+                .then(function(res) {
+                    assert(res.statusCode === 200);
+                    assert(res.redirects.length === 0);
+                    done();
+                });
+            });
+        });
+    });
+
+    describe('GET admin edit user password', function() {
+        it('should return HTTP 200 with no redirects', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'admin', password: 'admin'})
+            .then(function() {
+                agent
+                .get('/admin/users/edit/password/eric')
+                .then(function(res) {
+                    assert(res.statusCode === 200);
+                    assert(res.redirects.length === 0);
+                    done();
+                });
+            });
+        });
+    });
+
+    describe('GET admin remove user', function() {
+        it('should return HTTP 200 with no redirects', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'admin', password: 'admin'})
+            .then(function() {
+                agent
+                .get('/admin/users/remove/eric')
                 .then(function(res) {
                     assert(res.statusCode === 200);
                     assert(res.redirects.length === 0);
