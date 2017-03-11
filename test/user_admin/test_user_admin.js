@@ -118,6 +118,23 @@ describe('admin test', function() {
         });
     });
 
+    describe('GET admin new user', function() {
+        it('should return HTTP 200 with no redirects', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'admin', password: 'admin'})
+            .then(function() {
+                agent
+                .get('/admin/users/new')
+                .then(function(res) {
+                    assert(res.statusCode === 200);
+                    assert(res.redirects.length === 0);
+                    done();
+                });
+            });
+        });
+    });
+
     after(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
         .then(function(dbConn) {
