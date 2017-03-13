@@ -99,16 +99,16 @@ router.post('/edit/:username', [util.ensureAdmin, valAdmin.validateUserEditPost]
             existingUser = userResults[1];
         if (!user) {
             req.flash('info', 'User not found');
-            res.redirect('/admin/sites');
+            res.redirect('/admin/users');
         } else if (!existingUser || existingUser.username === user.username) {
             user.username = req.body.username;
             user.isAdmin = req.body.isAdmin;
             user.save();
             req.flash('info', 'User updated!');
-            res.redirect('/admin/users');
+            res.redirect('/admin/users/edit/' + req.params.username);
         } else {
             req.flash('info', 'Username already in use');
-            res.redirect('/admin/users');
+            res.redirect('/admin/users/edit/' + req.params.username);
         }
     })
     .catch(function(err) {

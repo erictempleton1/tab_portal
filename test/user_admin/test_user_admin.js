@@ -135,17 +135,17 @@ describe('admin test', function() {
         });
     });
 
-    describe('POST edit user', function() {
-        it('should change user info in db', function(done) {
+    describe('POST edit user unknown', function() {
+        it('should redirect to users page for unknown user param', function(done) {
             agent
             .post('/login')
             .send({username: 'admin', password: 'admin'})
             .then(function() {
                 agent
                 .post('/admin/users/edit/eric1')
-                .send({})
                 .then(function(res) {
-                    console.log(res.redirects);
+                    assert(res.redirects.length === 1);
+                    assert(res.redirects[0].endsWith('/users'));
                     done();
                 });
             });
