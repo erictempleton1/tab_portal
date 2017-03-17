@@ -28,7 +28,7 @@ prompt.start();
 prompt.get(schema, function(err, result) {
     if (result.password === result.confirmPassword) {
         var newAccount = {
-            username: util.cleanString(result.username),
+            username: result.username,
             isAdmin: true,
             regDate: Date.now(),
             lastLogin: Date.now()
@@ -44,5 +44,3 @@ prompt.get(schema, function(err, result) {
         console.log('Error - passwords do not match');
     }
 });
-
-// TODO - mongoose deprecated warning being thrown and no account is added!
