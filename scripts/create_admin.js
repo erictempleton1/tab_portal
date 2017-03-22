@@ -1,4 +1,5 @@
-var prompt = require('prompt'),
+var app = require('../app'),
+    prompt = require('prompt'),
     Account = require('../models/account'),
     util = require('../utility/utility');
 
