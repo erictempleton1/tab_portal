@@ -152,6 +152,22 @@ describe('admin test', function() {
         });
     });
 
+    describe('POST edit user', function() {
+        it('should edit a user doc', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'admin', password: 'admin'})
+            .then(function() {
+                agent
+                .post('/admin/users/edit/eric')
+                .then(function(res) {
+                    console.log('placeholder');
+                    done();
+                });
+            });
+        });
+    });
+
     after(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
         .then(function(dbConn) {
