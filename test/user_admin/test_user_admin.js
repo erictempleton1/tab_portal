@@ -172,6 +172,25 @@ describe('admin test', function() {
         });
     });
 
+    describe('POST remove user', function() {
+        it('should remove user', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'admin', password: 'admin'})
+            .then(function() {
+                agent
+                .post('/admin/users/remove/eric')
+                .then(function(res) {
+                    Account.findOne({username: 'eric'}).exec()
+                    .then(function(result) {
+                        assert(result === null);
+                    });
+                    done();
+                });
+            });
+        });
+    });
+
     after(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
         .then(function(dbConn) {
