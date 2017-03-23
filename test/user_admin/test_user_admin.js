@@ -153,15 +153,19 @@ describe('admin test', function() {
     });
 
     describe('POST edit user', function() {
-        it('should edit a user doc', function(done) {
+        it('should update non-admin user to an admin', function(done) {
             agent
             .post('/login')
             .send({username: 'admin', password: 'admin'})
             .then(function() {
                 agent
                 .post('/admin/users/edit/eric')
+                .send({username: 'eric', isAdmin: true})
                 .then(function(res) {
-                    console.log('placeholder');
+                    Account.findOne({username: 'eric'}).exec()
+                    .then(function(result) {
+                        assert(result.isAdmin);
+                    });
                     done();
                 });
             });
