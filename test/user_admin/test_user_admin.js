@@ -191,6 +191,23 @@ describe('admin test', function() {
         });
     });
 
+    describe('POST create new user', function() {
+        it('should create a new user', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'admin', password: 'admin'})
+            .then(function() {
+                agent
+                .post('/admin/users/new')
+                .send({username: 'newuser1'})
+                .then(function(res) {
+                    console.log(res);
+                    done();
+                });
+            });
+        });
+    });
+
     after(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
         .then(function(dbConn) {
