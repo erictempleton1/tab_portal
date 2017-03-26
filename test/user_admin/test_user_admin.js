@@ -11,11 +11,11 @@ var app = require('../../app'),
 
 chai.use(chaiHttp);
 
-describe('admin test', function() {
+describe('admin user tests', function() {
     before(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
         .then(function(dbConn) {
-            dbConn.dropDatabase(function( err, result) {
+            dbConn.dropDatabase(function(err, result) {
                 if (err) {
                     console.log(err);
                 }
@@ -203,7 +203,6 @@ describe('admin test', function() {
                 .then(function(res) {
                     Account.findOne({username: 'newuser1'}).exec()
                     .then(function(result) {
-                        console.log(result);
                         assert(result.username === 'newuser1');
                     });
                     done();
