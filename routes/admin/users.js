@@ -178,13 +178,13 @@ router.post('/new', [util.ensureAdmin, valAdmin.validateNewUserPost], function (
         lastLogin: Date.now()
     };
     Account.register(new Account(regInfo), req.body.password, function (err, account) {
-    if (err) {
-        req.flash("info", "Sorry, this account already exists");
-        res.render('admin/add_user');
-    } else {
-        req.flash('info', 'User created');
-        res.redirect('/admin/users');
-    }    
+        if (err) {
+            req.flash("info", "Sorry, this account already exists");
+            res.render('admin/add_user');
+        } else {
+            req.flash('info', 'User created');
+            res.redirect('/admin/users');
+        }    
     });
 });
 

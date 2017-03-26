@@ -192,16 +192,20 @@ describe('admin test', function() {
     });
 
     describe('POST create new user', function() {
-        it('should create a new user', function(done) {
+        it('should create user', function(done) {
             agent
             .post('/login')
             .send({username: 'admin', password: 'admin'})
             .then(function() {
                 agent
                 .post('/admin/users/new')
-                .send({username: 'newuser1'})
+                .send({username: 'newuser1', password: 'newuser1'})
                 .then(function(res) {
-                    console.log(res);
+                    Account.findOne({username: 'newuser1'}).exec()
+                    .then(function(result) {
+                        console.log(result);
+                        assert(result.username === 'newuser1');
+                    });
                     done();
                 });
             });
