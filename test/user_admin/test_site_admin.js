@@ -35,5 +35,16 @@ describe('admin site tests', function() {
             });
         });
     });
-    // TODO - add tests!
+    
+    after(function(done) {
+        MongoClient.connect(dbSettings.dbUri.testing)
+        .then(function(dbConn) {
+            dbConn.dropDatabase(function(err, result) {
+                if (err) {
+                    console.log(err);
+                }
+                done();
+            });
+        });
+    });
 });
