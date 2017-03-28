@@ -32,10 +32,28 @@ describe('admin site tests', function() {
                 if (err) {
                     console.log(error);
                 }
+                done();
             });
         });
     });
-    
+
+    describe('GET sites listing', function() {
+        it('should return HTTP 200 with no redirect', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'admin', password: 'admin'})
+            .then(function() {
+                agent
+                .get('/admin/sites')
+                .then(function(res) {
+                    assert(res.statusCode === 200);
+                    assert(res.redirects.length === 0);
+                    done();
+                });
+            });
+        });
+    });
+
     after(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
         .then(function(dbConn) {
