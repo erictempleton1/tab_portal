@@ -54,6 +54,22 @@ describe('admin site tests', function() {
         });
     });
 
+    describe('GET edit site page for unknown site', function() {
+        it('should redirect back to sites listing page', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'admin', password: 'admin'})
+            .then(function() {
+                agent
+                .get('/admin/sites/edit/madeupsite')
+                .then(function(res) {
+                    assert(res.redirects[0].endsWith('/admin/sites'));
+                    done();
+                });
+            });
+        });
+    });
+
     after(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
         .then(function(dbConn) {
