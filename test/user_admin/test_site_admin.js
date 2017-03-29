@@ -68,6 +68,23 @@ describe('admin site tests', function() {
                 });
             });
         });
+    }); 
+
+    describe('GET new site creation page', function() {
+        it('should return HTTP 200 with no redirect', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'admin', password: 'admin'})
+            .then(function() {
+                agent
+                .get('/admin/sites/new')
+                .then(function(res) {
+                    assert(res.statusCode === 200);
+                    assert(res.redirects.length === 0);
+                    done();
+                });
+            });
+        });
     });
 
     after(function(done) {
