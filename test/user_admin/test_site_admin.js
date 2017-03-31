@@ -12,6 +12,7 @@ var app = require('../../app'),
 
 chai.use(chaiHttp);
 
+
 describe('admin site tests', function() {
     before(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
@@ -37,6 +38,15 @@ describe('admin site tests', function() {
             });
         });
     });
+
+    var newSite = {
+        allowedUsers: ['admin'],
+        vizUrl: 'http://google.com',
+        trustedLogin: true,
+        siteName: 'awesomesite',
+        slug: 'awesomesite',
+        isTabServerViz: true
+    };
 
     describe('GET sites listing', function() {
         it('should return HTTP 200 with no redirect', function(done) {
@@ -96,14 +106,7 @@ describe('admin site tests', function() {
             .then(function() {
                 agent
                 .post('/admin/sites/new')
-                .send({
-                    allowedUsers: ['admin'],
-                    vizUrl: 'http://google.com',
-                    trustedLogin: true,
-                    siteName: 'awesomesite',
-                    slug: 'awsomesite',
-                    isTabServerViz: true
-                })
+                .send(newSite)
                 .then(function(res) {
                     Sites.findOne({siteName: 'awesomesite'}).exec()
                     .then(function(result) {
@@ -111,6 +114,31 @@ describe('admin site tests', function() {
                         assert(result.siteName === 'awesomesite');
                     });
                     done();
+                });
+            });
+        });
+    });
+
+    describe('POST site name already in use', function() {
+        it('should not create a new site', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'admin', password: 'admin'})
+            .then(function() {
+                agent
+                .post('/admin/sites/new')
+                .send(newSite)
+                .then(function() {
+                    agent
+                    .post('/admin/sites/new')
+                    .send(newSite)
+                    .then(function(res) {
+                        Sites.find({siteName: 'awesomesite'}).exec()
+                        .then(function(result) {
+                            assert(result.length === 1);
+                        });
+                        done();
+                    });
                 });
             });
         });
