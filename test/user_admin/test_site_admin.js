@@ -7,7 +7,8 @@ var app = require('../../app'),
     agent = chai.request.agent(app),
     MongoClient = require('mongodb').MongoClient,
     dbSettings = require('../../db_config'),
-    Account = require('../../models/account');
+    Account = require('../../models/account'),
+    Sites = require('../../models/sites');
 
 chai.use(chaiHttp);
 
@@ -81,6 +82,34 @@ describe('admin site tests', function() {
                 .then(function(res) {
                     assert(res.statusCode === 200);
                     assert(res.redirects.length === 0);
+                    done();
+                });
+            });
+        });
+    });
+
+    describe('POST new site page', function() {
+        it('should create a new site', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'admin', password: 'admin'})
+            .then(function() {
+                agent
+                .post('/admin/sites/new')
+                .send({
+                    allowedUsers: ['admin'],
+                    vizUrl: 'http://google.com',
+                    trustedLogin: true,
+                    siteName: 'awesomesite',
+                    slug: 'awsomesite',
+                    isTabServerViz: true
+                })
+                .then(function(res) {
+                    Sites.findOne({siteName: 'awesomesite'}).exec()
+                    .then(function(result) {
+                        assert(result !== null);
+                        assert(result.siteName === 'awesomesite');
+                    });
                     done();
                 });
             });
