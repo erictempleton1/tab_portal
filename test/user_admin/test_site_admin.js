@@ -144,6 +144,33 @@ describe('admin site tests', function() {
         });
     });
 
+    describe('POST edit site', function() {
+        it('should update an existing site', function(done) {
+            agent
+            .post('/login')
+            .send({username: 'admin', password: 'admin'})
+            .then(function() {
+                agent
+                .post('/admin/sites/new')
+                .send(newSite)
+                .then(function() {
+                    newSite.vizUrl = 'http://newurl.com';
+                    agent
+                    .post('/admin/sites/edit/' + newSite.siteName)
+                    .send(newSite)
+                    .then(function(res) {
+                        Sites.findOne({siteName: newSite.siteName}).exec()
+                        .then(function(result) {
+                            console.log(result);
+                            assert(result.vizUrl === 'http://newurl.com');
+                        });
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
     after(function(done) {
         MongoClient.connect(dbSettings.dbUri.testing)
         .then(function(dbConn) {
