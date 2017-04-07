@@ -1,7 +1,7 @@
 var express = require('express'),
     router = express.Router(),
     util = require('../../utility/utility'),
-    AccountActivity = require('../../models/adminActivity');
+    AdminActivity = require('../../models/adminActivity');
 
 
 /**
@@ -10,6 +10,7 @@ var express = require('express'),
 router.get('/', util.ensureAdmin, function (req, res) {
     AdminActivity.find({}).exec()
     .then(function(activities) {
+        console.log(activities);
         res.render('admin/admin', {user: req.user, activities: actvities});
     })
     .catch(function(err) {

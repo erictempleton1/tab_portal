@@ -2,7 +2,6 @@ var express = require('express'),
     router = express.Router(),
     moment = require('moment'),
     Account = require('../../models/account'),
-    AdminActivity = require('../../models/adminActivity'),
     Sites = require('../../models/sites'),
     util = require('../../utility/utility'),
     valAdmin = require('../../validators/admin');
