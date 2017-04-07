@@ -13,6 +13,14 @@ body {
     border-color: #E7E7E7;
 }
 
+.nav-buffer {
+  padding-top: 25px;
+}
+
+.well-style {
+  padding: 25px;
+}
+
 /* parsley css */
 input.parsley-success,
 select.parsley-success,
