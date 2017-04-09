@@ -9,7 +9,30 @@
         <div class="col-sm-8 nav-buffer">
           <div class="well well-style">
             <div class="text-center">
-              hello
+              <% if (activities.length === 0) { %>
+                  No activities found
+              <% } else if (activities[0].error) { %>
+                  <%= activities[0].error %>
+              <% } else { %>
+                  <% for (var i = 0; i < activities.length; i++) { %>
+                      <% if (activities[i].action === "remove") { %>
+                        <h5>
+                          <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                          <%= activities[i].message %>
+                        </h5>
+                      <% } else if (activities[i].action === "edit") { %>
+                        <h5>
+                          <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                          <%= activites[i].message %>
+                        </h5>
+                      <% } else if (activities[i].action === "add") { %>
+                        <h5>
+                          <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                          <%= activities[i].message %>
+                        </h5>
+                      <% } %>
+                  <% } %>
+              <% } %>
             </div>
           </div>
         </div>

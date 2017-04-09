@@ -11,11 +11,12 @@ router.get('/', util.ensureAdmin, function (req, res) {
     AdminActivity.find({}).exec()
     .then(function(activities) {
         console.log(activities);
-        res.render('admin/admin', {user: req.user, activities: actvities});
+        res.render('admin/admin', {user: req.user, activities: activities});
     })
     .catch(function(err) {
+        console.log(err);
         var errMsg = 'Error loading activities';
-        res.render('admin/admin', {user: req.user, activites: [{error: errMsg}]})
+        res.render('admin/admin', {user: req.user, activities: [{error: errMsg}]})
     });
 });
 
