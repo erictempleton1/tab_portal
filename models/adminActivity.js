@@ -4,7 +4,9 @@ var mongoose = require('mongoose'),
     var AdminActivity = new Schema({
         adminUserId: Schema.ObjectId,
         adminUsername: String,
-        activity: String,
+        activityType: String,
+        activityMessage: String,
+        activityArea: String,
         activityDate: Date
     });
 
