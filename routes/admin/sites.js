@@ -80,6 +80,15 @@ router.post('/edit/:sitename', [util.ensureAdmin, valAdmin.validateSiteEditPost]
             site.trustedLogin = req.body.trustedLogin;
             site.save();
             req.flash('info', 'Site updated!');
+            var action = new AdminActivitiy({
+                adminUserId: req.user._id,
+                adminUsername: req.user.username,
+                activityType: "edit",
+                activityMessage: "Edited site: " + site.siteName,
+                activityArea: "sites",
+                activityArea: Date.now()
+            });
+            action.save();
             res.redirect('/admin/sites');
         } else {
             req.flash('info', 'Site name already in use');
