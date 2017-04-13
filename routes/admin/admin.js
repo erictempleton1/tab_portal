@@ -6,6 +6,7 @@ var express = require('express'),
 
 
 // todo - add moment formatted date to ejs
+// todo - add admin activity save to users 
 
 /**
  * Render admin index
