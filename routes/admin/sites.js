@@ -86,7 +86,7 @@ router.post('/edit/:sitename', [util.ensureAdmin, valAdmin.validateSiteEditPost]
                 activityType: "edit",
                 activityMessage: "Edited site: " + site.siteName,
                 activityArea: "sites",
-                activityArea: Date.now()
+                activityDate: Date.now()
             });
             action.save();
             res.redirect('/admin/sites');
@@ -127,6 +127,15 @@ router.post('/remove/:sitename', [util.ensureAdmin, valAdmin.validateSiteRemoveP
     Sites.remove({siteName: req.params.sitename}).exec()
     .then(function (site) {
         if (site) {
+            var action = new AdminActivitiy({
+                adminUserId: req.user._id,
+                adminUsername: req.user.username,
+                activityType: "remove",
+                activityMessage: "Removed site: " + req.params.sitename,
+                activityArea: "sites",
+                activityDate: Date.now()
+            });
+            action.save();
             req.flash('info', 'Site removed!');
             res.redirect('/admin/sites');
         } else {
@@ -170,6 +179,15 @@ router.post('/new', [util.ensureAdmin, valAdmin.validateNewSitePost], function (
                 isTabServerViz: req.body.isTabServerViz
             });
             newSite.save();
+            var action = new AdminActivitiy({
+                adminUserId: req.user._id,
+                adminUsername: req.user.username,
+                activityType: "new",
+                activityMessage: "Created site: " + util.cleanString(req.body.siteName),
+                activityArea: "sites",
+                activityDate: Date.now()
+            });
+            action.save();
             req.flash('info', 'New site created');
             res.redirect('/admin/sites');
         } else {

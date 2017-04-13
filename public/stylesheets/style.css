@@ -17,6 +17,10 @@ body {
   padding-top: 25px;
 }
 
+.admin-activity-pad {
+  padding: 10px 10px 10px 10px;
+}
+
 .well-style {
   padding: 25px;
 }
